@@ -1,0 +1,58 @@
+﻿<Window x:Class="ContragentAnalyse.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ContragentAnalyse"
+        mc:Ignorable="d"
+        Title="Анализ контрагентов" Height="920" Width="1245">
+    <Window.Resources>
+        <Style TargetType="Button" x:Key="MenuButton">
+            <Setter Property="Background" Value="#FF1A1A1D"/>
+            <Setter Property="BorderBrush" Value="{x:Null}"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Foreground" Value="#FFF1F1F1"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="#FF1A1A1D" BorderThickness="1">
+                            <ContentPresenter HorizontalAlignment="Left" Margin="10,0" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <SolidColorBrush Color="#FF2D2D30"/>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <SolidColorBrush Color="#FF686868"/>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="87*"/>
+            <ColumnDefinition Width="328*"/>
+        </Grid.ColumnDefinitions>
+        <Rectangle Fill="#FF1A1A1D"/>
+        <StackPanel>
+            <Button Content="Анкета" Style="{StaticResource MenuButton}" Click="MenuClick" Tag="Page1"/>
+            <Button Content="Оценка Риска" Style="{StaticResource MenuButton}" Click="MenuClick" Tag="Page3"/>
+            <Button Content="Выгрузка в Excel" Style="{StaticResource MenuButton}" Click="MenuClick" Tag="Page4"/>
+        </StackPanel>
+        <ContentControl Grid.Column="1" Name="MainContentController" Margin="10" > 
+
+        </ContentControl>
+    </Grid>
+</Window>
