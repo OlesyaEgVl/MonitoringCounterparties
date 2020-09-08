@@ -22,79 +22,375 @@
                         </ListBox>
                     </GroupBox>
                 </StackPanel>
-                
-                    <StackPanel >
-                        <GroupBox Header="Выберете фильтры" Margin="10,0">
-                            <StackPanel >
+
+                <StackPanel >
+                    <GroupBox Header="Выберете фильтры" Margin="10,0">
+                        <StackPanel >
+                            <StackPanel Orientation="Horizontal" Margin="5">
+                                <TextBlock Text="Страна регистрации:" Width="200"/>
                                 <StackPanel Orientation="Horizontal" Margin="5">
-                                    <TextBlock Text="Страна регистрации:" Width="200"/>
-                                    <TextBox Width="300"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="5">
-                                    <TextBlock Text="Дата актуализации:" Width="200"/>
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <Label Content="Начальная дата:"/>
-                                        <DatePicker Name="StartDatePicker" SelectedDate="{Binding StartReportDate}" />
-                                        <Label Content="Конечная дата:"/>
-                                        <DatePicker Name="EndDatePicker" SelectedDate="{Binding EndReportDate}" />
-                                    </StackPanel>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="5">
-                                    <TextBlock Text="Другие БИНы Клиента:" Width="200"/>
-                                    <TextBox Width="300" />
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="5">
-                                    <TextBlock Text="Клиентский менеджер:" Width="200"/>
-                                    <TextBox x:Name="TextClientMenedger" Width="300"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="5">
-                                    <TextBlock Text="Уровень риска:" Width="200"/>
-                                    <ComboBox Width="300" />
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="5">
-                                    <TextBlock Text="Дата пересмотра:" Width="200"/>
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <Label Content="Начальная дата:"/>
-                                        <DatePicker Name="StartDatePicker2" SelectedDate="{Binding StartReportDate}" />
-                                        <Label Content="Конечная дата:"/>
-                                        <DatePicker Name="EndDatePicker2" SelectedDate="{Binding EndReportDate}" />
-                                    </StackPanel>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="5">
-                                    <TextBlock Text="Выявленные критерии риска:" Width="200"/>
-                                    <TextBox Width="300"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="5">
-                                    <TextBlock Text="Действующие договора:" Width="200"/>
-                                    <ComboBox Width="300" />
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="5">
-                                    <TextBlock Text="Наличие карточки с ОП:" Width="200"/>
-                                    <TextBox Width="300" />
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="5">
-                                    <TextBlock Text="Счета в валюте:" Width="200"/>
-                                    <TextBox Width="300"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="5">
-                                    <TextBlock Text="Контакты:" Width="200"/>
-                                    <TextBox x:Name="TextContact" Width="300" />
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="5">
-                                    <TextBlock Text="Запросы:" Width="200"/>
-                                    <CheckBox x:Name="CheckBox1_Copy" Width="300"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="5">
-                                    <TextBlock Text="Счет с ограничениями:" Width="200"/>
-                                    <CheckBox x:Name="CheckBox1" Width="300"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Vertical" Margin="5" HorizontalAlignment="Right">
-                                    <Button x:Name="buttonExcel" Width="150" Height="25" Content="Выгрузить Excel"/>
+                                    <ListView MinWidth="100" MaxWidth="650" MinHeight="20" Height="90" Width="380">
+                                        <ListView.View>
+                                            <GridView>
+                                                <GridViewColumn/>
+                                            </GridView>
+                                        </ListView.View>
+                                        <CheckBox Content="Все страны"/>
+                                        <CheckBox Content="Армения"/>
+                                        <CheckBox Content="Австрия"/>
+                                        <CheckBox Content="Австралия"/>
+                                        <CheckBox Content="Азербайджан"/>
+                                        <CheckBox Content="Бельгия"/>
+                                        <CheckBox Content="Болгария"/>
+                                        <CheckBox Content="Белоруссия"/>
+                                        <CheckBox Content="Швейцария"/>
+                                        <CheckBox Content="Китай"/>
+                                        <CheckBox Content="Кипр"/>
+                                        <CheckBox Content="Чехия"/>
+                                        <CheckBox Content="Германия"/>
+                                        <CheckBox Content="Эстония"/>
+                                        <CheckBox Content="Франция"/>
+                                        <CheckBox Content="Великобритания"/>
+                                        <CheckBox Content="Гернси"/>
+                                        <CheckBox Content="Ирландия"/>
+                                        <CheckBox Content="Израиль"/>
+                                        <CheckBox Content="Италия"/>
+                                        <CheckBox Content="Каймановы острова"/>
+                                        <CheckBox Content="Казахстан"/>
+                                        <CheckBox Content="Литва"/>
+                                        <CheckBox Content="Люксембург"/>
+                                        <CheckBox Content="Латвия"/>
+                                        <CheckBox Content="Македония"/>
+                                        <CheckBox Content="Нидерланды"/>
+                                        <CheckBox Content="Новая Зеландия"/>
+                                        <CheckBox Content="Польша"/>
+                                        <CheckBox Content="Россия"/>
+                                        <CheckBox Content="Швеция"/>
+                                        <CheckBox Content="Словакия"/>
+                                        <CheckBox Content="Украина"/>
+                                        <CheckBox Content="США"/>
+                                        <CheckBox Content="Британские Виргинские Острова"/>
+                                        <CheckBox Content="Грузия"/>
+                                        <CheckBox Content="Монголия"/>
+                                        <CheckBox Content="Норвегия"/>
+                                        <CheckBox Content="Киргизия"/>
+                                        <CheckBox Content="Узбекистан"/>
+                                        <CheckBox Content="Индия"/>
+                                        <CheckBox Content="Молдова"/>
+                                        <CheckBox Content="Таджикистан"/>
+                                        <CheckBox Content="Иное"/>
+
+                                    </ListView>
                                 </StackPanel>
                             </StackPanel>
-                        </GroupBox>
-                    </StackPanel>
-               
+                            <StackPanel Orientation="Horizontal" Margin="5">
+                                <TextBlock Text="Дата актуализации:" Width="200"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Label Content="Начальная дата:"/>
+                                    <DatePicker Name="StartDatePicker" SelectedDate="{Binding StartReportDate}" />
+                                    <Label Content="Конечная дата:"/>
+                                    <DatePicker Name="EndDatePicker" SelectedDate="{Binding EndReportDate}" />
+                                </StackPanel>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="5">
+                                <TextBlock Text="Другие БИНы Клиента:" Width="200"/>
+                                <TextBox Width="300" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="5">
+                                <TextBlock Text="Клиентский менеджер:" Width="200"/>
+                                <TextBox x:Name="TextClientMenedger" Width="300"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="5">
+                                <TextBlock Text="Уровень риска:" Width="200"/>
+                                <ComboBox Width="300" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="5">
+                                <TextBlock Text="Дата пересмотра:" Width="200"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Label Content="Начальная дата:"/>
+                                    <DatePicker Name="StartDatePicker2" SelectedDate="{Binding StartReportDate}" />
+                                    <Label Content="Конечная дата:"/>
+                                    <DatePicker Name="EndDatePicker2" SelectedDate="{Binding EndReportDate}" />
+                                </StackPanel>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="5">
+                                <TextBlock Text="Выявленные критерии риска:" Width="200"/>
+                                <ListView MinWidth="100" MaxWidth="650" MinHeight="20" Height="90" Width="380">
+                                    <ListView.View>
+                                        <GridView>
+                                            <GridViewColumn/>
+                                        </GridView>
+                                    </ListView.View>
+                                    <CheckBox Content="Все криерии"/>
+                                    <CheckBox Content="Наличие действующих блокирующих санкций в отношении акционера, владеющего менее 45% капитала Клиента, и/или Члена органа управления Клиента"/>
+                                    <CheckBox Content="Наличие действующих секторальных санкций в отношении Клиента и/или акционера Клиента"/>
+                                    <CheckBox Content="Установлен факт связи Клиента и/или лиц, которые по отдельности или в совокупности владеют более чем 50% капитала Клиента, и/или Бенефициарного владельца Клиента с непризнанной Российской Федерацией территорией и/или Члена органа управления Клиента со  страной/территорией, указанной в Первой группе государств и территорий Приложения №1 Инструкции №1361"/>
+                                    <CheckBox Content="Клиент и/или его акционер и/или Бенефициарный владелец Клиента и/или дочерняя компания и/или филиал/представительство Клиента зарегистрировано (инкорпорировано) (место жительства или место нахождения)  на территории, указанной во Второй группе государств и территорий Приложения №1 Инструкции №1361 "/>
+                                    <CheckBox Content="Акционер Клиента и/или Бенефициарный владелец Клиента и/или Член органа управления Клиента является ПДЛ/РДЛ и/или Ближайшим окружением ПДЛ/РДЛ"/>
+                                    <CheckBox Content="Наличие информации в отношении Клиента и/или его акционера и/или Члена органа управления Клиента и/или Бенефициарного владельца Клиента, полученной из открытых источников, заслуживающих доверия, и/или во внутренних ресурсах и системах Банка, вызывающей по оценке ОМК подозрения в том, что целью заключения сотрудничества может являться совершение операций в целях легализации (отмывания) доходов, полученных преступным путем, финансирования терроризма и финансирования распространения оружия массового уничтожения"/>
+                                    <CheckBox Content="Наличие информационных сообщений, из заслуживающих доверия источников информации, о финансовом оздоровлении и/или назначении временной администрации и/или недостаточности капитала и/или несоблюдении нормативов Клиентом и/или банкротстве основного акционера Клиента и/или о введении в отношении Клиента запрета на привлечение денежных средств физических лиц во вклады и (или) открытие и ведение банковских счетов физических лиц"/>
+                                    <CheckBox Content="Отсутствие по адресу места нахождения Клиента-резидента Российской Федерации его постоянно действующего органа, иных органов или лиц, имеющих право действовать от имени Клиента без доверенности"/>
+                                    <CheckBox Content="Присутствие акционера, владеющего более 50% капитала Клиента, и/или Бенефициарного владельца Клиента в БД Репутационные риски Банка"/>
+                                    <CheckBox Content="Несоответствие внутренних процедур банка в сфере ПОД/ФТ/ФРОМУ рекомендациям FATF"/>
+                                    <CheckBox Content="Предупреждение/штрафы со стороны надзорного органа в связи с неисполнением/ненадлежащим исполнением законодательства в области ПОД/ФТ/ФРОМУ за последние 2 года"/>
+                                    <CheckBox Content="Отсутствие процедур, регламентирующих отношения с ПДЛ/PДЛ и Ближайшим окружением ПДЛ/РДЛ."/>
+                                    <CheckBox Content="Наличие доступа третьих лиц к корреспондентским счетам, открытых у Клиента и банка-корреспондента, с которым у третьих лиц нет корреспондентских счетов (практика «сквозных» счетов)"/>
+                                    <CheckBox Content="Несоответствие внутренних процедур банка общепризнанным стандартам «Знай своего клиента»"/>
+                                    <CheckBox Content="Осуществление неполной и/или нерегулярной оценки/переоценки уровня риска клиентов"/>
+                                    <CheckBox Content="Открытие счетов на анонимных владельцев и/или открытие первого счета без личного присутствия физического лица, его идентификации и/или оценки риска"/>
+                                    <CheckBox Content="Более 10% высокорисковых клиентов (осуществляющих интенсивный оборот наличности, Money Service Business и т.п.)"/>
+                                    <CheckBox Content="Не проводится проверка достоверности информации, полученной в ходе идентификации"/>
+                                    <CheckBox Content="Только ручной мониторинг операций клиентов"/>
+                                    <CheckBox Content="Применение недостаточных мер в отношении клиентов, неоднократно осуществлявших необычные/подозрительные операции"/>
+                                    <CheckBox Content="Отсутствие процедур по выявлению операций, проводимых в рамках ухода от процедур контроля по ПОД/ФТ/ФРОМУ, в т.ч. по выявлению необычных операций"/>
+                                    <CheckBox Content="Осуществление неполной и/или нерегулярной оценки риска операций клиента"/>
+                                    <CheckBox Content="Отсутствие процедур по выявлению операций с подставными или фиктивными компаниями («shell company»)"/>
+                                    <CheckBox Content="Отсутствие процедур по установлению источника происхождения денежных средств и контроля операций клиентов-ПДЛ/РДЛ и Ближайшего окружения ПДЛ/РДЛ."/>
+                                    <CheckBox Content="Только ручная обработка платежей на предмет контроля страновых и санкционных ограничений"/>
+                                    <CheckBox Content="Отсутствие ограничений и достаточных контролей при принятии на обслуживание и обслуживании лиц/лиц-резидентов государств/территорий, находящихся под действующими санкциями/ограничениями"/>
+                                    <CheckBox Content="Отсутствие ограничений и достаточных контролей при принятии на обслуживание и обслуживании клиентов, зарегистрированных во Второй группе государств и территорий Приложения №1 Инструкции №1361 («офшорные» государства/территории)"/>
+                                    <CheckBox Content="Не разработаны процедуры/политики, направленные на минимизацию санкционных и страновых рисков"/>
+                                    <CheckBox Content="Банком выявлены необычные операции"/>
+                                    <CheckBox Content="Запросы по платежу со стороны НОСТРО-банка"/>
+                                    <CheckBox Content="Нарушение Клиентом условий договора"/>
+                                    <CheckBox Content="Иное"/>
+                                </ListView>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="5">
+                                <TextBlock Text="Действующие договора:" Width="200"/>
+                                <ListView MinWidth="100" MaxWidth="650" MinHeight="20" Height="90" Width="380">
+                                    <ListView.View>
+                                        <GridView>
+                                            <GridViewColumn/>
+                                        </GridView>
+                                    </ListView.View>
+                                    <CheckBox Content="Все договора"/>
+                                    <CheckBox Content="Форекс"/>
+                                    <CheckBox Content="Межбанк "/>
+                                    <CheckBox Content="Кор. счета рублевые "/>
+                                    <CheckBox Content="Кор. счета валютные"/>
+                                    <CheckBox Content="Корсчета NOSTRO"/>
+                                    <CheckBox Content="Пластиковые карты"/>
+                                    <CheckBox Content="Корсчета 2004"/>
+                                    <CheckBox Content="Банкнотные сделки"/>
+                                    <CheckBox Content="Договор по операциям ПК"/>
+                                    <CheckBox Content="Собственные векселя"/>
+                                    <CheckBox Content="Договор на инкассацию"/>
+                                    <CheckBox Content="Соглашения по ценным бумагам"/>
+                                    <CheckBox Content="ALFA-FOREX"/>
+                                    <CheckBox Content="АЛЬФА-КЛИЕНТ"/>
+                                    <CheckBox Content="Драгметаллы"/>
+                                    <CheckBox Content="Процессинг"/>
+                                    <CheckBox Content="Договор НПС"/>
+                                    <CheckBox Content="RISDA"/>
+                                    <CheckBox Content="ISDA"/>
+                                    <CheckBox Content="RISDA FI"/>
+                                    <CheckBox Content="ISMA"/>
+                                    <CheckBox Content="Соглашение СПФС"/>
+                                    <CheckBox Content="Клиент ИБ"/>
+                                    <CheckBox Content="Ген. договор (депозит)"/>
+                                    <CheckBox Content="Электр. банк. гарантия"/>
+                                    <CheckBox Content="Непокрыт. аккредитив.  Бенефициар"/>
+                                    <CheckBox Content="Банковский платежный агент"/>
+                                    <CheckBox Content="RISDA онлайн"/>
+                                    <CheckBox Content="CSA онлайн"/>
+                                    <CheckBox Content="Иное"/>
+                                </ListView>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="5">
+                                <TextBlock Text="Наличие карточки с ОП:" Width="200"/>
+                                <CheckBox  Width="300"  />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="5">
+                                <TextBlock Text="Счета в валюте:" Width="200"/>
+                                <ListView MinWidth="100" MaxWidth="650" MinHeight="20" Height="90" Width="380">
+                                    <ListView.View>
+                                        <GridView>
+                                            <GridViewColumn/>
+                                        </GridView>
+                                    </ListView.View>
+                                    <CheckBox Content="Все счета в валюте"/>
+                                    <CheckBox Content="ALL (Лек) - Албания"/>
+                                    <CheckBox Content="DZD (Алжирский динар) - Алжир"/>
+                                    <CheckBox Content="ARS (Аргентинское песо) - Аргентина"/>
+                                    <CheckBox Content="AUD (Австралийский доллар) - Австралия; Кирибати; Кокосовые (Килинг) острова; Науру; Остров Норфолк; Остров Рождества; Остров Херд и острова Макдональд; Тувалу"/>
+                                    <CheckBox Content="BSD (Багамский доллар) - Багамы"/>
+                                    <CheckBox Content="BHD (Бахрейнский динар) - Бахрейн"/>
+                                    <CheckBox Content="BDT (Така) - Бангладеш"/>
+                                    <CheckBox Content="AMD (Армянский драм) - Армения"/>
+                                    <CheckBox Content="BBD (Барбадосский доллар) - Барбадос"/>
+                                    <CheckBox Content="BMD (Бермудский доллар) - Бермуды"/>
+                                    <CheckBox Content="BTN (Нгултрум) - Бутан"/>
+                                    <CheckBox Content="BOB (Боливиано) - Боливия, многонациональное государство"/>
+                                    <CheckBox Content="BWP (Пула) - Ботсвана"/>
+                                    <CheckBox Content="BZD (Белизский доллар) - Белиз"/>
+                                    <CheckBox Content="SBD (Доллар Соломоновых Островов) - Соломоновы Острова "/>
+                                    <CheckBox Content="BND (Брунейский доллар) - Бруней-Даруссалам"/>
+                                    <CheckBox Content="MMK (Кьят) - Мьянма"/>
+                                    <CheckBox Content="BIF (Бурундийский франк) - Бурунди"/>
+                                    <CheckBox Content="KHR (Риель) - Камбоджа"/>
+                                    <CheckBox Content="CAD (Канадский доллар) - Канада"/>
+                                    <CheckBox Content="CVE (Эскудо Кабо-Верде) - Кабо-Верде"/>
+                                    <CheckBox Content="KYD (Доллар Островов Кайман) - Острова Кайман"/>
+                                    <CheckBox Content="LKR (Шри-ланкийская рупия) - Шри-Ланка"/>
+                                    <CheckBox Content="CLP (Чилийское песо) - Чили"/>
+                                    <CheckBox Content="CNY (Юань) - Китай"/>
+                                    <CheckBox Content="COP (Колумбийское песо) - Колумбия"/>
+                                    <CheckBox Content="KMF (Коморский франк) - Коморы"/>
+                                    <CheckBox Content="CRC (Коста-риканский колон) - Коста-Рика"/>
+                                    <CheckBox Content="HRK (Куна) - Хорватия"/>
+                                    <CheckBox Content="CUP (Кубинское песо) - Куба"/>
+                                    <CheckBox Content="CZK (Чешская крона) - Чехия"/>
+                                    <CheckBox Content="DKK (Датская крона) - Гренландия; Дания; Фарерские острова"/>
+                                    <CheckBox Content="DOP (Доминиканское песо) - Доминиканская Республика"/>
+                                    <CheckBox Content="SVC (Сальвадорский колон) - Эль-Сальвадор"/>
+                                    <CheckBox Content="ETB (Эфиопский быр) - Эфиопия"/>
+                                    <CheckBox Content="ERN (Накфа) - Эритрея"/>
+                                    <CheckBox Content="FKP (Фунт Фолклендских островов) - Фолклендские острова (Мальвинские)"/>
+                                    <CheckBox Content="FJD (Доллар Фиджи) - Фиджи"/>
+                                    <CheckBox Content="DJF (Франк Джибути) - Джибути"/>
+                                    <CheckBox Content="GMD (Даласи) - Гамбия"/>
+                                    <CheckBox Content="GIP (Гибралтарский фунт) - Гибралтар"/>
+                                    <CheckBox Content="GTQ (Кетсаль) - Гватемала"/>
+                                    <CheckBox Content="GNF (Гвинейский франк) - Гвинея"/>
+                                    <CheckBox Content="GYD (Гайанский доллар) - Гайана"/>
+                                    <CheckBox Content="HTG (Гурд) - Гаити"/>
+                                    <CheckBox Content="HNL (Лемпира) - Гондурас"/>
+                                    <CheckBox Content="HKD (Гонконгский доллар) - Гонконг"/>
+                                    <CheckBox Content="HUF (Форинт) - Венгрия"/>
+                                    <CheckBox Content="ISK (Исландская крона) - Исландия"/>
+                                    <CheckBox Content="INR (Индийская рупия) - Бутан; Индия"/>
+                                    <CheckBox Content="IDR (Рупия) - Индонезия"/>
+                                    <CheckBox Content="IRR (Иранский риал) - Иран (Исламская Республика)"/>
+                                    <CheckBox Content="IQD (Иракский динар) - Ирак"/>
+                                    <CheckBox Content="ILS (Новый израильский шекель) - Израиль "/>
+                                    <CheckBox Content="JMD (Ямайский доллар) - Ямайка"/>
+                                    <CheckBox Content="JPY (Иена) - Япония"/>
+                                    <CheckBox Content="KZT (Тенге) - Казахстан"/>
+                                    <CheckBox Content="JOD (Иорданский динар) - Иордания"/>
+                                    <CheckBox Content="KES (Кенийский шиллинг) - Кения"/>
+                                    <CheckBox Content="KPW (Северокорейская вона) - Корея, народно-демократическая республика"/>
+                                    <CheckBox Content="KRW (Вона) - Корея, республика"/>
+                                    <CheckBox Content="KWD (Кувейтский динар) - Кувейт"/>
+                                    <CheckBox Content="KGS (Сом) - Киргизия"/>
+                                    <CheckBox Content="LAK (Лаосский кип) - Лаосская Народно-Демократическая Республика"/>
+                                    <CheckBox Content="LBP (Ливанский фунт) - Ливан"/>
+                                    <CheckBox Content="LSL (Лоти) - Лесото"/>
+                                    <CheckBox Content="LRD (Либерийский доллар) - Либерия"/>
+                                    <CheckBox Content="LYD (Ливийский динар) - Ливия"/>
+                                    <CheckBox Content="SSP (Южносуданский фунт) - Южный Судан"/>
+                                    <CheckBox Content="MOP (Патака) - Макао"/>
+                                    <CheckBox Content="MWK (Малавийская квача) - Малави"/>
+                                    <CheckBox Content="MYR (Малайзийский ринггит) - Малайзия"/>
+                                    <CheckBox Content="MVR (Руфия) - Мальдивы"/>
+                                    <CheckBox Content="MRU (Угия) - Мавритания"/>
+                                    <CheckBox Content="MUR (Маврикийская рупия) - Маврикий"/>
+                                    <CheckBox Content="MXN (Мексиканское песо) - Мексика"/>
+                                    <CheckBox Content="MNT (Тугрик) - Монголия"/>
+                                    <CheckBox Content="MDL (Молдавский лей) - Молдова, республика"/>
+                                    <CheckBox Content="MAD (Марокканский дирхам) - Западная Сахара; Марокко"/>
+                                    <CheckBox Content="OMR (Оманский риал) - Оман"/>
+                                    <CheckBox Content="NAD (Доллар Намибии) - Намибия"/>
+                                    <CheckBox Content="NPR (Непальская рупия) - Непал"/>
+                                    <CheckBox Content="ANG (Нидерландский антильский гульден) - Кюрасао; Сен-Мартен (нидерландская часть)"/>
+                                    <CheckBox Content="AWG (Арубанский флорин) - Аруба"/>
+                                    <CheckBox Content="VUV (Вату) - Вануату"/>
+                                    <CheckBox Content="NZD (Новозеландский доллар) - Ниуэ; Новая Зеландия; Острова Кука; Питкерн; Токелау"/>
+                                    <CheckBox Content="NIO (Золотая кордоба) - Никарагуа"/>
+                                    <CheckBox Content="NGN (Найра) - Нигерия"/>
+                                    <CheckBox Content="NOK (Норвежская крона) - Норвегия; Остров Буве; Шпицберген и Ян Майен"/>
+                                    <CheckBox Content="PKR (Пакистанская рупия) - Пакистан"/>
+                                    <CheckBox Content="PAB (Бальбоа) - Панама"/>
+                                    <CheckBox Content="PGK (Кина) - Папуа Новая Гвинея"/>
+                                    <CheckBox Content="PYG (Гуарани) - Парагвай"/>
+                                    <CheckBox Content="PEN (Соль) - Перу"/>
+                                    <CheckBox Content="PHP (Филиппинское песо) - Филиппины"/>
+                                    <CheckBox Content="QAR (Катарский риал) - Катар"/>
+                                    <CheckBox Content="RUB (Российский рубль) - Россия"/>
+                                    <CheckBox Content="RWF (Франк Руанды) - Руанда"/>
+                                    <CheckBox Content="SHP (Фунт Святой Елены) - Святая Елена, остров Вознесения, Тристан-да-Кунья"/>
+                                    <CheckBox Content="SAR (Саудовский риял) - Саудовская Аравия"/>
+                                    <CheckBox Content="SCR (Сейшельская рупия) - Сейшелы"/>
+                                    <CheckBox Content="SLL (Леоне) - Сьерра-Леоне"/>
+                                    <CheckBox Content="SGD (Сингапурский доллар) - Сингапур"/>
+                                    <CheckBox Content="VND (Донг) - Вьетнам"/>
+                                    <CheckBox Content="SOS (Сомалийский шиллинг) - Сомали"/>
+                                    <CheckBox Content="ZAR (Рэнд) - Лесото; Намибия; Южная Африка"/>
+                                    <CheckBox Content="SZL (Лилангени) - Эсватини"/>
+                                    <CheckBox Content="SEK (Шведская крона) - Швеция"/>
+                                    <CheckBox Content="CHF (Швейцарский франк) - Лихтенштейн; Швейцария"/>
+                                    <CheckBox Content="SYP (Сирийский фунт) - Сирийская Арабская Республика"/>
+                                    <CheckBox Content="THB (Бат) - Таиланд"/>
+                                    <CheckBox Content="TOP (Паанга) - Тонга"/>
+                                    <CheckBox Content="TTD (Доллар Тринидада и Тобаго) - Тринидад и Тобаго "/>
+                                    <CheckBox Content="AED (Дирхам (ОАЭ)) - Объединенные Арабские Эмираты (ОАЭ)"/>
+                                    <CheckBox Content="TND (Тунисский динар) - Тунис"/>
+                                    <CheckBox Content="UGX (Угандийский шиллинг) - Уганда"/>
+                                    <CheckBox Content="MKD (Денар) - Македония, бывшая Югославская Республика"/>
+                                    <CheckBox Content="EGP (Египетский фунт) - Египет"/>
+                                    <CheckBox Content="GBP (Фунт стерлингов) - Соединенное королевство"/>
+                                    <CheckBox Content="TZS (Танзанийский шиллинг) - Танзания, объединенная республика"/>
+                                    <CheckBox Content="USD (Доллар США) - Американское Самоа; Британская территория в Индийском океане; Бонэйр, Синт-Эстатиус и Саба; Виргинские острова (Британские); Виргинские острова (США); Гаити; Гуам; Малые Тихоокеанские Отдаленные острова Соединенных Штатов; Маршалловы Острова; Микронезия, федеративные штаты; Острова Теркс и Кайкос; Палау; Панама; Пуэрто-Рико; Северные Марианские острова; Соединенные Штаты; Тимор-Лесте; Эквадор; Эль-Сальвадор"/>
+                                    <CheckBox Content="UYU (Уругвайское песо) - Уругвай"/>
+                                    <CheckBox Content="UZS (Узбекский сум) - Узбекистан"/>
+                                    <CheckBox Content="WST (Тала) - Самоа"/>
+                                    <CheckBox Content="YER (Йеменский риал) - Йемен"/>
+                                    <CheckBox Content="TWD (Новый тайваньский доллар) - Тайвань (Китай) "/>
+                                    <CheckBox Content="CUC (Конвертируемое песо) - Куба   "/>
+                                    <CheckBox Content="ZWL (Доллар Зимбабве) - Зимбабве    "/>
+                                    <CheckBox Content="TMT (Новый туркменский манат) - Туркменистан"/>
+                                    <CheckBox Content="GHS (Ганский седи) - Гана"/>
+                                    <CheckBox Content="SDG (Суданский фунт) - Судан"/>
+                                    <CheckBox Content="UYI (Уругвайское песо в индексированных единицах) - Уругвай     "/>
+                                    <CheckBox Content="RSD (Сербский динар) - Сербия   "/>
+                                    <CheckBox Content="MZN (Мозамбикский метикал) - Мозамбик    "/>
+                                    <CheckBox Content="AZN (Азербайджанский манат) - Азербайджан    "/>
+                                    <CheckBox Content="RON (Румынский лей) - Румыния"/>
+                                    <CheckBox Content="TRY (Турецкая лира) - Турция    "/>
+                                    <CheckBox Content="XAF (Франк КФА ВЕАС) - Габон; Камерун; Конго; Центрально-Африканская Республика; Чад; Экваториальная Гвинея "/>
+                                    <CheckBox Content="XCD (Восточно-карибский доллар) - Ангилья; Антигуа и Барбуда; Гренада; Доминика; Монтсеррат; Сент-Винсент и Гренадины; Сент-Китс и Невис; Сент-Люсия"/>
+                                    <CheckBox Content="XOF (Франк КФА ВСЕАО) - Бенин; Буркина-Фасо; Гвинея-Бисау; Кот д'Ивуар; Мали; Нигер; Сенегал; Того  "/>
+                                    <CheckBox Content="XPF (Франк КФП) - Новая Каледония; Французская Полинезия; Уоллис и Футуна"/>
+                                    <CheckBox Content="XDR (СДР (специальные права заимствования)) - Международный валютный фонд (МВФ)"/>
+                                    <CheckBox Content="SRD (Суринамский доллар) - Суринам"/>
+                                    <CheckBox Content="MGA (Малагасийский ариари) - Мадагаскар"/>
+                                    <CheckBox Content="COU (Единица реальной стоимости) - Колумбия "/>
+                                    <CheckBox Content="AFN (Афгани) - Афганистан"/>
+                                    <CheckBox Content="TJS (Сомони) - Таджикистан"/>
+                                    <CheckBox Content="AOA (Кванза) - Ангола"/>
+                                    <CheckBox Content="BGN (Болгарский лев) - Болгария"/>
+                                    <CheckBox Content="CDF (Конголезский франк) - Конго, демократическая республика"/>
+                                    <CheckBox Content="ВАМ (Конвертируемая марка) - Босния и Герцеговина"/>
+                                    <CheckBox Content="EUR (Евро) - Австрия; Андорра; Бельгия; Гваделупа; Германия; Греция; Ирландия; Испания; Италия; Кипр; Латвия; Литва; Люксембург; Майотта; Мальта; Мартиника; Монако; Нидерланды; Папский Престол (Государство-город Ватикан); Португалия; Реюньон; Сан-Марино; Сен-Бартелеми; Сен-Мартен (французская часть); Сент-Пьер и Микелон; Словакия; Словения; Финляндия; Франция; Французская Гвиана; Французские Южные территории; Черногория; Эландские острова; Эстония"/>
+                                    <CheckBox Content="UAH (Гривна) - Украина"/>
+                                    <CheckBox Content="GEL (Лари) - Грузия"/>
+                                    <CheckBox Content="PLN (Злотый) - Польша"/>
+                                    <CheckBox Content="BRL (Бразильский реал) - Бразилия"/>
+                                    <CheckBox Content="ZMW (Замбийская квача) - Замбия"/>
+                                    <CheckBox Content="BYN (Белорусский рубль) - Беларусь"/>
+                                    <CheckBox Content="STN (Добра) - Сан-Томе и Принсипи"/>
+                                    <CheckBox Content="VES (Боливар Соберано) - Венесуэла (Боливарианская Республика)"/>
+                                </ListView>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="5">
+                                <TextBlock Text="Контакты:" Width="200"/>
+                                <TextBox x:Name="TextContact" Width="300" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="5">
+                                <TextBlock Text="Запросы:" Width="200"/>
+                                <CheckBox x:Name="CheckBox1_Copy" Width="300"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="5">
+                                <TextBlock Text="Счет с ограничениями:" Width="200"/>
+                                <CheckBox x:Name="CheckBox1" Width="300"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical" Margin="5" HorizontalAlignment="Right">
+                                <Button x:Name="buttonExcel" Width="150" Height="25" Content="Выгрузить Excel"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </GroupBox>
+                </StackPanel>
+
             </StackPanel>
         </ScrollViewer>
     </Grid>

@@ -53,5 +53,10 @@ namespace ContragentAnalyse.Controls
             RedactHistory.Background = Brushes.LightGray;
             SaveHistoryTime.Background = Brushes.LightGray;
         }
+
+        private void CheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            DateRevision.IsEnabled = true;
+        }
     }
 }

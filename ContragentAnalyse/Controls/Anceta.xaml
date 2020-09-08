@@ -5,104 +5,99 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ContragentAnalyse.Controls"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" x:Class="ContragentAnalyse.Controls.Anceta"
-             mc:Ignorable="d"
-    DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
+             mc:Ignorable="d" DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <Grid>
-                <StackPanel>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="199*"/>
+                <ColumnDefinition Width="443*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.ColumnSpan="2">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Введите БИН" Margin="5,0"/>
-                    <TextBox MinWidth="50" Margin="5,0"/>
-                    <TextBlock Text="Введите наименование" Margin="5,0"/>
-                    <TextBox MinWidth="250" Margin="5,0"/>
-                        <Button x:Name="buttonSearch"  Content="Поиск" Width="100" Click="Search" Tag="Page1Education"/>
+                    <TextBox MinWidth="50" Margin="5,0" Text="{Binding SearchBIN}"/>
+                    <TextBlock Text="Введите наименование" Margin="5,0" />
+                    <TextBox MinWidth="250" Margin="5,0" Text="{Binding SearchName}"/>
+                    <Button x:Name="buttonSearch"  Content="Поиск" Width="100" Click="Search" Tag="Page1Education"
+                                Command="{Binding SearchCommand}"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <GroupBox Header="Выберете из предложенных Банков/Юр.лиц" Margin="10,20" >
-                        <ListBox Margin="5" Width="600" Height="100">
-
-                        </ListBox>
+                        <ListView Name="FoundItemsList" Margin="5" MinWidth="600" MinHeight="100" ItemsSource="{Binding FoundClients}" SelectedItem="{Binding SelectedClient}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="БИН" DisplayMemberBinding="{Binding Path=Bank.BIN}"/>
+                                    <GridViewColumn Header="Название" DisplayMemberBinding="{Binding Path=Bank.ShortName}"/>
+                                    <GridViewColumn Header="Мнемоника" DisplayMemberBinding="{Binding Path=Mnemonic}"/>
+                                    <GridViewColumn Header="Тип клиента" DisplayMemberBinding="{Binding Path=TypeClient.Name}"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
                     </GroupBox>
                 </StackPanel>
             </StackPanel>
-        <ContentControl Name="Page1ContentController1" Margin="0,190,0,0">
+            <ContentControl Name="Page1ContentController1" Margin="0,190,0,0" Grid.ColumnSpan="2">
                 <TabControl VerticalAlignment="Top" HorizontalAlignment="Stretch">
-                    <TabItem x:Name="TabClient"  Header="Добавить Клиента"  >
-                        <TabItem.Content>
-                            <Grid>
-                                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                                    <StackPanel>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="Введите БИН для загрузки информации из Эквейжена" Margin="5,0"/>
-                                            <TextBox MinWidth="50" Margin="5,0"/>
-                                            <Button x:Name="New" Content="Добавить нового Клиента" Width="200" />
-                                        </StackPanel>
-                                    </StackPanel>
-                                </ScrollViewer>
-                            </Grid>
-                        </TabItem.Content>
-                       
-                    </TabItem>
+
                     <TabItem Header="Информация о Клиенте"  >
                         <TabItem.Content>
                             <Grid ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Auto">
                                 <StackPanel >
-
                                     <GroupBox Header="Информация о Клиенте" Margin="10,0">
                                         <StackPanel >
                                             <StackPanel Orientation="Horizontal" Margin="5">
                                                 <TextBlock Text="Полное наименование Клиента:" Width="200"/>
-                                                <TextBox  Width="300" IsReadOnly="True"/>
+                                                <TextBox Text="{Binding CurrentBank.FullName}" Width="300" IsReadOnly="True"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="5">
                                                 <TextBlock Text="Страна регистрации:" Width="200"/>
-                                                <TextBox Width="300" IsReadOnly="True"/>
+                                                <TextBox Text="{Binding CurrentBank.Country}" Width="300" IsReadOnly="True"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="5">
                                                 <TextBlock Text="Дата актуализации:" Width="200"/>
-                                                <DatePicker Width="150" IsEnabled="False"/>
+                                                <DatePicker Text="{Binding DataAct}" Width="150" IsEnabled="False"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="5">
                                                 <TextBlock Text="Другие БИНы Клиента:" Width="200"/>
-                                                <TextBox Width="300" IsReadOnly="True"/>
+                                                <TextBox Text="{Binding CurrentBank.AdditionalBIN}" Width="300" IsReadOnly="True"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="5">
                                                 <TextBlock Text="Клиентский менеджер:" Width="200"/>
-                                                <TextBox x:Name="TextClientMenedger" Width="300" IsEnabled="False"/>
+                                                <TextBox Text="{Binding ClientManagers}" x:Name="TextClientMenedger" Width="300" IsEnabled="False"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="5">
                                                 <TextBlock Text="Уровень риска:" Width="200"/>
-                                                <ComboBox Width="300" IsReadOnly="True"/>
+                                                <TextBox Text="{Binding Criteria}" Width="300" IsEnabled="False"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="5">
                                                 <TextBlock Text="Дата пересмотра:" Width="200"/>
-                                                <DatePicker Width="150" IsEnabled="False"/>
+                                                <DatePicker Text="{Binding DateNext}" Width="150" IsEnabled="False"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="5">
                                                 <TextBlock Text="Выявленные критерии риска:" Width="200"/>
-                                                <TextBox Width="300"/>
+                                                <ComboBox Text="{Binding Criterias}" Width="300" IsEnabled="False"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="5">
                                                 <TextBlock Text="Действующие договора:" Width="200"/>
-                                                <TextBox Width="300" IsReadOnly="True"/>
+                                                <TextBox Text="{Binding Contract}" Width="300" IsReadOnly="True"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="5">
                                                 <TextBlock Text="Наличие карточки с ОП:" Width="200"/>
-                                                <TextBox Width="300" IsReadOnly="True"/>
+                                                <TextBox Text="{Binding CardKOP}" Width="300" IsReadOnly="True"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="5">
                                                 <TextBlock Text="Счета в валюте:" Width="200"/>
-                                                <TextBox Width="300" IsReadOnly="True"/>
+                                                <TextBox Text="{Binding AccountNumbers}" Width="300" IsReadOnly="True"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="5">
                                                 <TextBlock Text="Контакты:" Width="200"/>
-                                                <TextBox x:Name="TextContact" Width="300" IsEnabled="False"/>
+                                                <TextBox  x:Name="TextContact" Text="{Binding Contact}"  Width="300" IsEnabled="False"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="5">
                                                 <TextBlock Text="Запросы:" Width="200"/>
                                                 <DataGrid>
                                                     <DataGrid.Columns>
-                                                        <DataGridTextColumn Header="Дата направления" MinWidth="90" />
+                                                        <DataGridTextColumn Header="Дата направления" MinWidth="90"  />
                                                         <DataGridTextColumn Header="Дата получения"  MinWidth="90" />
                                                         <DataGridTextColumn Header="Комментарий" MinWidth="90" />
                                                     </DataGrid.Columns>
@@ -125,7 +120,23 @@
                                 </StackPanel>
                             </Grid>
                         </TabItem.Content>
-                        
+
+                    </TabItem>
+                    <TabItem x:Name="TabClient"  Header="Добавить Клиента"  >
+                        <TabItem.Content>
+                            <Grid>
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="Введите БИН для загрузки информации из Эквейжена" Margin="5,0"/>
+                                            <TextBox MinWidth="50" Margin="5,0"/>
+                                            <Button x:Name="New" Content="Добавить нового Клиента" Width="200" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Grid>
+                        </TabItem.Content>
+
                     </TabItem>
                 </TabControl>
             </ContentControl>
