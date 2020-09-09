@@ -10,9 +10,6 @@ namespace ContragentAnalyse.Model.Entities
         public int Status_Id { get; set; }
         public DateTime DateEKS{ get; set; }
         public DateTime DateActEKS { get; set; }
-        public DateTime? DateRequest { get; set; }
-        public DateTime? RecieveDate { get; set; }
-        public string Comment { get; set; } 
         public int Type_Agreement_Id { get; set; }
         [ForeignKey(nameof(Bank_Id))]
         public virtual Bank Bank { get; set; }

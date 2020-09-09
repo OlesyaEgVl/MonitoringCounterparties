@@ -23,10 +23,12 @@ namespace ContragentAnalyse.Model.Implementation
             Include(i=>i.TypeClient).
             Include(i=>i.Bank.Actualizations).
             Include(i => i.Bank.PrescoringScoring).
+            Include("Bank.PrescoringScoring.CriteriaToScoring").
             Include(i => i.Bank.Client).
             Include(i=>i.Bank.Contracts).
             Include(i => i.Bank.RestrictedAccounts).
             Include(i => i.Bank.Contacts).
+            Include(i=>i.Requests).
             Where(i => i.Bank.BIN.ToLower().Equals(BIN.ToLower())).ToList();
 
         //.
@@ -38,24 +40,6 @@ namespace ContragentAnalyse.Model.Implementation
             return DateAct;
         }
 
-        public DateTime? GetDateDirection()
-        {
-            Actualization direction = _dbContext.Actualization.Include("Bank").FirstOrDefault(i => i.Id == 0); // Как соеденить таблицы и взять поле. которое нужно
-            DateTime? DateAc = direction.DateRequest;
-            return DateAc;
-        }
-        public DateTime? GetDateReceive()
-        {
-            Actualization receivedKit = _dbContext.Actualization.Include("Bank").FirstOrDefault(i => i.Id == 0); // Как соеденить таблицы и взять поле. которое нужно
-            DateTime? DateReceivedKit = receivedKit.RecieveDate;
-            return DateReceivedKit;
-        }
-        public string GetComments()
-        {
-            Actualization comm = _dbContext.Actualization.Include("Bank").FirstOrDefault(i => i.Id == 0); // Как соеденить таблицы и взять поле. которое нужно
-            string Comment = comm.Comment;
-            return Comment;
-        }
         public DateTime? GetDateNextScoring()
         {
             PrescoringScoring nextdate = _dbContext.PrescoringScoring.Include("Bank").FirstOrDefault(i => i.Id == 0); // Как соеденить таблицы и взять поле. которое нужно
@@ -113,5 +97,9 @@ namespace ContragentAnalyse.Model.Implementation
             return AccountNumbers;
         }
 
+        public void Commit()
+        {
+            _dbContext.SaveChanges();
+        }
     }
 }

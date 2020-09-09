@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+  xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:local="clr-namespace:ContragentAnalyse.Controls"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" x:Class="ContragentAnalyse.Controls.Anceta"
              mc:Ignorable="d" DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
@@ -75,7 +76,7 @@
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="5">
                                                 <TextBlock Text="Выявленные критерии риска:" Width="200"/>
-                                                <ComboBox Text="{Binding Criterias}" Width="300" IsEnabled="False"/>
+                                                <ComboBox ItemsSource="{Binding CurrentBank.PrescoringScoring}" Width="300" IsEnabled="False"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="5">
                                                 <TextBlock Text="Действующие договора:" Width="200"/>
@@ -95,15 +96,15 @@
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="5">
                                                 <TextBlock Text="Запросы:" Width="200"/>
-                                                <DataGrid>
+                                                <DataGrid ItemsSource="{Binding SelectedClient.Requests}" AutoGenerateColumns="False" >
+                                                    <!--<i:EventTrigger EventName="LostFocus">
+                                                        <i:InvokeCommandAction Command="{Binding CommitChanges}"/>
+                                                    </i:EventTrigger>-->
                                                     <DataGrid.Columns>
-                                                        <DataGridTextColumn Header="Дата направления" MinWidth="90"  />
-                                                        <DataGridTextColumn Header="Дата получения"  MinWidth="90" />
-                                                        <DataGridTextColumn Header="Комментарий" MinWidth="90" />
+                                                        <DataGridTextColumn Header="Дата направления" MinWidth="90" Binding="{Binding SendDate}" />
+                                                        <DataGridTextColumn Header="Дата получения"  MinWidth="90" Binding="{Binding RecieveDate}" />
+                                                        <DataGridTextColumn Header="Комментарий" MinWidth="90" Binding="{Binding Comment}"/>
                                                     </DataGrid.Columns>
-                                                    <DataTemplate>
-                                                        <TextBlock Text="" MinHeight="30"/>
-                                                    </DataTemplate>
                                                 </DataGrid>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="5">

@@ -9,9 +9,6 @@ namespace ContragentAnalyse.Model.Interfaces
     {
         Bank GetBank(string BIN);
         DateTime GetDateActual();
-        DateTime? GetDateDirection();
-        DateTime? GetDateReceive();
-        string GetComments();
         DateTime? GetDateNextScoring();
         string GetLevelRisk();
         string GetClientManager();
@@ -22,6 +19,6 @@ namespace ContragentAnalyse.Model.Interfaces
         string GetContacts();
 
         List<Client> GetClients(string BIN);
-
+        void Commit();
     }
 }

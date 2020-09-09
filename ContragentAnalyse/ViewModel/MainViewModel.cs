@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using ContragentAnalyse.Model.Entities;
@@ -50,6 +52,7 @@ namespace ContragentAnalyse.ViewModel
                 _selectedClient = value;
                 CurrentBank = _selectedClient.Bank;
                 OnPropertyChanged(nameof(CurrentBank));
+                OnPropertyChanged(nameof(SelectedClient));
             }
         }
 
@@ -66,6 +69,7 @@ namespace ContragentAnalyse.ViewModel
         public string AccountNumbers { get; set; }
         public bool? CardKOP { get; set; }
         public string Contact { get; set; }
+        
         #endregion
 
         #region Commands
@@ -78,6 +82,7 @@ namespace ContragentAnalyse.ViewModel
         public Count Count { get; set; }
         public UnloadHistory UnloadHistory { get; set; }
         public UnloadExcel UnloadExcel { get; set; }
+        public CommitChanges CommitChanges { get; set; }
         #endregion
 
         #region CurrentData
@@ -105,6 +110,7 @@ namespace ContragentAnalyse.ViewModel
             Count = new Count();
             UnloadHistory = new UnloadHistory();
             UnloadExcel = new UnloadExcel();
+            CommitChanges = new CommitChanges(CommitMethod);
         }
 
         private void SearchMethod()
@@ -123,12 +129,6 @@ namespace ContragentAnalyse.ViewModel
             }
             DataAct = _foundClients[0].Bank.Actualizations.OrderBy(i => i.DateActEKS).FirstOrDefault().DateActEKS;
             OnPropertyChanged(nameof(DataAct));
-            DateRequests = _foundClients[0].Bank.Actualizations.OrderBy(i => i.DateRequest).FirstOrDefault().DateRequest;
-            OnPropertyChanged(nameof(DateRequests));
-            DateReceivedKit= _foundClients[0].Bank.Actualizations.OrderBy(i => i.DateRequest).FirstOrDefault().DateRequest;
-            OnPropertyChanged(nameof(DateReceivedKit));
-            Comments = _foundClients[0].Bank.Actualizations.OrderBy(i => i.Comment).FirstOrDefault().Comment;
-            OnPropertyChanged(nameof(Comments));
             DateNext = _foundClients[0].Bank.PrescoringScoring.OrderBy(i => i.DateNextScoring).FirstOrDefault().DateNextScoring;
             OnPropertyChanged(nameof(DateNext));
             ClientManagers = _foundClients[0].Bank.Client.OrderBy(i => i.ClientManager).FirstOrDefault().ClientManager;
@@ -138,12 +138,18 @@ namespace ContragentAnalyse.ViewModel
             //Criterias = _foundClients[0].Bank.PrescoringScoring.OrderBy(i => i.CriteriaToScoring.).FirstOrDefault().CriteriaToScoring;
             // OnPropertyChanged(nameof(Criterias));// Мб тут по другому? Критериев же много
             Contract  = _foundClients[0].Bank.Contracts.OrderBy(i => i.Name).FirstOrDefault().Name;
-            OnPropertyChanged(nameof(Contract));
             AccountNumbers = _foundClients[0].Bank.RestrictedAccounts.OrderBy(i => i.AccountNumber).FirstOrDefault().AccountNumber;
-            OnPropertyChanged(nameof(AccountNumbers));
             Contact = _foundClients[0].Bank.Contacts.OrderBy(i => i.ContactFIO).FirstOrDefault().ContactFIO;
             Contact += " "+_foundClients[0].Bank.Contacts.OrderBy(i => i.Value).FirstOrDefault().Value;
+            OnPropertyChanged(nameof(Contract));
+            OnPropertyChanged(nameof(AccountNumbers));
             OnPropertyChanged(nameof(Contact));
+            
+        }
+
+        private void CommitMethod()
+        {
+            _dbProvider.Commit();
         }
     }
 }
