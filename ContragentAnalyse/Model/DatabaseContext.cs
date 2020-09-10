@@ -24,6 +24,7 @@ namespace ContragentAnalyse.Model
             modelBuilder.Entity<Bank>().HasMany(i => i.Contacts).WithOne(i => i.Bank);
             modelBuilder.Entity<PrescoringScoring>().HasMany(i => i.CriteriaToScoring).WithOne(i => i.PrescoringScoring);
             modelBuilder.Entity<Criteria>().HasMany(i => i.CriteriaToScoring).WithOne(i => i.Criteria);
+            modelBuilder.Entity<Client>().HasMany(i => i.Requests).WithOne(i => i.Client);
         }
 
         public DbSet<AccountStates> AccountStates { get; set; }

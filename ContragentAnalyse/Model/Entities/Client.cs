@@ -1,5 +1,6 @@
 ﻿using ContragentAnalyse.Model.Entities.Base;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ContragentAnalyse.Model.Entities
@@ -22,5 +23,7 @@ namespace ContragentAnalyse.Model.Entities
         public virtual TypeClient TypeClient { get; set; }
         [ForeignKey(nameof(CoordinatingEmployee_Id))]
         public virtual Employees Employees { get; set; }
+        private List<Request> requests = new List<Request>();
+        public List<Request> Requests { get => requests; set => requests = value; }
     }
 }

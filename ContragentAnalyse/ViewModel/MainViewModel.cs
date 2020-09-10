@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using ContragentAnalyse.Model.Entities;
@@ -50,11 +52,11 @@ namespace ContragentAnalyse.ViewModel
                 _selectedClient = value;
                 CurrentBank = _selectedClient.Bank;
                 OnPropertyChanged(nameof(CurrentBank));
+                OnPropertyChanged(nameof(SelectedClient));
             }
         }
 
         public Bank CurrentBank { get; set; }
-       
         public DateTime DataAct { get; set; }
         public DateTime? DateReceivedKit { get; set; }
         public DateTime? DateRequests { get; set; }
@@ -78,6 +80,7 @@ namespace ContragentAnalyse.ViewModel
         public Count Count { get; set; }
         public UnloadHistory UnloadHistory { get; set; }
         public UnloadExcel UnloadExcel { get; set; }
+        public CommitChanges CommitChanges { get; set; }
         #endregion
 
         #region CurrentData
@@ -90,10 +93,10 @@ namespace ContragentAnalyse.ViewModel
             //InitializeData();
         }
 
-       /* private void InitializeData()
-        {
-         
-        }*/
+        /* private void InitializeData()
+         {
+
+         }*/
 
         private void InitializeCommands()
         {
@@ -105,6 +108,7 @@ namespace ContragentAnalyse.ViewModel
             Count = new Count();
             UnloadHistory = new UnloadHistory();
             UnloadExcel = new UnloadExcel();
+            CommitChanges = new CommitChanges(CommitMethod);
         }
 
         private void SearchMethod()
@@ -123,12 +127,6 @@ namespace ContragentAnalyse.ViewModel
             }
             DataAct = _foundClients[0].Bank.Actualizations.OrderBy(i => i.DateActEKS).FirstOrDefault().DateActEKS;
             OnPropertyChanged(nameof(DataAct));
-            DateRequests = _foundClients[0].Bank.Actualizations.OrderBy(i => i.DateRequest).FirstOrDefault().DateRequest;
-            OnPropertyChanged(nameof(DateRequests));
-            DateReceivedKit= _foundClients[0].Bank.Actualizations.OrderBy(i => i.DateRequest).FirstOrDefault().DateRequest;
-            OnPropertyChanged(nameof(DateReceivedKit));
-            Comments = _foundClients[0].Bank.Actualizations.OrderBy(i => i.Comment).FirstOrDefault().Comment;
-            OnPropertyChanged(nameof(Comments));
             DateNext = _foundClients[0].Bank.PrescoringScoring.OrderBy(i => i.DateNextScoring).FirstOrDefault().DateNextScoring;
             OnPropertyChanged(nameof(DateNext));
             ClientManagers = _foundClients[0].Bank.Client.OrderBy(i => i.ClientManager).FirstOrDefault().ClientManager;
@@ -144,6 +142,10 @@ namespace ContragentAnalyse.ViewModel
             Contact = _foundClients[0].Bank.Contacts.OrderBy(i => i.ContactFIO).FirstOrDefault().ContactFIO;
             Contact += " "+_foundClients[0].Bank.Contacts.OrderBy(i => i.Value).FirstOrDefault().Value;
             OnPropertyChanged(nameof(Contact));
+        }
+        private void CommitMethod()
+        {
+            _dbProvider.Commit();
         }
     }
 }

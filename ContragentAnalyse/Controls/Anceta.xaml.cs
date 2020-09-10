@@ -32,8 +32,8 @@ namespace ContragentAnalyse.Controls
             buttonCorr.Background = Brushes.DarkGray;
             buttonWord.Background = Brushes.LightGray;
             buttonSave.Background = Brushes.LightGray;
-            TextClientMenedger.IsEnabled = true;
-            TextContact.IsEnabled = true;
+            TextClientMenedger.IsReadOnly = false;
+            TextContact.IsReadOnly = false;
             CheckBox1.IsEnabled = true;
         }
 
@@ -42,8 +42,8 @@ namespace ContragentAnalyse.Controls
             buttonCorr.Background = Brushes.LightGray;
             buttonWord.Background = Brushes.LightGray;
             buttonSave.Background = Brushes.DarkGray;
-            TextClientMenedger.IsEnabled = false;
-            TextContact.IsEnabled = false;
+            TextClientMenedger.IsReadOnly = true;
+            TextContact.IsReadOnly = true;
             CheckBox1.IsEnabled = false;
         }
 
