@@ -68,6 +68,7 @@ namespace ContragentAnalyse.ViewModel
         public string AccountNumbers { get; set; }
         public bool? CardKOP { get; set; }
         public string Contact { get; set; }
+        
         #endregion
 
         #region Commands
@@ -136,12 +137,18 @@ namespace ContragentAnalyse.ViewModel
             //Criterias = _foundClients[0].Bank.PrescoringScoring.OrderBy(i => i.CriteriaToScoring.).FirstOrDefault().CriteriaToScoring;
             // OnPropertyChanged(nameof(Criterias));// Мб тут по другому? Критериев же много
             Contract  = _foundClients[0].Bank.Contracts.OrderBy(i => i.Name).FirstOrDefault().Name;
-            OnPropertyChanged(nameof(Contract));
             AccountNumbers = _foundClients[0].Bank.RestrictedAccounts.OrderBy(i => i.AccountNumber).FirstOrDefault().AccountNumber;
-            OnPropertyChanged(nameof(AccountNumbers));
             Contact = _foundClients[0].Bank.Contacts.OrderBy(i => i.ContactFIO).FirstOrDefault().ContactFIO;
             Contact += " "+_foundClients[0].Bank.Contacts.OrderBy(i => i.Value).FirstOrDefault().Value;
+            OnPropertyChanged(nameof(Contract));
+            OnPropertyChanged(nameof(AccountNumbers));
             OnPropertyChanged(nameof(Contact));
+            
+        }
+
+        private void CommitMethod()
+        {
+            _dbProvider.Commit();
         }
         private void CommitMethod()
         {
