@@ -150,9 +150,6 @@ namespace ContragentAnalyse.ViewModel
         {
             _dbProvider.Commit();
         }
-        private void CommitMethod()
-        {
-            _dbProvider.Commit();
-        }
+      
     }
 }

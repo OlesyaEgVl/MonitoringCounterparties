@@ -34,6 +34,9 @@ namespace ContragentAnalyse.Controls
             buttonSave.Background = Brushes.LightGray;
             TextClientMenedger.IsReadOnly = false;
             TextContact.IsReadOnly = false;
+            Table1.IsReadOnly = false;
+            Table2.IsReadOnly = false;
+            Table3.IsReadOnly = false;
             CheckBox1.IsEnabled = true;
         }
 
@@ -44,6 +47,9 @@ namespace ContragentAnalyse.Controls
             buttonSave.Background = Brushes.DarkGray;
             TextClientMenedger.IsReadOnly = true;
             TextContact.IsReadOnly = true;
+            Table1.IsReadOnly = true;
+            Table2.IsReadOnly = true;
+            Table3.IsReadOnly = true;
             CheckBox1.IsEnabled = false;
         }
 
