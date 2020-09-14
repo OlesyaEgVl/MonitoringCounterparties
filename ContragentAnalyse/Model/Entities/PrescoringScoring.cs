@@ -19,7 +19,5 @@ namespace ContragentAnalyse.Model.Entities
         [ForeignKey(nameof(ScoringType_Id))]
         public virtual ScoringType ScoringType { get; set; }
         public List <CriteriaToScoring> CriteriaToScoring { get; set; }
-
-
     }
 }

@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Windows;
 using System.Windows.Input;
 
 namespace ContragentAnalyse.ViewModel.Commands
 {
-    public class Word : ICommand
+    public class MyCommand<T> : ICommand
     {
         public event EventHandler CanExecuteChanged;
+        private Action<T> Action { get; set; }
+        public MyCommand(Action<T> action)
+        {
+            Action = action;
+        }
 
         public bool CanExecute(object parameter)
         {
@@ -17,9 +21,10 @@ namespace ContragentAnalyse.ViewModel.Commands
 
         public void Execute(object parameter)
         {
-            MessageBox.Show($"Скачать Word");
+            if (parameter is T && parameter != null)
+            {
+                Action?.Invoke((T)parameter);
+            }
         }
-
-
     }
 }

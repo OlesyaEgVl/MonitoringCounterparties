@@ -50,9 +50,12 @@ namespace ContragentAnalyse.ViewModel
             set
             {
                 _selectedClient = value;
-                CurrentBank = _selectedClient.Bank;
-                OnPropertyChanged(nameof(CurrentBank));
-                OnPropertyChanged(nameof(SelectedClient));
+                if (_selectedClient != null)
+                {
+                    CurrentBank = _selectedClient.Bank;
+                    OnPropertyChanged(nameof(CurrentBank));
+                    OnPropertyChanged(nameof(SelectedClient));
+                }
             }
         }
 
@@ -72,16 +75,15 @@ namespace ContragentAnalyse.ViewModel
         #endregion
 
         #region Commands
-        public SearchCommand SearchCommand { get; set; }
-        public AddNewClient AddNewClient { get; set; }
-
-        public Editing Editing { get; set; }
-        public SaveChanges SaveChanges { get; set; }
-        public Word Word { get; set; }
-        public Count Count { get; set; }
-        public UnloadHistory UnloadHistory { get; set; }
-        public UnloadExcel UnloadExcel { get; set; }
-        public CommitChanges CommitChanges { get; set; }
+        public MyCommand SearchCommand { get; set; }
+        public MyCommand AddNewClient { get; set; }
+        public MyCommand Editing { get; set; }
+        public MyCommand SaveChanges { get; set; }
+        public MyCommand Word { get; set; }
+        public MyCommand Count { get; set; }
+        public MyCommand UnloadHistory { get; set; }
+        public MyCommand UnloadExcel { get; set; }
+        public MyCommand CommitChanges { get; set; }
         #endregion
 
         #region CurrentData
@@ -98,18 +100,20 @@ namespace ContragentAnalyse.ViewModel
          {
 
          }*/
+        
 
         private void InitializeCommands()
         {
-            SearchCommand = new SearchCommand(SearchMethod);
-            AddNewClient = new AddNewClient();
-            Editing = new Editing();
-            SaveChanges = new SaveChanges();
-            Word = new Word();
-            Count = new Count();
-            UnloadHistory = new UnloadHistory();
-            UnloadExcel = new UnloadExcel();
-            CommitChanges = new CommitChanges(CommitMethod);
+            SearchCommand = new MyCommand(SearchMethod);
+            //TODO подставить реализацию команд
+            AddNewClient = new MyCommand(()=> MessageBox.Show($"Добавить нового клиента"));
+            Editing = new MyCommand(() => MessageBox.Show($"Редактировать"));
+            SaveChanges = new MyCommand(()=>MessageBox.Show($"Сохранить изменения"));
+            Word = new MyCommand(()=> MessageBox.Show($"Скачать Word"));
+            Count = new MyCommand(()=> MessageBox.Show($"Посчитать"));
+            UnloadHistory = new MyCommand(()=> MessageBox.Show($"Сохранить историю"));
+            UnloadExcel = new MyCommand(()=> MessageBox.Show($"Exel"));
+            CommitChanges = new MyCommand(CommitMethod);
         }
 
         private void SearchMethod()
@@ -126,8 +130,8 @@ namespace ContragentAnalyse.ViewModel
             if(!string.IsNullOrWhiteSpace(SearchName))
             {
                 FoundClients.Clear();
-               
-                foreach (Client client in _dbProvider.GetClientsName(SearchName))
+                List<Client> banks = _dbProvider.GetClientsName(SearchName).ToList();
+                foreach (Client client in banks)
                 {
                     FoundClients.Add(client);
                 }
