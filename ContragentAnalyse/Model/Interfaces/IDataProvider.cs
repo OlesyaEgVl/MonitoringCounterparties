@@ -17,9 +17,8 @@ namespace ContragentAnalyse.Model.Interfaces
         bool? GetCardOP();
         string GetAccountNumber();
         string GetContacts();
-
-        List<Client> GetClients(string BIN);
+        IEnumerable<Client> GetClients(string BIN);
+        IEnumerable<Client> GetClientsName(string Name);
         void Commit();
-        List<Client> GetClientsName(string Name);
     }
 }

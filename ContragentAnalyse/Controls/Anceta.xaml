@@ -82,24 +82,15 @@
                                     </GroupBox>
                                     </StackPanel>
                                 <GroupBox Header="Информация о Клиенте 2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="630,0,0,0" >
-                                    <StackPanel >
-                                        <StackPanel Orientation="Horizontal" Margin="5">
-                                            <TextBlock Text="Комплаенс-менеджер:" Width="200"/>
+                                    <StackPanel HorizontalAlignment="Left">
+                                            <TextBlock Text="Комплаенс-менеджер:" Width="200" HorizontalAlignment="Left"/>
                                             <TextBox Text="{Binding ClientManagers}" x:Name="TextClientMenedger" Width="300" IsReadOnly="True"/>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal" Margin="5">
-                                            <TextBlock Text="Уровень риска:" Width="200"/>
+                                            <TextBlock Text="Уровень риска:" Width="200" HorizontalAlignment="Left"/>
                                             <TextBox Text="{Binding Criteria}" Width="300" IsReadOnly="True"/>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal" Margin="5">
-                                            <TextBlock Text="Дата пересмотра риска:" Width="200"/>
-                                            <DatePicker Text="{Binding DateNext}" Width="150" IsEnabled="False"/>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal" Margin="5">
+                                        <TextBlock Text="Дата пересмотра риска:" Width="200" HorizontalAlignment="Left"/>
+                                        <DatePicker Text="{Binding DateNext}" Width="150" IsEnabled="False" HorizontalAlignment="Left"/>
                                             <TextBlock Text="Выявленные критерии риска:" Width="200"/>
-                                            <ComboBox ItemsSource="{Binding CurrentBank.PrescoringScoring}" Width="300"/>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal" Margin="5">
+                                        <ComboBox ItemsSource="{Binding CurrentBank.PrescoringScoring}" DisplayMemberPath="ScoringType_Id" Width="300"/>
                                             <TextBlock Text="Запросы:" Width="200"/>
                                             <DataGrid ItemsSource="{Binding SelectedClient.Requests}" AutoGenerateColumns="False" >
                                                 <!--<i:EventTrigger EventName="LostFocus">
@@ -111,16 +102,11 @@
                                                     <DataGridTextColumn x:Name="Table3" Header="Комментарий" MinWidth="90" Binding="{Binding Comment}" IsReadOnly="True"/>
                                                 </DataGrid.Columns>
                                             </DataGrid>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal" Margin="5">
                                             <TextBlock Text="Контакты:" Width="200"/>
                                             <TextBox  x:Name="TextContact" Text="{Binding Contact}"  Width="300" IsReadOnly="True"/>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Vertical" Margin="5" HorizontalAlignment="Right">
                                             <Button x:Name="buttonCorr" Width="150" Height="25" Content="Редактировать" Click="Corr"/>
                                             <Button x:Name="buttonSave" Width="150" Height="25" Content="Сохранить изменения" Click="Save"/>
                                             <Button x:Name="buttonWord" Width="150" Height="25" Content="Выгрузить в Word" Click="Word"/>
-                                        </StackPanel>
                                     </StackPanel>
                                 </GroupBox>
                             </Grid>

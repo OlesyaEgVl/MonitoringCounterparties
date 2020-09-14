@@ -2,6 +2,7 @@
 {
     public class Locator
     {
+
         public MainViewModel Main
         {
             get

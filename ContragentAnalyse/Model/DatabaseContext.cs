@@ -8,10 +8,16 @@ namespace ContragentAnalyse.Model
 {
     public class DatabaseContext : DbContext
     {
-        
+
+#if !DevAtHome
+        private const string CONNECTION_STRING = "Server=A105512\\A105512;Database=CounterpartyMonitoring;Integrated Security=false;Trusted_Connection=True;MultipleActiveResultSets=True;User Id = CounterPartyMonitoring_user; Password = orppaAdmin123!";
+#else
+        private const string CONNECTION_STRING = @"Server=IlyaHome\MyDB;Database=CounterpartyMonitoring;Integrated Security=true;Trusted_Connection=True;MultipleActiveResultSets=True;";
+#endif
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=A105512\\A105512;Database=CounterpartyMonitoring;Trusted_Connection=True;MultipleActiveResultSets=True;User Id=  CounterPartyMonitoring_user; Password = orppaAdmin123!");
+            
+            optionsBuilder.UseSqlServer(CONNECTION_STRING);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) 
@@ -25,6 +31,11 @@ namespace ContragentAnalyse.Model
             modelBuilder.Entity<PrescoringScoring>().HasMany(i => i.CriteriaToScoring).WithOne(i => i.PrescoringScoring);
             modelBuilder.Entity<Criteria>().HasMany(i => i.CriteriaToScoring).WithOne(i => i.Criteria);
             modelBuilder.Entity<Client>().HasMany(i => i.Requests).WithOne(i => i.Client);
+        }
+
+        public DatabaseContext() : base()
+        {
+            Database.EnsureCreated();
         }
 
         public DbSet<AccountStates> AccountStates { get; set; }

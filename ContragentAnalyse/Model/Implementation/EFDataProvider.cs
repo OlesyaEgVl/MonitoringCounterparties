@@ -18,30 +18,35 @@ namespace ContragentAnalyse.Model.Implementation
 
         public Bank GetBank(string BIN) => _dbContext.Banks.FirstOrDefault(i => i.BIN.ToLower().Equals(BIN.ToLower()));
 
-        public List<Client> GetClients(string BIN) => _dbContext.Client.
+        public IEnumerable<Client> GetClients(string BIN) => _dbContext.Client.
             Include(i=>i.Bank).
             Include(i=>i.TypeClient).
             Include(i=>i.Bank.Actualizations).
             Include(i => i.Bank.PrescoringScoring).
-            Include("Bank.PrescoringScoring.CriteriaToScoring").
+            Include(i => i.Bank).
+                ThenInclude(i => i.PrescoringScoring).
+                ThenInclude(i => i.CriteriaToScoring).
             Include(i => i.Bank.Client).
             Include(i=>i.Bank.Contracts).
             Include(i => i.Bank.RestrictedAccounts).
             Include(i => i.Bank.Contacts).
             Include(i=>i.Requests).
-            Where(i => i.Bank.BIN.ToLower().Equals(BIN.ToLower())).ToList();
-        public List<Client> GetClientsName(string Name) => _dbContext.Client.
+            Where(i => i.Bank.BIN.ToLower().Equals(BIN.ToLower()));
+
+        public IEnumerable<Client> GetClientsName(string Name) => _dbContext.Client.
             Include(i => i.Bank).
             Include(i => i.TypeClient).
             Include(i => i.Bank.Actualizations).
             Include(i => i.Bank.PrescoringScoring).
-            Include("Bank.PrescoringScoring.CriteriaToScoring").
+            Include(i=> i.Bank).
+                ThenInclude(i=>i.PrescoringScoring).
+                ThenInclude(i=>i.CriteriaToScoring).
             Include(i => i.Bank.Client).
             Include(i => i.Bank.Contracts).
             Include(i => i.Bank.RestrictedAccounts).
             Include(i => i.Bank.Contacts).
             Include(i => i.Requests).
-            Where(i => i.Bank.Name.ToLower().IndexOf(Name.ToLower()) > -1).ToList();
+            Where(i => i.Bank.Name.ToLower().IndexOf(Name.ToLower()) > -1);
         
         public DateTime GetDateActual()
         {
@@ -106,7 +111,6 @@ namespace ContragentAnalyse.Model.Implementation
             string AccountNumbers = AccountNumber.ContactFIO;
             return AccountNumbers;
         }
-
         public void Commit()
         {
             _dbContext.SaveChanges();

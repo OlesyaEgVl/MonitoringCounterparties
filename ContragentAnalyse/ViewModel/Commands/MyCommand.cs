@@ -5,14 +5,15 @@ using System.Windows.Input;
 
 namespace ContragentAnalyse.ViewModel.Commands
 {
-    public class CommitChanges : ICommand
+    public class MyCommand : ICommand
     {
         public event EventHandler CanExecuteChanged;
-        Action _action;
-        public CommitChanges(Action action)
+        private Action Action { get; set; }
+        public MyCommand(Action action)
         {
-            _action = action;
+            Action = action;
         }
+
         public bool CanExecute(object parameter)
         {
             return true;
@@ -20,7 +21,7 @@ namespace ContragentAnalyse.ViewModel.Commands
 
         public void Execute(object parameter)
         {
-            _action?.Invoke();
+            Action?.Invoke();
         }
     }
 }
