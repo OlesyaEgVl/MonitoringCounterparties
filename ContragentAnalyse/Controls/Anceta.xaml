@@ -46,7 +46,7 @@
                                         <StackPanel >
                                             <StackPanel Orientation="Horizontal" Margin="5">
                                                 <TextBlock Text="Полное наименование Клиента:" Width="200"/>
-                                                <TextBox Text="{Binding CurrentBank.FullName}" Width="300" MaxWidth="500" IsReadOnly="True"/>
+                                                <TextBox Text="{Binding CurrentBank.FullName}" MinWidth="300" MaxWidth="400" IsReadOnly="True"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="5">
                                                 <TextBlock Text="Страна регистрации:" Width="200"/>
@@ -81,7 +81,7 @@
                                         </StackPanel>
                                     </GroupBox>
                                     </StackPanel>
-                                <GroupBox Header="Информация о Клиенте 2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="700,0,0,0" >
+                                <GroupBox Header="Информация о Клиенте 2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="630,0,0,0" >
                                     <StackPanel >
                                         <StackPanel Orientation="Horizontal" Margin="5">
                                             <TextBlock Text="Комплаенс-менеджер:" Width="200"/>

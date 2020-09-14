@@ -20,5 +20,6 @@ namespace ContragentAnalyse.Model.Interfaces
 
         List<Client> GetClients(string BIN);
         void Commit();
+        List<Client> GetClientsName(string Name);
     }
 }

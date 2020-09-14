@@ -123,8 +123,19 @@ namespace ContragentAnalyse.ViewModel
                 }
             }
             else
+            if(!string.IsNullOrWhiteSpace(SearchName))
             {
-                MessageBox.Show("Поле БИН не может быть пустым!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                FoundClients.Clear();
+               
+                foreach (Client client in _dbProvider.GetClientsName(SearchName))
+                {
+                    FoundClients.Add(client);
+                }
+              
+            }
+            else
+            {
+                MessageBox.Show("Поле БИН/Наименование не может быть пустым!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
             DataAct = _foundClients[0].Bank.Actualizations.OrderBy(i => i.DateActEKS).FirstOrDefault().DateActEKS;
             OnPropertyChanged(nameof(DataAct));

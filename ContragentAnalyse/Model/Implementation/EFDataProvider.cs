@@ -30,9 +30,19 @@ namespace ContragentAnalyse.Model.Implementation
             Include(i => i.Bank.Contacts).
             Include(i=>i.Requests).
             Where(i => i.Bank.BIN.ToLower().Equals(BIN.ToLower())).ToList();
-
-        //.
-        //
+        public List<Client> GetClientsName(string Name) => _dbContext.Client.
+            Include(i => i.Bank).
+            Include(i => i.TypeClient).
+            Include(i => i.Bank.Actualizations).
+            Include(i => i.Bank.PrescoringScoring).
+            Include("Bank.PrescoringScoring.CriteriaToScoring").
+            Include(i => i.Bank.Client).
+            Include(i => i.Bank.Contracts).
+            Include(i => i.Bank.RestrictedAccounts).
+            Include(i => i.Bank.Contacts).
+            Include(i => i.Requests).
+            Where(i => i.Bank.Name.ToLower().IndexOf(Name.ToLower()) > -1).ToList();
+        
         public DateTime GetDateActual()
         {
             Actualization actual = _dbContext.Actualization.Include("Bank").FirstOrDefault(i => i.Id == 0); // Как соеденить таблицы и взять поле. которое нужно
