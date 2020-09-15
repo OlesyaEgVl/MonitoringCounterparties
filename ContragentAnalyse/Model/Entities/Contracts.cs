@@ -6,9 +6,9 @@ namespace ContragentAnalyse.Model.Entities
 {
     public class Contracts : NamedEntity
     {
-        public int Bank_Id { get; set; }
-        [ForeignKey(nameof(Bank_Id))]
-        public virtual Bank Bank { get; set; }
+        public int Client_Id { get; set; }
+        [ForeignKey(nameof(Client_Id))]
+        public virtual Client Client { get; set; }
 
     }
 }

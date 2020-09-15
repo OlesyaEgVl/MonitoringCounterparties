@@ -2,12 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace ContragentAnalyse.Model.Entities
 {
-   public class Client : BaseEntity
+   public class Client : NamedEntity
     {
-        public int? Bank_Id { get; set; }
         public string Mnemonic { get; set; }
         public string ClientManager { get; set; }
         public bool? CardOP { get; set; }
@@ -15,8 +15,56 @@ namespace ContragentAnalyse.Model.Entities
         public DateTime BecomeClientDate { get; set; }
         public int ResponsibleUnit_Id { get; set; }
         public int CoordinatingEmployee_Id { get; set; }
-        [ForeignKey(nameof(Bank_Id))]
-        public virtual Bank Bank { get; set; }
+        public string BIN { get; set; }
+        public string AdditionalBIN { get; set; }
+        public string ShortName { get; set; }
+        public string FullName { get; set; }
+        public string EnglName { get; set; }
+        public string Country { get; set; }
+        public string LicenceNumber { get; set; }
+        public DateTime? LicenceEstDate { get; set; }
+        public string RKC_BIK { get; set; }
+        public string INN { get; set; }
+        public string OGRN { get; set; }
+        public DateTime? OGRN_Date { get; set; }
+        public string RegName_RP { get; set; }
+        public DateTime? RegDate_RP { get; set; }
+        public string RegStruct_Name { get; set; }
+        public bool? CurrencyLicence { get; set; }
+        public string RegistrationRegion { get; set; }
+        public string AddressPrime { get; set; }
+        public string Level
+        {
+            get
+            {
+                return "Здесь будет уровень риска";
+            }
+        }
+
+        public DateTime? NextScoringDate
+        {
+            get
+            {
+                return PrescoringScoring.Max(i => i.DateNextScoring);
+            }
+        }
+
+        public List<Criteria> Criterias
+        {
+            get
+            {
+                List<Criteria> exportVal = new List<Criteria>();
+                if (PrescoringScoring == null) return exportVal;
+                foreach(PrescoringScoring ps in PrescoringScoring)
+                {
+                    foreach(CriteriaToScoring cs in ps.CriteriaToScoring)
+                    {
+                        exportVal.Add(cs.Criteria);
+                    }
+                }
+                return exportVal;
+            }
+        }
         [ForeignKey(nameof(ResponsibleUnit_Id))]
         public virtual ResponsibleUnit ResponsibleUnit { get; set; }
         [ForeignKey(nameof(Client_type_Id))]
@@ -25,5 +73,11 @@ namespace ContragentAnalyse.Model.Entities
         public virtual Employees Employees { get; set; }
         private List<Request> requests = new List<Request>();
         public List<Request> Requests { get => requests; set => requests = value; }
+        public List<Actualization> Actualizations { get; set; }
+        public List<PrescoringScoring> PrescoringScoring { get; set; }
+        public List<Contracts> Contracts { get; set; }
+        public List<StopFactors> StopFactors { get; set; }
+        public List<RestrictedAccounts> RestrictedAccounts { get; set; }
+        public List<Contacts> Contacts { get; set; }
     }
 }

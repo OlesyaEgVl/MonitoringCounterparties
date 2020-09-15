@@ -9,10 +9,10 @@ namespace ContragentAnalyse.Model.Entities
         public int ContactType_Id { get; set; }
         public string Value { get; set; }
         public string ContactFIO { get; set; }
-        public int Bank_Id { get; set; }
+        public int Client_Id { get; set; }
 
-        [ForeignKey(nameof(Bank_Id))]
-        public virtual Bank Bank { get; set; }
+        [ForeignKey(nameof(Client_Id))]
+        public virtual Client Client { get; set; }
 
         [ForeignKey(nameof(ContactType_Id))]
         public virtual ContactType ContactType { get; set; }

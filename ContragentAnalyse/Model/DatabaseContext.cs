@@ -12,7 +12,7 @@ namespace ContragentAnalyse.Model
 #if !DevAtHome
         private const string CONNECTION_STRING = "Server=A105512\\A105512;Database=CounterpartyMonitoring;Integrated Security=false;Trusted_Connection=True;MultipleActiveResultSets=True;User Id = CounterPartyMonitoring_user; Password = orppaAdmin123!";
 #else
-        private const string CONNECTION_STRING = @"Server=IlyaHome\MyDB;Database=CounterpartyMonitoring;Integrated Security=true;Trusted_Connection=True;MultipleActiveResultSets=True;";
+        private const string CONNECTION_STRING = @"Server=IlyaHome\MyDB;Database=CounterpartyMonitoringNew;Integrated Security=true;Trusted_Connection=True;MultipleActiveResultSets=True;";
 #endif
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -22,15 +22,15 @@ namespace ContragentAnalyse.Model
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) 
         {
-            modelBuilder.Entity<Bank>().HasMany(i => i.Actualizations).WithOne(i => i.Bank);
-            modelBuilder.Entity<Bank>().HasMany(i => i.PrescoringScoring).WithOne(i => i.Bank);
-            modelBuilder.Entity<Bank>().HasMany(i => i.Client).WithOne(i => i.Bank);
-            modelBuilder.Entity<Bank>().HasMany(i => i.Contracts).WithOne(i => i.Bank);
-            modelBuilder.Entity<Bank>().HasMany(i => i.RestrictedAccounts).WithOne(i => i.Bank);
-            modelBuilder.Entity<Bank>().HasMany(i => i.Contacts).WithOne(i => i.Bank);
+            modelBuilder.Entity<Client>().HasMany(i => i.Actualizations).WithOne(i => i.Client);
+            modelBuilder.Entity<Client>().HasMany(i => i.PrescoringScoring).WithOne(i => i.Client);
+            modelBuilder.Entity<Client>().HasMany(i => i.Contracts).WithOne(i => i.Client);
+            modelBuilder.Entity<Client>().HasMany(i => i.RestrictedAccounts).WithOne(i => i.Client);
+            modelBuilder.Entity<Client>().HasMany(i => i.Contacts).WithOne(i => i.Client);
+            modelBuilder.Entity<Client>().HasMany(i => i.Requests).WithOne(i => i.Client);
+            modelBuilder.Entity<Client>().HasMany(i => i.StopFactors).WithOne(i => i.Client);
             modelBuilder.Entity<PrescoringScoring>().HasMany(i => i.CriteriaToScoring).WithOne(i => i.PrescoringScoring);
             modelBuilder.Entity<Criteria>().HasMany(i => i.CriteriaToScoring).WithOne(i => i.Criteria);
-            modelBuilder.Entity<Client>().HasMany(i => i.Requests).WithOne(i => i.Client);
         }
 
         public DatabaseContext() : base()
@@ -41,7 +41,6 @@ namespace ContragentAnalyse.Model
         public DbSet<AccountStates> AccountStates { get; set; }
         public DbSet<Actualization> Actualization { get; set; }
         public DbSet<BankProduct> BankProduct { get; set; }
-        public DbSet<Bank> Banks { get; set; }
         public DbSet<Client> Client { get; set; }
         public DbSet<Contacts> Contacts { get; set; }
         public DbSet<Contracts> Contracts { get; set; }

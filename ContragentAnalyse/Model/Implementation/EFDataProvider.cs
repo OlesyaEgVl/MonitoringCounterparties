@@ -10,43 +10,33 @@ namespace ContragentAnalyse.Model.Implementation
 {
     public class EFDataProvider : IDataProvider
     {
-        DatabaseContext _dbContext;
+        readonly DatabaseContext _dbContext;
         public EFDataProvider()
         {
             _dbContext = new DatabaseContext();
         }
 
-        public Bank GetBank(string BIN) => _dbContext.Banks.FirstOrDefault(i => i.BIN.ToLower().Equals(BIN.ToLower()));
-
         public IEnumerable<Client> GetClients(string BIN) => _dbContext.Client.
-            Include(i=>i.Bank).
             Include(i=>i.TypeClient).
-            Include(i=>i.Bank.Actualizations).
-            Include(i => i.Bank.PrescoringScoring).
-            Include(i => i.Bank).
-                ThenInclude(i => i.PrescoringScoring).
+            Include(i => i.Actualizations).
+            Include(i => i.PrescoringScoring).
                 ThenInclude(i => i.CriteriaToScoring).
-            Include(i => i.Bank.Client).
-            Include(i=>i.Bank.Contracts).
-            Include(i => i.Bank.RestrictedAccounts).
-            Include(i => i.Bank.Contacts).
+            Include(i=>i.Contracts).
+            Include(i => i.RestrictedAccounts).
+            Include(i => i.Contacts).
             Include(i=>i.Requests).
-            Where(i => i.Bank.BIN.ToLower().Equals(BIN.ToLower()));
+            Where(i => i.BIN.ToLower().Equals(BIN.ToLower()));
 
-        public IEnumerable<Client> GetClientsName(string Name) => _dbContext.Client.
-            Include(i => i.Bank).
+        public IEnumerable<Client> GetClientsByName(string Name) => _dbContext.Client.
             Include(i => i.TypeClient).
-            Include(i => i.Bank.Actualizations).
-            Include(i => i.Bank.PrescoringScoring).
-            Include(i=> i.Bank).
-                ThenInclude(i=>i.PrescoringScoring).
-                ThenInclude(i=>i.CriteriaToScoring).
-            Include(i => i.Bank.Client).
-            Include(i => i.Bank.Contracts).
-            Include(i => i.Bank.RestrictedAccounts).
-            Include(i => i.Bank.Contacts).
+            Include(i => i.Actualizations).
+            Include(i => i.PrescoringScoring).
+                ThenInclude(i => i.CriteriaToScoring).
+            Include(i => i.Contracts).
+            Include(i => i.RestrictedAccounts).
+            Include(i => i.Contacts).
             Include(i => i.Requests).
-            Where(i => i.Bank.Name.ToLower().IndexOf(Name.ToLower()) > -1);
+            Where(i => i.Name.ToLower().IndexOf(Name.ToLower()) > -1);
         
         public DateTime GetDateActual()
         {

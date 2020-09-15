@@ -33,10 +33,9 @@ namespace ContragentAnalyse.Controls
             buttonWord.Background = Brushes.LightGray;
             buttonSave.Background = Brushes.LightGray;
             TextClientMenedger.IsReadOnly = false;
-            TextContact.IsReadOnly = false;
-            Table1.IsReadOnly = false;
-            Table2.IsReadOnly = false;
-            Table3.IsReadOnly = false;
+            SendDateColumn.IsReadOnly = false;
+            RecieveDateColumn.IsReadOnly = false;
+            CommentColumn.IsReadOnly = false;
             CheckBox1.IsEnabled = true;
         }
 
@@ -46,10 +45,9 @@ namespace ContragentAnalyse.Controls
             buttonWord.Background = Brushes.LightGray;
             buttonSave.Background = Brushes.DarkGray;
             TextClientMenedger.IsReadOnly = true;
-            TextContact.IsReadOnly = true;
-            Table1.IsReadOnly = true;
-            Table2.IsReadOnly = true;
-            Table3.IsReadOnly = true;
+            SendDateColumn.IsReadOnly = true;
+            RecieveDateColumn.IsReadOnly = true;
+            CommentColumn.IsReadOnly = true;
             CheckBox1.IsEnabled = false;
         }
 
@@ -66,6 +64,7 @@ namespace ContragentAnalyse.Controls
             buttonWord.Background = Brushes.LightGray;
             buttonSave.Background = Brushes.LightGray;
         }
+
     }
 
 }
