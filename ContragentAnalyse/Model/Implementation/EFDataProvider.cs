@@ -20,7 +20,6 @@ namespace ContragentAnalyse.Model.Implementation
             Include(i=>i.TypeClient).
             Include(i => i.Actualizations).
             Include(i => i.PrescoringScoring).
-                ThenInclude(i => i.CriteriaToScoring).
             Include(i=>i.Contracts).
             Include(i => i.RestrictedAccounts).
             Include(i => i.Contacts).
@@ -31,7 +30,6 @@ namespace ContragentAnalyse.Model.Implementation
             Include(i => i.TypeClient).
             Include(i => i.Actualizations).
             Include(i => i.PrescoringScoring).
-                ThenInclude(i => i.CriteriaToScoring).
             Include(i => i.Contracts).
             Include(i => i.RestrictedAccounts).
             Include(i => i.Contacts).
@@ -45,12 +43,12 @@ namespace ContragentAnalyse.Model.Implementation
             return DateAct;
         }
 
-        public DateTime? GetDateNextScoring()
+        /*public DateTime? GetDateNextScoring()
         {
             PrescoringScoring nextdate = _dbContext.PrescoringScoring.Include("Bank").FirstOrDefault(i => i.Id == 0); // Как соеденить таблицы и взять поле. которое нужно
             DateTime? DateNext = nextdate.DateNextScoring;
             return DateNext;
-        }
+        }*/
         public string GetCriterions()
         {
             Criteria criterion = _dbContext.Criteria.Include("Bank").FirstOrDefault(i => i.Id == 0); // Как соеденить таблицы и взять поле. которое нужно

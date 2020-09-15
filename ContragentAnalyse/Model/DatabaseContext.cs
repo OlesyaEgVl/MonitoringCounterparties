@@ -9,11 +9,11 @@ namespace ContragentAnalyse.Model
     public class DatabaseContext : DbContext
     {
 
-#if !DevAtHome
+//#if !DevAtHome
         private const string CONNECTION_STRING = "Server=A105512\\A105512;Database=CounterpartyMonitoring;Integrated Security=false;Trusted_Connection=True;MultipleActiveResultSets=True;User Id = CounterPartyMonitoring_user; Password = orppaAdmin123!";
-#else
-        private const string CONNECTION_STRING = @"Server=IlyaHome\MyDB;Database=CounterpartyMonitoringNew;Integrated Security=true;Trusted_Connection=True;MultipleActiveResultSets=True;";
-#endif
+//#else
+        //private const string CONNECTION_STRING = @"Server=IlyaHome\MyDB;Database=CounterpartyMonitoringNew;Integrated Security=true;Trusted_Connection=True;MultipleActiveResultSets=True;";
+//#endif
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             
@@ -29,13 +29,18 @@ namespace ContragentAnalyse.Model
             modelBuilder.Entity<Client>().HasMany(i => i.Contacts).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.Requests).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.StopFactors).WithOne(i => i.Client);
-            modelBuilder.Entity<PrescoringScoring>().HasMany(i => i.CriteriaToScoring).WithOne(i => i.PrescoringScoring);
-            modelBuilder.Entity<Criteria>().HasMany(i => i.CriteriaToScoring).WithOne(i => i.Criteria);
+           /* modelBuilder.Entity<PrescoringScoring>().HasMany(i => i.CriteriaToScoring).WithOne(i => i.PrescoringScoring);
+            modelBuilder.Entity<Criteria>().HasMany(i => i.CriteriaToScoring).WithOne(i => i.Criteria);*/
         }
 
         public DatabaseContext() : base()
         {
+           
             Database.EnsureCreated();
+            /*if (Client.CountAsync() == 0)
+            {
+                //Создать тестовые денные
+            }*/
         }
 
         public DbSet<AccountStates> AccountStates { get; set; }
@@ -46,7 +51,7 @@ namespace ContragentAnalyse.Model
         public DbSet<Contracts> Contracts { get; set; }
         public DbSet<ContactType> ContactType { get; set; }
         public DbSet<Criteria> Criteria { get; set; }
-        public DbSet<CriteriaToScoring> CriteriaToScoring { get; set; }
+       
         public DbSet<Currency> Currency { get; set; }
         public DbSet<Employees> Employees { get; set; }
         public DbSet<Level> Level { get; set; }    

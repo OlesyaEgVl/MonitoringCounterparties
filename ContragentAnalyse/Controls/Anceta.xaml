@@ -73,7 +73,7 @@
                                         <TextBlock Text="Дата пересмотра риска:"  HorizontalAlignment="Left"/>
                                         <DatePicker Text="{Binding SelectedClient.NextScoringDate}" IsEnabled="False"/>
                                         <TextBlock Text="Выявленные критерии риска:"/>
-                                        <ListView ItemsSource="{Binding SelectedClient.Criterias, Mode=OneWay}">
+                                        <ListView ItemsSource="{Binding SelectedClient.Criteria, Mode=OneWay}">
                                             <ListView.View>
                                                 <GridView>
                                                     <GridViewColumn Header="Критерий" DisplayMemberBinding="{Binding Name}" Width="150"/>
