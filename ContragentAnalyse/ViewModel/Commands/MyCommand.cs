@@ -7,7 +7,10 @@ namespace ContragentAnalyse.ViewModel.Commands
 {
     public class MyCommand : ICommand
     {
+#pragma warning disable 67
         public event EventHandler CanExecuteChanged;
+#pragma warning restore 67
+
         private Action Action { get; set; }
         public MyCommand(Action action)
         {

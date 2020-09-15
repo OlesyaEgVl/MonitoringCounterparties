@@ -5,10 +5,14 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
+using System.Windows.Input;
+using ContragentAnalyse.Extension;
 using ContragentAnalyse.Model.Entities;
 using ContragentAnalyse.Model.Implementation;
 using ContragentAnalyse.Model.Interfaces;
 using ContragentAnalyse.ViewModel.Commands;
+
+using Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal;
 
 namespace ContragentAnalyse.ViewModel
 {
@@ -16,155 +20,103 @@ namespace ContragentAnalyse.ViewModel
     {
         #region Реализация Singleton
         private static MainViewModel instance;
-        public static MainViewModel GetInstance()
+        public static MainViewModel GetInstance(IDataProvider provider)
         {
-            instance ??= new MainViewModel();
+            instance ??= new MainViewModel(provider);
             return instance;
         }
         #endregion
 
-        #region dataProviders
-        IDataProvider _dbProvider = new EFDataProvider();
-        
-        #endregion
-
-        #region Текущие значения
-        public string SearchBIN { get; set; }
-        public string SearchName { get; set; }
-        private ObservableCollection<Client> _foundClients = new ObservableCollection<Client>();
-        public ObservableCollection<Client> FoundClients { get => _foundClients; set => _foundClients = value; }
-        private Client _selectedClient;
-
+        #region ViewModel методы
         public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged(string propertyName)
+        private void RaisePropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        #endregion
 
+        #region dataProviders
+        readonly IDataProvider _dbProvider;
+        #endregion
+
+        #region Текущие значения
+        private ObservableCollection<Client> _foundClients = new ObservableCollection<Client>();
+        public ObservableCollection<Client> FoundClients { get => _foundClients; set => _foundClients = value; }
+        private Client _selectedClient;
         public Client SelectedClient
         {
-            get
-            {
-                return _selectedClient;
-            }
+            get => _selectedClient;
             set
             {
                 _selectedClient = value;
-                if (_selectedClient != null)
-                {
-                    CurrentBank = _selectedClient.Bank;
-                    OnPropertyChanged(nameof(CurrentBank));
-                    OnPropertyChanged(nameof(SelectedClient));
-                }
+                RaisePropertyChanged(nameof(SelectedClient));
             }
         }
-
-        public Bank CurrentBank { get; set; }
-        public DateTime DataAct { get; set; }
-        public DateTime? DateReceivedKit { get; set; }
-        public DateTime? DateRequests { get; set; }
-        public string ClientManagers { get; set; }
-        public string Comments { get; set; }
-        public DateTime? DateNext { get; set; }
-        public string Criterias { get; set; }
-        public string Contract { get; set; }
-        public string AccountNumbers { get; set; }
-        public bool? CardKOP { get; set; }
-        public string Contact { get; set; }
-        
         #endregion
 
         #region Commands
-        public MyCommand SearchCommand { get; set; }
-        public MyCommand AddNewClient { get; set; }
-        public MyCommand Editing { get; set; }
-        public MyCommand SaveChanges { get; set; }
-        public MyCommand Word { get; set; }
-        public MyCommand Count { get; set; }
-        public MyCommand UnloadHistory { get; set; }
-        public MyCommand UnloadExcel { get; set; }
-        public MyCommand CommitChanges { get; set; }
+        public MyCommand<string> SearchCommand { get; set; }
+        public MyCommand AddClientCommand { get; set; }
+        public MyCommand EditCommand { get; set; }
+        public MyCommand SaveCommand { get; set; }
+        public MyCommand ExportWordCommand { get; set; }
+        public MyCommand CalculateCommand { get; set; }
+        public MyCommand SaveRiskRecordCommand { get; set; }
+        public MyCommand ExportExcelCommand { get; set; }
+        public MyCommand SaveChangesCommand { get; set; }
         #endregion
 
-        #region CurrentData
-        public string TestString { get; set; }
-        #endregion
-
-        private MainViewModel()
+        private MainViewModel(IDataProvider provider)
         {
+            _dbProvider = provider;
             InitializeCommands();
-            //InitializeData();
+            InitializeData();
         }
 
-        /* private void InitializeData()
-         {
+        private void InitializeData()
+        {
 
-         }*/
-        
+        }
 
         private void InitializeCommands()
         {
-            SearchCommand = new MyCommand(SearchMethod);
             //TODO подставить реализацию команд
-            AddNewClient = new MyCommand(()=> MessageBox.Show($"Добавить нового клиента"));
-            Editing = new MyCommand(() => MessageBox.Show($"Редактировать"));
-            SaveChanges = new MyCommand(()=>MessageBox.Show($"Сохранить изменения"));
-            Word = new MyCommand(()=> MessageBox.Show($"Скачать Word"));
-            Count = new MyCommand(()=> MessageBox.Show($"Посчитать"));
-            UnloadHistory = new MyCommand(()=> MessageBox.Show($"Сохранить историю"));
-            UnloadExcel = new MyCommand(()=> MessageBox.Show($"Exel"));
-            CommitChanges = new MyCommand(CommitMethod);
+            SearchCommand = new MyCommand<string>(SearchMethod);
+            AddClientCommand = new MyCommand(()=> MessageBox.Show($"Добавить нового клиента"));
+            EditCommand = new MyCommand(() => MessageBox.Show($"Редактировать"));
+            SaveCommand = new MyCommand(()=>MessageBox.Show($"Сохранить изменения"));
+            CalculateCommand = new MyCommand(()=> MessageBox.Show($"Посчитать"));
+            SaveRiskRecordCommand = new MyCommand(()=> MessageBox.Show($"Сохранить историю"));
+            ExportWordCommand = new MyCommand(()=> MessageBox.Show($"Скачать Word"));
+            ExportExcelCommand = new MyCommand(()=> MessageBox.Show($"Exel"));
+            SaveChangesCommand = new MyCommand(CommitMethod);
         }
 
-        private void SearchMethod()
+
+        private void SearchMethod(string searchStr)
         {
-            if (!string.IsNullOrWhiteSpace(SearchBIN)) 
-            {
-                FoundClients.Clear();
-                foreach(Client client in _dbProvider.GetClients(SearchBIN))
-                {
-                    FoundClients.Add(client);
-                }
-            }
+            //TODO продумать предупреждение о большом количестве результатов поиска при поиске строки '"' или 'А'
+            Func<IEnumerable<Client>> GetClientsFunc = GetSearchFunction(searchStr); //Func - какой то метод, который обязуется вернуть IEnumerable<Client>
+            FoundClients.Clear();
+            FoundClients.AddRange(GetClientsFunc?.Invoke()); // .Invoke - вызывает срабатывание метода
+            //FoundClients.AddRange - Extension Method или метод расширения. Реализация тут ContragentAnalyse.Extension
+        }
+
+        private Func<IEnumerable<Client>> GetSearchFunction(string searchString)
+        {
+            //TODO обсудить с каких символов начинается ПИН клиента (Банка или юрлица)
+            char[] BinFirstLetters = { 'U', 'Y' };
+            if (string.IsNullOrWhiteSpace(searchString)) return null;
+            if(searchString.Length == 6 && BinFirstLetters.Any(i=>i == searchString.ToUpper()[0]))
+                return () => _dbProvider.GetClients(searchString);
             else
-            if(!string.IsNullOrWhiteSpace(SearchName))
-            {
-                FoundClients.Clear();
-                List<Client> banks = _dbProvider.GetClientsName(SearchName).ToList();
-                foreach (Client client in banks)
-                {
-                    FoundClients.Add(client);
-                }
-              
-            }
-            else
-            {
-                MessageBox.Show("Поле БИН/Наименование не может быть пустым!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-            }
-            DataAct = _foundClients[0].Bank.Actualizations.OrderBy(i => i.DateActEKS).FirstOrDefault().DateActEKS;
-            OnPropertyChanged(nameof(DataAct));
-            DateNext = _foundClients[0].Bank.PrescoringScoring.OrderBy(i => i.DateNextScoring).FirstOrDefault().DateNextScoring;
-            OnPropertyChanged(nameof(DateNext));
-            ClientManagers = _foundClients[0].Bank.Client.OrderBy(i => i.ClientManager).FirstOrDefault().ClientManager;
-            OnPropertyChanged(nameof(ClientManagers));
-            CardKOP = _foundClients[0].Bank.Client.OrderBy(i => i.CardOP).FirstOrDefault().CardOP;
-            OnPropertyChanged(nameof(CardKOP));
-            //Criterias = _foundClients[0].Bank.PrescoringScoring.OrderBy(i => i.CriteriaToScoring.).FirstOrDefault().CriteriaToScoring;
-            // OnPropertyChanged(nameof(Criterias));// Мб тут по другому? Критериев же много
-            Contract  = _foundClients[0].Bank.Contracts.OrderBy(i => i.Name).FirstOrDefault().Name;
-            AccountNumbers = _foundClients[0].Bank.RestrictedAccounts.OrderBy(i => i.AccountNumber).FirstOrDefault().AccountNumber;
-            Contact = _foundClients[0].Bank.Contacts.OrderBy(i => i.ContactFIO).FirstOrDefault().ContactFIO;
-            Contact += " "+_foundClients[0].Bank.Contacts.OrderBy(i => i.Value).FirstOrDefault().Value;
-            OnPropertyChanged(nameof(Contract));
-            OnPropertyChanged(nameof(AccountNumbers));
-            OnPropertyChanged(nameof(Contact));
-            
+                return () => _dbProvider.GetClientsByName(searchString);
         }
 
         private void CommitMethod()
         {
+            //TODO это работает не так
             _dbProvider.Commit();
         }
-      
     }
 }

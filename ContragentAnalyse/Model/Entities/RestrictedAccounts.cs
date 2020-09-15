@@ -9,7 +9,7 @@ namespace ContragentAnalyse.Model.Entities
 {
     public class RestrictedAccounts : BaseEntity
     {
-        public int Bank_Id { get; set; }
+        public int Client_Id { get; set; }
         public int Currency_Id { get; set; }
         public string AccountNumber { get; set; }
         public int AccountState_Id { get; set; }
@@ -17,8 +17,8 @@ namespace ContragentAnalyse.Model.Entities
         [ForeignKey(nameof(Currency_Id))]
         public virtual Currency Currency { get; set; }
 
-        [ForeignKey(nameof(Bank_Id))]
-        public virtual Bank Bank { get; set; }
+        [ForeignKey(nameof(Client_Id))]
+        public virtual Client Client { get; set; }
 
         [ForeignKey(nameof(AccountState_Id))]
         public virtual AccountStates AccountState { get; set; }

@@ -7,7 +7,9 @@ namespace ContragentAnalyse.ViewModel.Commands
 {
     public class MyCommand<T> : ICommand
     {
+#pragma warning disable 67
         public event EventHandler CanExecuteChanged;
+#pragma warning restore 67
         private Action<T> Action { get; set; }
         public MyCommand(Action<T> action)
         {
@@ -21,9 +23,9 @@ namespace ContragentAnalyse.ViewModel.Commands
 
         public void Execute(object parameter)
         {
-            if (parameter is T && parameter != null)
+            if (parameter is T t && parameter != null)
             {
-                Action?.Invoke((T)parameter);
+                Action?.Invoke(t);
             }
         }
     }

@@ -5,9 +5,8 @@ using System.Text;
 
 namespace ContragentAnalyse.Model.Interfaces
 {
-    interface IDataProvider
+    public interface IDataProvider
     {
-        Bank GetBank(string BIN);
         DateTime GetDateActual();
         DateTime? GetDateNextScoring();
         string GetLevelRisk();
@@ -18,7 +17,7 @@ namespace ContragentAnalyse.Model.Interfaces
         string GetAccountNumber();
         string GetContacts();
         IEnumerable<Client> GetClients(string BIN);
-        IEnumerable<Client> GetClientsName(string Name);
+        IEnumerable<Client> GetClientsByName(string Name);
         void Commit();
     }
 }
