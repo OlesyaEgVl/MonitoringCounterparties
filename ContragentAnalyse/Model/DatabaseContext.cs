@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ContragentAnalyse.Model
@@ -37,9 +38,10 @@ namespace ContragentAnalyse.Model
         {
            
             Database.EnsureCreated();
-            /*if (Client.CountAsync() == 0)
+           /* if (Client.Count() == 0)
             {
                 //Создать тестовые денные
+                Client.BIN.;
             }*/
         }
 

@@ -5,7 +5,7 @@
              x:Class="ContragentAnalyse.Controls.Anceta"
     mc:Ignorable="d" DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <Grid>
+        <Grid >
             <StackPanel Grid.ColumnSpan="2">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Введите идентификатор клиента" Margin="5,0"/>
