@@ -3,68 +3,54 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:ContragentAnalyse.Controls"
-             mc:Ignorable="d">
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+            
+             mc:Ignorable="d" DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" >
 
-        <Grid Name="CurrentGrid">
-
+        <Grid>
             <StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Введите БИН" Margin="5,0"/>
-                    <TextBox MinWidth="50" Margin="5,0"/>
-                    <TextBlock Text="Введите наименование" Margin="5,0"/>
-                    <TextBox MinWidth="250" Margin="5,0"/>
-                    <Button Content="Поиск" Width="100"/>
+                    <TextBlock Text="Введите идентификатор клиента" Margin="5,0"/>
+                    <TextBox Name="SearchField2" MinWidth="300" Margin="5,0"/>
+                    <Button IsDefault="True" x:Name="buttonSearch2"  Content="Поиск" Width="100" Click="Search2"
+                                Command="{Binding SearchCommand}"
+                                CommandParameter="{Binding ElementName=SearchField2, Path=Text}"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <GroupBox Header="Выберете из предложенных Банков/Юр.лиц" Margin="10,20" >
-                        <ListBox Margin="5" Width="600" Height="100">
-
-                        </ListBox>
+                        <ListView Name="FoundItemsList2" Margin="5" MinWidth="600" MinHeight="100" ItemsSource="{Binding FoundClients}" SelectedItem="{Binding SelectedClient}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="БИН" DisplayMemberBinding="{Binding Path=BIN}"/>
+                                    <GridViewColumn Header="Название" DisplayMemberBinding="{Binding Path=ShortName}"/>
+                                    <GridViewColumn Header="Мнемоника" DisplayMemberBinding="{Binding Path=Mnemonic}"/>
+                                    <GridViewColumn Header="Тип клиента" DisplayMemberBinding="{Binding Path=TypeClient.Name}"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
                     </GroupBox>
                 </StackPanel>
                 <GroupBox Header="Критерии риска" Margin="10,0">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="5">
-                            <ListView MinWidth="300" MaxWidth="650" MinHeight="20" Height="297" Width="650">
+                            <ListView  ItemsSource="{Binding RiskCriteriasList}" SelectedItem="{Binding SelectedRisk}" MinWidth="300" MaxWidth="650" MinHeight="20" Height="297" Width="650">
                                 <ListView.View>
                                     <GridView>
-                                        <GridViewColumn/>
+                                        <GridView.Columns>
+                                            <GridViewColumn>
+                                                <GridViewColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <CheckBox/>
+                                                    </DataTemplate>
+                                                </GridViewColumn.CellTemplate>
+                                            </GridViewColumn>
+                                            <GridViewColumn Header="Название критерия" DisplayMemberBinding="{Binding Path=Name}" Width="550"/>
+                                            <GridViewColumn Header="Балл" DisplayMemberBinding="{Binding Path=Weight}" Width="50"/>
+                                        </GridView.Columns>
                                     </GridView>
                                 </ListView.View>
-                                <CheckBox Content="Наличие действующих блокирующих санкций в отношении акционера, владеющего менее 45% капитала Клиента, и/или Члена органа управления Клиента"/>
-                                <CheckBox Content="Наличие действующих секторальных санкций в отношении Клиента и/или акционера Клиента"/>
-                                <CheckBox Content="Установлен факт связи Клиента и/или лиц, которые по отдельности или в совокупности владеют более чем 50% капитала Клиента, и/или Бенефициарного владельца Клиента с непризнанной Российской Федерацией территорией и/или Члена органа управления Клиента со  страной/территорией, указанной в Первой группе государств и территорий Приложения №1 Инструкции №1361"/>
-                                <CheckBox Content="Клиент и/или его акционер и/или Бенефициарный владелец Клиента и/или дочерняя компания и/или филиал/представительство Клиента зарегистрировано (инкорпорировано) (место жительства или место нахождения)  на территории, указанной во Второй группе государств и территорий Приложения №1 Инструкции №1361 "/>
-                                <CheckBox Content="Акционер Клиента и/или Бенефициарный владелец Клиента и/или Член органа управления Клиента является ПДЛ/РДЛ и/или Ближайшим окружением ПДЛ/РДЛ"/>
-                                <CheckBox Content="Наличие информации в отношении Клиента и/или его акционера и/или Члена органа управления Клиента и/или Бенефициарного владельца Клиента, полученной из открытых источников, заслуживающих доверия, и/или во внутренних ресурсах и системах Банка, вызывающей по оценке ОМК подозрения в том, что целью заключения сотрудничества может являться совершение операций в целях легализации (отмывания) доходов, полученных преступным путем, финансирования терроризма и финансирования распространения оружия массового уничтожения"/>
-                                <CheckBox Content="Наличие информационных сообщений, из заслуживающих доверия источников информации, о финансовом оздоровлении и/или назначении временной администрации и/или недостаточности капитала и/или несоблюдении нормативов Клиентом и/или банкротстве основного акционера Клиента и/или о введении в отношении Клиента запрета на привлечение денежных средств физических лиц во вклады и (или) открытие и ведение банковских счетов физических лиц"/>
-                                <CheckBox Content="Отсутствие по адресу места нахождения Клиента-резидента Российской Федерации его постоянно действующего органа, иных органов или лиц, имеющих право действовать от имени Клиента без доверенности"/>
-                                <CheckBox Content="Присутствие акционера, владеющего более 50% капитала Клиента, и/или Бенефициарного владельца Клиента в БД Репутационные риски Банка"/>
-                                <CheckBox Content="Несоответствие внутренних процедур банка в сфере ПОД/ФТ/ФРОМУ рекомендациям FATF"/>
-                                <CheckBox Content="Предупреждение/штрафы со стороны надзорного органа в связи с неисполнением/ненадлежащим исполнением законодательства в области ПОД/ФТ/ФРОМУ за последние 2 года"/>
-                                <CheckBox Content="Отсутствие процедур, регламентирующих отношения с ПДЛ/PДЛ и Ближайшим окружением ПДЛ/РДЛ."/>
-                                <CheckBox Content="Наличие доступа третьих лиц к корреспондентским счетам, открытых у Клиента и банка-корреспондента, с которым у третьих лиц нет корреспондентских счетов (практика «сквозных» счетов)"/>
-                                <CheckBox Content="Несоответствие внутренних процедур банка общепризнанным стандартам «Знай своего клиента»"/>
-                                <CheckBox Content="Осуществление неполной и/или нерегулярной оценки/переоценки уровня риска клиентов"/>
-                                <CheckBox Content="Открытие счетов на анонимных владельцев и/или открытие первого счета без личного присутствия физического лица, его идентификации и/или оценки риска"/>
-                                <CheckBox Content="Более 10% высокорисковых клиентов (осуществляющих интенсивный оборот наличности, Money Service Business и т.п.)"/>
-                                <CheckBox Content="Не проводится проверка достоверности информации, полученной в ходе идентификации"/>
-                                <CheckBox Content="Только ручной мониторинг операций клиентов"/>
-                                <CheckBox Content="Применение недостаточных мер в отношении клиентов, неоднократно осуществлявших необычные/подозрительные операции"/>
-                                <CheckBox Content="Отсутствие процедур по выявлению операций, проводимых в рамках ухода от процедур контроля по ПОД/ФТ/ФРОМУ, в т.ч. по выявлению необычных операций"/>
-                                <CheckBox Content="Осуществление неполной и/или нерегулярной оценки риска операций клиента"/>
-                                <CheckBox Content="Отсутствие процедур по выявлению операций с подставными или фиктивными компаниями («shell company»)"/>
-                                <CheckBox Content="Отсутствие процедур по установлению источника происхождения денежных средств и контроля операций клиентов-ПДЛ/РДЛ и Ближайшего окружения ПДЛ/РДЛ."/>
-                                <CheckBox Content="Только ручная обработка платежей на предмет контроля страновых и санкционных ограничений"/>
-                                <CheckBox Content="Отсутствие ограничений и достаточных контролей при принятии на обслуживание и обслуживании лиц/лиц-резидентов государств/территорий, находящихся под действующими санкциями/ограничениями"/>
-                                <CheckBox Content="Отсутствие ограничений и достаточных контролей при принятии на обслуживание и обслуживании клиентов, зарегистрированных во Второй группе государств и территорий Приложения №1 Инструкции №1361 («офшорные» государства/территории)"/>
-                                <CheckBox Content="Не разработаны процедуры/политики, направленные на минимизацию санкционных и страновых рисков"/>
-                                <CheckBox Content="Банком выявлены необычные операции"/>
-                                <CheckBox Content="Запросы по платежу со стороны НОСТРО-банка"/>
-                                <CheckBox Content="Нарушение Клиентом условий договора"/>
-
+                                
                             </ListView>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="5">

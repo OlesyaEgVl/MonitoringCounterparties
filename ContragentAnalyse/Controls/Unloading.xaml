@@ -4,22 +4,29 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ContragentAnalyse.Controls"
-             mc:Ignorable="d">
+             mc:Ignorable="d" DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
     <Grid>
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Введите БИН" Margin="5,0"/>
-                    <TextBox MinWidth="50" Margin="5,0"/>
-                    <TextBlock Text="Введите наименование" Margin="5,0"/>
-                    <TextBox MinWidth="250" Margin="5,0"/>
-                    <Button Content="Поиск" Width="100"/>
+                    <TextBlock Text="Введите идентификатор клиента" Margin="5,0"/>
+                    <TextBox Name="SearchField3" MinWidth="300" Margin="5,0"/>
+                    <Button IsDefault="True" x:Name="buttonSearch3"  Content="Поиск" Width="100" Click="Search3"
+                                Command="{Binding SearchCommand}"
+                                CommandParameter="{Binding ElementName=SearchField3, Path=Text}"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
-                    <GroupBox Header="Выберете из предложенных Банков/Юр.лиц" Margin="10,20" HorizontalAlignment="Left" VerticalAlignment="Top" >
-                        <ListBox Margin="5" Width="600" Height="100">
-
-                        </ListBox>
+                    <GroupBox Header="Выберете из предложенных Банков/Юр.лиц" Margin="10,20" >
+                        <ListView Name="FoundItemsList3" Margin="5" MinWidth="600" MinHeight="100" ItemsSource="{Binding FoundClients}" SelectedItem="{Binding SelectedClient}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="БИН" DisplayMemberBinding="{Binding Path=BIN}"/>
+                                    <GridViewColumn Header="Название" DisplayMemberBinding="{Binding Path=ShortName}"/>
+                                    <GridViewColumn Header="Мнемоника" DisplayMemberBinding="{Binding Path=Mnemonic}"/>
+                                    <GridViewColumn Header="Тип клиента" DisplayMemberBinding="{Binding Path=TypeClient.Name}"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
                     </GroupBox>
                 </StackPanel>
 
