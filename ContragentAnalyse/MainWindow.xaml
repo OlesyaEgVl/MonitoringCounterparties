@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ContragentAnalyse"
         mc:Ignorable="d"
-        Title="Анализ контрагентов" Height="920" Width="1245">
-    <Window.Resources>
+        Title="Анализ контрагентов" MinHeight="600" MinWidth="700" Height="920" Width="1245">
+    <Window.Resources >
         <Style TargetType="Button" x:Key="MenuButton">
             <Setter Property="Background" Value="#FF1A1A1D"/>
             <Setter Property="BorderBrush" Value="{x:Null}"/>

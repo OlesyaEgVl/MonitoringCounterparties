@@ -8,7 +8,7 @@ namespace ContragentAnalyse.Model.Interfaces
     public interface IDataProvider
     {
         DateTime GetDateActual();
-        DateTime? GetDateNextScoring();
+       // DateTime? GetDateNextScoring();
         string GetLevelRisk();
         string GetClientManager();
         string GetCriteria();

@@ -33,6 +33,7 @@ namespace ContragentAnalyse.Model.Entities
         public bool? CurrencyLicence { get; set; }
         public string RegistrationRegion { get; set; }
         public string AddressPrime { get; set; }
+        public DateTime? NextScoringDate { get; set; }
         public string Level
         {
             get
@@ -41,30 +42,15 @@ namespace ContragentAnalyse.Model.Entities
             }
         }
 
-        public DateTime? NextScoringDate
+        /*public DateTime? NextScoringDate
         {
             get
             {
                 return PrescoringScoring.Max(i => i.DateNextScoring);
             }
         }
-
-        public List<Criteria> Criterias
-        {
-            get
-            {
-                List<Criteria> exportVal = new List<Criteria>();
-                if (PrescoringScoring == null) return exportVal;
-                foreach(PrescoringScoring ps in PrescoringScoring)
-                {
-                    foreach(CriteriaToScoring cs in ps.CriteriaToScoring)
-                    {
-                        exportVal.Add(cs.Criteria);
-                    }
-                }
-                return exportVal;
-            }
-        }
+        */
+       
         [ForeignKey(nameof(ResponsibleUnit_Id))]
         public virtual ResponsibleUnit ResponsibleUnit { get; set; }
         [ForeignKey(nameof(Client_type_Id))]
@@ -79,5 +65,6 @@ namespace ContragentAnalyse.Model.Entities
         public List<StopFactors> StopFactors { get; set; }
         public List<RestrictedAccounts> RestrictedAccounts { get; set; }
         public List<Contacts> Contacts { get; set; }
+        public List<Criteria> Criteria { get; set; }
     }
 }

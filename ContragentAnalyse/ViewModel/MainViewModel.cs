@@ -41,7 +41,26 @@ namespace ContragentAnalyse.ViewModel
 
         #region Текущие значения
         private ObservableCollection<Client> _foundClients = new ObservableCollection<Client>();
+        private ObservableCollection<Criteria> _riskCriteria = new ObservableCollection<Criteria>();
         public ObservableCollection<Client> FoundClients { get => _foundClients; set => _foundClients = value; }
+        public ObservableCollection<Criteria> RiskCriteriasList { get => _riskCriteria; set => _riskCriteria = value; }
+
+        //подсказки в поле поиска Риски
+        public Stack<string> subjectFromDB;
+        private ObservableCollection<string> _subjectHints = new ObservableCollection<string>();
+        public ObservableCollection<string> SubjectHints { get =>_subjectHints; set => _subjectHints = value;}
+
+        //private Criteria _selectedRisk;
+        public Criteria SelectedRisk { get; set; }
+       /* {
+            get => _selectedRisk;
+            set
+            {
+                _selectedRisk = value;
+                RaisePropertyChanged(nameof(SelectedRisk));
+            }
+        }
+       */
         private Client _selectedClient;
         public Client SelectedClient
         {

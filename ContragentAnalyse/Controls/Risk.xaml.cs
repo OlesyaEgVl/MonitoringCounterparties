@@ -22,7 +22,10 @@ namespace ContragentAnalyse.Controls
         {
             InitializeComponent();
         }
-
+        private void Search2(object sender, RoutedEventArgs e)
+        {
+            buttonSearch2.Background = Brushes.DarkGray;
+        }
         private void SaveHistoryTime_Click(object sender, RoutedEventArgs e)
         {
             RedactHistory.Background = Brushes.LightGray;

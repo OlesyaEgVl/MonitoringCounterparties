@@ -1,13 +1,17 @@
-﻿using System;
+﻿using ContragentAnalyse.Model.Entities.Base;
+using System;
 using System.Collections.Generic;
-using System.Text;
-using ContragentAnalyse.Model.Entities.Base;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace ContragentAnalyse.Model.Entities
 {
     public class Criteria: NamedEntity
     {
         public float Weight { get; set; }
-        public List<CriteriaToScoring> CriteriaToScoring { get; set; }
+        public int Client_Id { get; set; }
+        [ForeignKey(nameof(Client_Id))]
+        public virtual Client Client { get; set; }
+      
     }
 }
