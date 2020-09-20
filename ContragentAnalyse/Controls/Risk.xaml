@@ -6,6 +6,13 @@
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
             
              mc:Ignorable="d" DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
+    <UserControl.Resources>
+        <DataTemplate x:Key="CheckBoxCell">
+            <StackPanel Orientation="Horizontal">
+                <CheckBox IsChecked="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}"/>
+            </StackPanel>
+        </DataTemplate>
+    </UserControl.Resources>
     <ScrollViewer VerticalScrollBarVisibility="Auto" >
 
         <Grid>
@@ -34,7 +41,16 @@
                 <GroupBox Header="Критерии риска" Margin="10,0">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="5">
-                            <ListView  ItemsSource="{Binding RiskCriteriasList}" SelectedItem="{Binding SelectedRisk}" MinWidth="300" MaxWidth="650" MinHeight="20" Height="297" Width="650">
+                            <ListView ItemsSource="{Binding RiskCriteriasList}" Grid.Column="1" Grid.Row="1" Name="selectoritems">
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn CellTemplate="{StaticResource CheckBoxCell}" Width="30"/>
+                                        <GridViewColumn Header="Название критерия" DisplayMemberBinding="{Binding Path=Name}" Width="550"/>
+                                        <GridViewColumn Header="Балл" DisplayMemberBinding="{Binding Path=Weight}" Width="50"/>
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                            <!--<ListView  ItemsSource="{Binding RiskCriteriasList}" SelectedItem="{Binding SelectedRisk}" MinWidth="300" MaxWidth="650" MinHeight="20" Height="297" Width="650">
                                 <ListView.View>
                                     <GridView>
                                         <GridView.Columns>
@@ -51,7 +67,7 @@
                                     </GridView>
                                 </ListView.View>
                                 
-                            </ListView>
+                            </ListView>-->
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="5">
                             <TextBlock Text="Итоговый балл (Уровень риска Клиента):" MinWidth="220"/>
