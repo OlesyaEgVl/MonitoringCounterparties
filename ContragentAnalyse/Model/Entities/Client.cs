@@ -15,6 +15,7 @@ namespace ContragentAnalyse.Model.Entities
         public DateTime BecomeClientDate { get; set; }
         public int ResponsibleUnit_Id { get; set; }
         public int CoordinatingEmployee_Id { get; set; }
+        public int Criteria_Id { get; set; }
         public string BIN { get; set; }
         public string AdditionalBIN { get; set; }
         public string ShortName { get; set; }
@@ -53,6 +54,8 @@ namespace ContragentAnalyse.Model.Entities
        
         [ForeignKey(nameof(ResponsibleUnit_Id))]
         public virtual ResponsibleUnit ResponsibleUnit { get; set; }
+        [ForeignKey(nameof(Criteria_Id))]
+        public virtual Criteria Criteria { get; set; }
         [ForeignKey(nameof(Client_type_Id))]
         public virtual TypeClient TypeClient { get; set; }
         [ForeignKey(nameof(CoordinatingEmployee_Id))]
@@ -65,6 +68,6 @@ namespace ContragentAnalyse.Model.Entities
         public List<StopFactors> StopFactors { get; set; }
         public List<RestrictedAccounts> RestrictedAccounts { get; set; }
         public List<Contacts> Contacts { get; set; }
-        public List<Criteria> Criteria { get; set; }
+       
     }
 }

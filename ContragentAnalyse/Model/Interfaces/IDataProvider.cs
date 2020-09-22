@@ -18,6 +18,7 @@ namespace ContragentAnalyse.Model.Interfaces
         string GetContacts();
         IEnumerable<Client> GetClients(string BIN);
         IEnumerable<Client> GetClientsByName(string Name);
+        IEnumerable<Criteria> GetCriterias();
         void Commit();
     }
 }

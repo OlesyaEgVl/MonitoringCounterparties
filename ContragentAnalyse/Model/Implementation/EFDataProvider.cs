@@ -35,7 +35,7 @@ namespace ContragentAnalyse.Model.Implementation
             Include(i => i.Contacts).
             Include(i => i.Requests).
             Where(i => i.Name.ToLower().IndexOf(Name.ToLower()) > -1);
-        
+        public IEnumerable<Criteria> GetCriterias() => _dbContext.Criteria;
         public DateTime GetDateActual()
         {
             Actualization actual = _dbContext.Actualization.Include("Bank").FirstOrDefault(i => i.Id == 0); // Как соеденить таблицы и взять поле. которое нужно
@@ -43,70 +43,9 @@ namespace ContragentAnalyse.Model.Implementation
             return DateAct;
         }
         #region
-        //подсказки в поле поиска Риск
-        /// </summary>
-        /// <param name="process">Процесс, к которому нужно подобратьподсказки</param>
-       /// <returns>Стек тем, введенных ранее пользователем</returns>
-        /* public Stack<string> GetSubjectHints(Process process)
-         {
-            Stack<string> subjects = new Stack<string>();
-            Dictionary<string, int> subjectCounted = new Dictionary<string, int>();
-
-             int proc_id;
-
-            if (process != null)
-            {
-                 proc_id = process.Id;
- 
-                  foreach(string item in Criteria.Name.Where(i=>i.Name.ToLower()) &&
-               i.Subject.Length > 0 && i.Process_id == proc_id).Select(i => i.Subject).ToArray())
-                {
-                   if (subjectCounted.ContainsKey(item))
-                    {
-                        subjectCounted[item]++;
-                      }
-                     else
-                     {
-                        subjectCounted.Add(item, 1);
-                     }
-                 }
-                 foreach(KeyValuePair<string, int> item in (from i in subjectCounted orderby i.Value ascending select i))
-                {
-                      subjects.Push(item.Key);
-               }
-             }
-             else
-            {
-                 foreach (string item in context.TimeSheetTableSet.Where(i =>
- i.Analytic.UserName.ToLower().Equals(Environment.UserName.ToLower()) &&
-                  i.Subject.Length > 0).Select(i => i.Subject).ToArray())
-                  {
-                    if (subjectCounted.ContainsKey(item))
-                     {
-                        subjectCounted[item]++;
-                     }
-                     else
-                     {
-                      subjectCounted.Add(item, 1);
-                      }
-                }
-                foreach (KeyValuePair<string, int> item in (from i in
-  subjectCounted orderby i.Value ascending select i))
-                 {
-                     subjects.Push(item.Key);
-                }
-            }
-              return subjects;
-          }
-
-        */
+        
         #endregion
-        /*public DateTime? GetDateNextScoring()
-        {
-            PrescoringScoring nextdate = _dbContext.PrescoringScoring.Include("Bank").FirstOrDefault(i => i.Id == 0); // Как соеденить таблицы и взять поле. которое нужно
-            DateTime? DateNext = nextdate.DateNextScoring;
-            return DateNext;
-        }*/
+        
         public string GetCriterions()
         {
             Criteria criterion = _dbContext.Criteria.Include("Bank").FirstOrDefault(i => i.Id == 0); // Как соеденить таблицы и взять поле. которое нужно
