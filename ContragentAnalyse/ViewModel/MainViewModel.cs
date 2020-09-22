@@ -132,22 +132,34 @@ namespace ContragentAnalyse.ViewModel
 
         private void SearchMethod(string searchStr)
         {
-            //TODO продумать предупреждение о большом количестве результатов поиска при поиске строки '"' или 'А'
-            Func<IEnumerable<Client>> GetClientsFunc = GetSearchFunction(searchStr); //Func - какой то метод, который обязуется вернуть IEnumerable<Client>
-            FoundClients.Clear();
-            FoundClients.AddRange(GetClientsFunc?.Invoke()); // .Invoke - вызывает срабатывание метода
-            //FoundClients.AddRange - Extension Method или метод расширения. Реализация тут ContragentAnalyse.Extension
+            if (!string.IsNullOrWhiteSpace(searchStr))
+            {
+
+                //TODO продумать предупреждение о большом количестве результатов поиска при поиске строки '"' или 'А'
+                Func<IEnumerable<Client>> GetClientsFunc = GetSearchFunction(searchStr); //Func - какой то метод, который обязуется вернуть IEnumerable<Client>
+                FoundClients.Clear();
+                FoundClients.AddRange(GetClientsFunc?.Invoke()); // .Invoke - вызывает срабатывание метода
+            }                                               //FoundClients.AddRange - Extension Method или метод расширения. Реализация тут ContragentAnalyse.Extension
+            else
+            {
+
+
+                MessageBox.Show("Поле ввода не должно быть пустым!");
+            }
         }
 
         private Func<IEnumerable<Client>> GetSearchFunction(string searchString)
         {
-            //TODO обсудить с каких символов начинается ПИН клиента (Банка или юрлица)
-            char[] BinFirstLetters = { 'U', 'Y' };
-            if (string.IsNullOrWhiteSpace(searchString)) return null;
-            if(searchString.Length == 6 && BinFirstLetters.Any(i=>i == searchString.ToUpper()[0]))
-                return () => _dbProvider.GetClients(searchString);
-            else
-                return () => _dbProvider.GetClientsByName(searchString);
+           
+                //TODO обсудить с каких символов начинается ПИН клиента (Банка или юрлица)
+                char[] BinFirstLetters = { 'U', 'Y' };
+                if (string.IsNullOrWhiteSpace(searchString)) return null;
+                if (searchString.Length == 6 && BinFirstLetters.Any(i => i == searchString.ToUpper()[0]))
+                    return () => _dbProvider.GetClients(searchString);
+                else
+                    return () => _dbProvider.GetClientsByName(searchString);
+            
+            
         }
 
         private void CommitMethod()

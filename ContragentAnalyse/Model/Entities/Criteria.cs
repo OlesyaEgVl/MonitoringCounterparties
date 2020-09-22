@@ -10,7 +10,7 @@ namespace ContragentAnalyse.Model.Entities
     {
         public float Weight { get; set; }
        
-        public List<Client> Client { get; set; }
+        
 
     }
 }
