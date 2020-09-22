@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -45,22 +46,10 @@ namespace ContragentAnalyse.ViewModel
         public ObservableCollection<Client> FoundClients { get => _foundClients; set => _foundClients = value; }
         public ObservableCollection<Criteria> RiskCriteriasList { get => _riskCriteria; set => _riskCriteria = value; }
 
-        //подсказки в поле поиска Риски
-        public Stack<string> subjectFromDB;
-        private ObservableCollection<string> _subjectHints = new ObservableCollection<string>();
-        public ObservableCollection<string> SubjectHints { get =>_subjectHints; set => _subjectHints = value;}
 
-        //private Criteria _selectedRisk;
-        public Criteria SelectedRisk { get; set; }
-       /* {
-            get => _selectedRisk;
-            set
-            {
-                _selectedRisk = value;
-                RaisePropertyChanged(nameof(SelectedRisk));
-            }
-        }
-       */
+        private ObservableCollection<Criteria> selectedCriterias = new ObservableCollection<Criteria>();
+        public ObservableCollection<Criteria> SelectedCriterias => selectedCriterias;
+       
         private Client _selectedClient;
         public Client SelectedClient
         {
@@ -73,6 +62,21 @@ namespace ContragentAnalyse.ViewModel
         }
         #endregion
 
+        List<string>DictionaryCountry = new List<string>() { "Австралия", "Австрия", "Азербайджан", "Армения"};
+        
+        // код, заполняющий словарь
+
+        // возвращает массив строк из словаря, соответствующих паттерну
+        List<string> GetItems(string pattern)
+        {
+            List<string> ret = new List<string>();
+            foreach (string s in DictionaryCountry)
+                if (s.StartsWith(pattern))
+                    ret.Add(s);
+
+            return ret;
+        }
+        
         #region Commands
         public MyCommand<string> SearchCommand { get; set; }
         public MyCommand AddClientCommand { get; set; }
@@ -83,6 +87,7 @@ namespace ContragentAnalyse.ViewModel
         public MyCommand SaveRiskRecordCommand { get; set; }
         public MyCommand ExportExcelCommand { get; set; }
         public MyCommand SaveChangesCommand { get; set; }
+        public MyCommand<object> StoreSelection { get; set; }
         #endregion
 
         private MainViewModel(IDataProvider provider)
@@ -94,7 +99,7 @@ namespace ContragentAnalyse.ViewModel
 
         private void InitializeData()
         {
-
+            RiskCriteriasList = new ObservableCollection<Criteria>(_dbProvider.GetCriterias());
         }
 
         private void InitializeCommands()
@@ -109,8 +114,21 @@ namespace ContragentAnalyse.ViewModel
             ExportWordCommand = new MyCommand(()=> MessageBox.Show($"Скачать Word"));
             ExportExcelCommand = new MyCommand(()=> MessageBox.Show($"Exel"));
             SaveChangesCommand = new MyCommand(CommitMethod);
+            StoreSelection = new MyCommand<object>(StoreSelectionMethod);
         }
 
+        private void StoreSelectionMethod(object SelectedItems)
+        {
+            if(SelectedItems is IEnumerable collection)
+            {
+                SelectedCriterias.Clear();
+                foreach(object obj in collection)
+                {
+                    SelectedCriterias.Add(obj as Criteria);
+                }
+
+            }
+        }
 
         private void SearchMethod(string searchStr)
         {
