@@ -21,9 +21,9 @@ namespace ContragentAnalyse.ViewModel
     {
         #region Реализация Singleton
         private static MainViewModel instance;
-        public static MainViewModel GetInstance(IDataProvider provider)
+        public static MainViewModel GetInstance(IDataProvider provider, IEquationProvider eqProvider)
         {
-            instance ??= new MainViewModel(provider);
+            instance ??= new MainViewModel(provider, eqProvider);
             return instance;
         }
         #endregion
@@ -38,6 +38,7 @@ namespace ContragentAnalyse.ViewModel
 
         #region dataProviders
         readonly IDataProvider _dbProvider;
+        private readonly IEquationProvider eqProvider;
         #endregion
 
         #region Текущие значения
@@ -79,7 +80,7 @@ namespace ContragentAnalyse.ViewModel
         
         #region Commands
         public MyCommand<string> SearchCommand { get; set; }
-        public MyCommand AddClientCommand { get; set; }
+        public MyCommand <string> AddClientCommand { get; set; }
         public MyCommand EditCommand { get; set; }
         public MyCommand SaveCommand { get; set; }
         public MyCommand ExportWordCommand { get; set; }
@@ -90,11 +91,13 @@ namespace ContragentAnalyse.ViewModel
         public MyCommand<object> StoreSelection { get; set; }
         #endregion
 
-        private MainViewModel(IDataProvider provider)
+        private MainViewModel(IDataProvider provider, IEquationProvider eqProvider)
         {
             _dbProvider = provider;
+            this.eqProvider = eqProvider;
             InitializeCommands();
             InitializeData();
+            //eqProvider.reader(); /* Метод выбран, просто, чтобы работал код. Сейчас ничего нужного не выполняет*/
         }
 
         private void InitializeData()
@@ -106,7 +109,7 @@ namespace ContragentAnalyse.ViewModel
         {
             //TODO подставить реализацию команд
             SearchCommand = new MyCommand<string>(SearchMethod);
-            AddClientCommand = new MyCommand(()=> MessageBox.Show($"Добавить нового клиента"));
+            AddClientCommand = new MyCommand<string>(AddClientMethod);
             EditCommand = new MyCommand(() => MessageBox.Show($"Редактировать"));
             SaveCommand = new MyCommand(()=>MessageBox.Show($"Сохранить изменения"));
             CalculateCommand = new MyCommand(()=> MessageBox.Show($"Посчитать"));
@@ -130,6 +133,20 @@ namespace ContragentAnalyse.ViewModel
             }
         }
 
+        private void AddClientMethod(string BINStr)
+        {
+            if (!string.IsNullOrWhiteSpace(BINStr))
+            {
+                Client newClient = eqProvider.GetClient(BINStr); //найти клиента в EQ
+                _dbProvider.AddClient(newClient); //добавить в БД
+                SelectedClient = newClient;
+            }                                              
+            else
+            {
+                MessageBox.Show("Поле ввода не должно быть пустым!");
+            }
+        }
+    
         private void SearchMethod(string searchStr)
         {
             if (!string.IsNullOrWhiteSpace(searchStr))

@@ -73,10 +73,10 @@
                                         <TextBlock Text="Дата пересмотра риска:"  HorizontalAlignment="Left"/>
                                         <DatePicker Text="{Binding SelectedClient.NextScoringDate}" IsEnabled="False"/>
                                         <TextBlock Text="Выявленные критерии риска:"/>
-                                        <ListView ItemsSource="{Binding SelectedClient.Criteria, Mode=OneWay}">
+                                        <ListView ItemsSource="{Binding SelectedClient.ClientToCrineria, Mode=OneWay}">
                                             <ListView.View>
                                                 <GridView>
-                                                    <GridViewColumn Header="Критерий" DisplayMemberBinding="{Binding Name}" Width="150"/>
+                                                    <GridViewColumn Header="Критерий" DisplayMemberBinding="{Binding Name}" Width="250"/>
                                                     <GridViewColumn Header="Балл" DisplayMemberBinding="{Binding Weight}"/>
                                                 </GridView>
                                             </ListView.View>
@@ -122,8 +122,9 @@
                                     <StackPanel>
                                         <StackPanel Orientation="Horizontal">
                                             <TextBlock Text="Введите БИН для загрузки информации из Equation" Margin="5,0"/>
-                                            <TextBox MinWidth="100" Margin="5,0"/>
-                                            <Button x:Name="New" Content="Добавить нового Клиента"/>
+                                            <TextBox Name="BINStr"  MinWidth="100" Margin="5,0"/>
+                                            <Button x:Name="New" Content="Добавить нового Клиента" Command="{Binding AddClientCommand}"
+                                CommandParameter="{Binding ElementName=BINStr, Path=Text}"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </ScrollViewer>

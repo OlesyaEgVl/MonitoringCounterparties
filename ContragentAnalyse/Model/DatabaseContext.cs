@@ -23,7 +23,7 @@ namespace ContragentAnalyse.Model
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) 
         {
-            modelBuilder.Entity<Client>().HasMany(i => i.Actualizations).WithOne(i => i.Client);
+            modelBuilder.Entity<Client>().HasMany(i => i.Actualization).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.PrescoringScoring).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.Contracts).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.RestrictedAccounts).WithOne(i => i.Client);
@@ -56,6 +56,7 @@ namespace ContragentAnalyse.Model
         public DbSet<Contacts> Contacts { get; set; }
         public DbSet<Contracts> Contracts { get; set; }
         public DbSet<ContactType> ContactType { get; set; }
+        public DbSet<Country> Country { get; set; }
         public DbSet<Criteria> Criteria { get; set; }
        
         public DbSet<Currency> Currency { get; set; }

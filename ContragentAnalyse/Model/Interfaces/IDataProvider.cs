@@ -20,5 +20,6 @@ namespace ContragentAnalyse.Model.Interfaces
         IEnumerable<Client> GetClientsByName(string Name);
         IEnumerable<Criteria> GetCriterias();
         void Commit();
+        void AddClient(Client newClient);
     }
 }

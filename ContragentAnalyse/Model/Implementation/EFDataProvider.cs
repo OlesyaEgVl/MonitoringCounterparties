@@ -18,7 +18,7 @@ namespace ContragentAnalyse.Model.Implementation
 
         public IEnumerable<Client> GetClients(string BIN) => _dbContext.Client.
             Include(i=>i.TypeClient).
-            Include(i => i.Actualizations).
+            Include(i => i.Actualization).
             Include(i => i.PrescoringScoring).
             Include(i=>i.Contracts).
             Include(i => i.RestrictedAccounts).
@@ -28,7 +28,7 @@ namespace ContragentAnalyse.Model.Implementation
 
         public IEnumerable<Client> GetClientsByName(string Name) => _dbContext.Client.
             Include(i => i.TypeClient).
-            Include(i => i.Actualizations).
+            Include(i => i.Actualization).
             Include(i => i.PrescoringScoring).
             Include(i => i.Contracts).
             Include(i => i.RestrictedAccounts).
@@ -99,6 +99,11 @@ namespace ContragentAnalyse.Model.Implementation
         public void Commit()
         {
             _dbContext.SaveChanges();
+        }
+
+        public void AddClient(Client newClient)
+        {
+            throw new NotImplementedException();
         }
     }
 }

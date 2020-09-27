@@ -320,7 +320,7 @@
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="5">
                                 <TextBlock Text="Контакты:" Width="200"/>
-                                <TextBox x:Name="TextContact" Width="300" />
+                                <CheckBox x:Name="CheckBox2_Copy" Width="300"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="5">
                                 <TextBlock Text="Запросы:" Width="200"/>
