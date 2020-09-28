@@ -4,6 +4,7 @@ using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -118,7 +119,7 @@ namespace ContragentAnalyse.Model.Implementation
 
             return clients;
         }
-        public void FillClient(Client client) //ТИПЫ ДАННЫХ ПРОСТАВЛЕНЫ ПОКА НЕ ВЕРНО, ДОДЕЛЫВАЮ
+        public void FillClient(Client client) 
         {
             string connectionString = @"Server=A105512\\A105512;Database=CounterpartyMonitoring;Integrated Security=false;Trusted_Connection=True;MultipleActiveResultSets=True;User Id = CounterPartyMonitoring_user; Password = orppaAdmin123!";
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -126,18 +127,53 @@ namespace ContragentAnalyse.Model.Implementation
                 connection.Open();
                 SqlCommand command = new SqlCommand();
                 command.CommandText = @"INSERT INTO Client VALUES (@ClientManager, @Client_type_Id ,@BecomeClientDate,@ShortName,@FullName,@EnglName  ,@LicenceNumber,@LicenceEstDate,@RKC_BIK,@INN,@OGRN,@OGRN_Date,@RegName_RP,@RegDate_RP,@CurrencyLicence ,@RegistrationRegion,@NextScoringDate,@Country_Id)";
-                command.Parameters.Add("@ClientManager", SqlDbType.NVarChar, 50);
-                command.Parameters.Add("@Client_type_Id", SqlDbType.NVarChar, 50);
-                command.Parameters.Add("@BecomeClientDate", SqlDbType.Image, 1000000);
-                command.Parameters.Add("@ShortName", SqlDbType.NVarChar, 50);
-                command.Parameters.Add("@FullName", SqlDbType.NVarChar, 50);
-                command.Parameters.Add("@EnglName", SqlDbType.Image, 1000000);
-                command.Parameters.Add("@LicenceNumber", SqlDbType.NVarChar, 50);
-                command.Parameters.Add("@LicenceEstDate", SqlDbType.NVarChar, 50);
-                command.Parameters.Add("@RKC_BIK", SqlDbType.Image, 1000000);
-                command.Parameters.Add("@INN", SqlDbType.NVarChar, 50);
-                command.Parameters.Add("@OGRN", SqlDbType.NVarChar, 50);
-                command.Parameters.Add("@OGRN_Date", SqlDbType.Image, 1000000);
+                command.Parameters.Add("@ClientManager", SqlDbType.NVarChar);
+                command.Parameters.Add("@Client_type_Id", SqlDbType.Int);
+                command.Parameters.Add("@BecomeClientDate", SqlDbType.Date);
+                command.Parameters.Add("@ShortName", SqlDbType.NVarChar);
+                command.Parameters.Add("@FullName", SqlDbType.NVarChar);
+                command.Parameters.Add("@EnglName", SqlDbType.NVarChar);
+                command.Parameters.Add("@LicenceNumber", SqlDbType.NVarChar);
+                command.Parameters.Add("@LicenceEstDate", SqlDbType.Date);
+                command.Parameters.Add("@RKC_BIK", SqlDbType.NVarChar);
+                command.Parameters.Add("@INN", SqlDbType.NVarChar);
+                command.Parameters.Add("@OGRN", SqlDbType.NVarChar);
+                command.Parameters.Add("@OGRN_Date", SqlDbType.Date);
+                command.Parameters.Add("@RegName_RP", SqlDbType.NVarChar);
+                command.Parameters.Add("@RegDate_RP", SqlDbType.Date);
+                command.Parameters.Add("@CurrencyLicence", SqlDbType.Bit);
+                command.Parameters.Add("@RegistrationRegion", SqlDbType.NVarChar);
+                command.Parameters.Add("@NextScoringDate", SqlDbType.Date);
+                command.Parameters.Add("@Country_Id", SqlDbType.Int);
+                // массив для хранения бинарных данных файла
+                byte[] imageData;
+                using (System.IO.FileStream fs = new System.IO.FileStream(connectionString, FileMode.Open))
+                {
+                    imageData = new byte[fs.Length];
+                    fs.Read(imageData, 0, imageData.Length);
+                }
+                // передаем данные в команду через параметры
+                command.Parameters["@ClientManager"].Value = client.ClientManager;
+                command.Parameters["@Client_type_Id"].Value = client.Client_type_Id;
+                command.Parameters["@BecomeClientDate"].Value = client.BecomeClientDate;
+                command.Parameters["@ShortName"].Value = client.ShortName;
+                command.Parameters["@FullName"].Value = client.FullName;
+                command.Parameters["@EnglName"].Value = client.EnglName;
+                command.Parameters["@LicenceNumber"].Value = client.LicenceNumber;
+                command.Parameters["@LicenceEstDate"].Value = client.LicenceEstDate;
+                command.Parameters["@RKC_BIK"].Value = client.RKC_BIK;
+                command.Parameters["@INN"].Value = client.INN;
+                command.Parameters["@OGRN"].Value = client.OGRN;
+                command.Parameters["@OGRN_Date"].Value = client.OGRN_Date;
+                command.Parameters["@RegName_RP"].Value = client.RegName_RP;
+                command.Parameters["@RegDate_RP"].Value = client.RegDate_RP;
+                command.Parameters["@CurrencyLicence"].Value = client.CurrencyLicence;
+                command.Parameters["@RegistrationRegion"].Value = client.RegistrationRegion;
+                command.Parameters["@NextScoringDate"].Value = client.NextScoringDate;
+                command.Parameters["@Country_Id"].Value = client.Country_Id;
+
+
+                command.ExecuteNonQuery();
                 //throw new NotImplementedException(); // заглушка
             }
 
