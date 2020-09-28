@@ -7,5 +7,9 @@ namespace ContragentAnalyse.Model.Entities
 {
     public class TypeClient : NamedEntity
     {
+        internal void add(TypeClient tc)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

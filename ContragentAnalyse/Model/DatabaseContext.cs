@@ -74,6 +74,7 @@ namespace ContragentAnalyse.Model
         public DbSet<StopFactors> StopFactors { get; set; }
         public DbSet<TypeAgreement> TypeAgreement { get; set; }
         public DbSet<TypeClient> TypeClient { get; set; }
+
       
     }
 }

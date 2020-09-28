@@ -184,5 +184,7 @@ namespace ContragentAnalyse.ViewModel
             //TODO это работает не так
             _dbProvider.Commit();
         }
+
+        //
     }
 }
