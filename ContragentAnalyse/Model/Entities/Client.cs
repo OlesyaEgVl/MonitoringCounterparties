@@ -15,13 +15,12 @@ namespace ContragentAnalyse.Model.Entities
         public DateTime BecomeClientDate { get; set; }
         public int ResponsibleUnit_Id { get; set; }
         public int CoordinatingEmployee_Id { get; set; }
-        public int Criteria_Id { get; set; }
         public string BIN { get; set; }
         public string AdditionalBIN { get; set; }
         public string ShortName { get; set; }
         public string FullName { get; set; }
         public string EnglName { get; set; }
-        public string Country { get; set; }
+        
         public string LicenceNumber { get; set; }
         public DateTime? LicenceEstDate { get; set; }
         public string RKC_BIK { get; set; }
@@ -35,6 +34,7 @@ namespace ContragentAnalyse.Model.Entities
         public string RegistrationRegion { get; set; }
         public string AddressPrime { get; set; }
         public DateTime? NextScoringDate { get; set; }
+        public int Country_Id { get; set; }
         public string Level
         {
             get
@@ -54,20 +54,22 @@ namespace ContragentAnalyse.Model.Entities
        
         [ForeignKey(nameof(ResponsibleUnit_Id))]
         public virtual ResponsibleUnit ResponsibleUnit { get; set; }
-        [ForeignKey(nameof(Criteria_Id))]
-        public virtual Criteria Criteria { get; set; }
         [ForeignKey(nameof(Client_type_Id))]
         public virtual TypeClient TypeClient { get; set; }
         [ForeignKey(nameof(CoordinatingEmployee_Id))]
+
         public virtual Employees Employees { get; set; }
+        [ForeignKey(nameof(Country_Id))]
+        public virtual Country Country { get; set; }
         private List<Request> requests = new List<Request>();
         public List<Request> Requests { get => requests; set => requests = value; }
-        public List<Actualization> Actualizations { get; set; }
+        public List<Actualization> Actualization { get; set; }
         public List<PrescoringScoring> PrescoringScoring { get; set; }
         public List<Contracts> Contracts { get; set; }
         public List<StopFactors> StopFactors { get; set; }
         public List<RestrictedAccounts> RestrictedAccounts { get; set; }
         public List<Contacts> Contacts { get; set; }
-       
+        public List<ClientToCrineria> ClientToCrineria { get; set; }
+
     }
 }

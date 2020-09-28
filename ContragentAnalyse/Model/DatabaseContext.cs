@@ -23,15 +23,16 @@ namespace ContragentAnalyse.Model
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) 
         {
-            modelBuilder.Entity<Client>().HasMany(i => i.Actualizations).WithOne(i => i.Client);
+            modelBuilder.Entity<Client>().HasMany(i => i.Actualization).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.PrescoringScoring).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.Contracts).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.RestrictedAccounts).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.Contacts).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.Requests).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.StopFactors).WithOne(i => i.Client);
+            modelBuilder.Entity<Client>().HasMany(i => i.ClientToCrineria).WithOne(i => i.Client);
 
-    
+
             /* modelBuilder.Entity<PrescoringScoring>().HasMany(i => i.CriteriaToScoring).WithOne(i => i.PrescoringScoring);
              modelBuilder.Entity<Criteria>().HasMany(i => i.CriteriaToScoring).WithOne(i => i.Criteria);*/
         }
@@ -51,9 +52,11 @@ namespace ContragentAnalyse.Model
         public DbSet<Actualization> Actualization { get; set; }
         public DbSet<BankProduct> BankProduct { get; set; }
         public DbSet<Client> Client { get; set; }
+        public DbSet<ClientToCrineria> ClientToCrineria { get; set; }
         public DbSet<Contacts> Contacts { get; set; }
         public DbSet<Contracts> Contracts { get; set; }
         public DbSet<ContactType> ContactType { get; set; }
+        public DbSet<Country> Country { get; set; }
         public DbSet<Criteria> Criteria { get; set; }
        
         public DbSet<Currency> Currency { get; set; }
