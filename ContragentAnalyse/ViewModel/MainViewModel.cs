@@ -112,12 +112,31 @@ namespace ContragentAnalyse.ViewModel
             AddClientCommand = new MyCommand<string>(AddClientMethod);
             EditCommand = new MyCommand(() => MessageBox.Show($"Редактировать"));
             SaveCommand = new MyCommand(()=>MessageBox.Show($"Сохранить изменения"));
-            CalculateCommand = new MyCommand(()=> MessageBox.Show($"Посчитать"));
-            SaveRiskRecordCommand = new MyCommand(()=> MessageBox.Show($"Сохранить историю"));
+            CalculateCommand = new MyCommand<string>(CalculateMethod);
+            SaveRiskRecordCommand = new MyCommand<string>(SaveRiskRecordMethod); ;//сохранить критерии и уровень риска
             ExportWordCommand = new MyCommand(()=> MessageBox.Show($"Скачать Word"));
             ExportExcelCommand = new MyCommand(()=> MessageBox.Show($"Exel"));
             SaveChangesCommand = new MyCommand(CommitMethod);
             StoreSelection = new MyCommand<object>(StoreSelectionMethod);
+        }
+
+        private void SaveRiskRecordMethod(string obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void CalculateMethod(string BINStr)
+        {
+            if (!string.IsNullOrWhiteSpace(BINStr))
+            {
+                Criteria [] criteriaslist = _dbProvider.GetCriterialist(BINStr); //найти критерии для клиента по бину
+                _dbProvider.AddCriteriaList(criteriaslist); //Посчитать сумму баллов критериев
+                
+            }
+            else
+            {
+                MessageBox.Show("Поле ввода не должно быть пустым!");
+            }
         }
 
         private void StoreSelectionMethod(object SelectedItems)

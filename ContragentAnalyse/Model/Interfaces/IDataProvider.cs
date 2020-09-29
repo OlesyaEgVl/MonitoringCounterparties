@@ -23,5 +23,7 @@ namespace ContragentAnalyse.Model.Interfaces
         void AddClient(Client newClient);
         TypeClient GetClientType(string v);
         Country GetCountry(string v);
+        Criteria[] GetCriterialist(string bINStr);
+        void AddCriteriaList(Criteria[] criteriaslist);
     }
 }

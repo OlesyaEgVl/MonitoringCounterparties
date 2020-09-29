@@ -12,7 +12,5 @@ namespace ContragentAnalyse.Model.Interfaces
         Client GetClient(string bINStr);
         void FillClient(Client client);
         
-
-
     }
 }

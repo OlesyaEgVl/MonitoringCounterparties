@@ -179,15 +179,25 @@ namespace ContragentAnalyse.Model.Implementation
         }
 
 
-        string[] Country = new string[] { "RU" }; //так ли надо делать со странами?
+        string[] Country = new string[] { "HA" };
         Country IDataProvider.GetCountry(string v)
         {
             if (BankTypeCodes.Any(i => i.Equals(v)))
             {
-                return _dbContext.Country.FirstOrDefault(i => i.Name.Equals("Россия"));
+                return _dbContext.Country.FirstOrDefault(i => i.Name.Equals("Страна"));
             }
             
             return null;
+        }
+
+        public Criteria[] GetCriterialist(string bINStr)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddCriteriaList(Criteria[] criteriaslist)
+        {
+            throw new NotImplementedException();
         }
     }
 }
