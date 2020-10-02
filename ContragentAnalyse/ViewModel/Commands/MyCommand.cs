@@ -26,10 +26,5 @@ namespace ContragentAnalyse.ViewModel.Commands
         {
             Action?.Invoke();
         }
-
-        public static implicit operator MyCommand(MyCommand<string> v)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -34,7 +34,8 @@ namespace ContragentAnalyse.Model.Entities
         public string RegistrationRegion { get; set; }
         public string AddressPrime { get; set; }
         public DateTime? NextScoringDate { get; set; }
-        public int Country_Id { get; set; }
+        public int? Country_Id { get; set; }
+        public int? Currency_Id { get; set; }
         public string Level
         {
             get
@@ -43,15 +44,38 @@ namespace ContragentAnalyse.Model.Entities
             }
         }
 
-        /*public DateTime? NextScoringDate
+        public DateTime? ActualizationDate
         {
             get
             {
-                return PrescoringScoring.Max(i => i.DateNextScoring);
+                if(Actualization != null && Actualization.Count > 0)
+                {
+                    return Actualization?.Max(i => i.DateActEKS);
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
-        */
-       
+
+        public string GetContracts
+        {
+            get
+            {
+                if(Contracts !=null && Contracts.Count > 0)
+                {
+                    return string.Join(", ", Contracts?.Select(i => i.Name).ToArray());
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+        }
+
+
+
         [ForeignKey(nameof(ResponsibleUnit_Id))]
         public virtual ResponsibleUnit ResponsibleUnit { get; set; }
         [ForeignKey(nameof(Client_type_Id))]
@@ -61,6 +85,8 @@ namespace ContragentAnalyse.Model.Entities
         public virtual Employees Employees { get; set; }
         [ForeignKey(nameof(Country_Id))]
         public virtual Country Country { get; set; }
+        [ForeignKey(nameof(Currency_Id))]
+        public virtual Currency Currency { get; set; }
         private List<Request> requests = new List<Request>();
         public List<Request> Requests { get => requests; set => requests = value; }
         public List<Actualization> Actualization { get; set; }

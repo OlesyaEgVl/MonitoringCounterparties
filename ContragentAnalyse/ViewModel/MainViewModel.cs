@@ -84,7 +84,7 @@ namespace ContragentAnalyse.ViewModel
         public MyCommand EditCommand { get; set; }
         public MyCommand SaveCommand { get; set; }
         public MyCommand ExportWordCommand { get; set; }
-        public MyCommand CalculateCommand { get; set; }
+        public MyCommand<string> CalculateCommand { get; set; }
         public MyCommand SaveRiskRecordCommand { get; set; }
         public MyCommand ExportExcelCommand { get; set; }
         public MyCommand SaveChangesCommand { get; set; }
@@ -103,6 +103,7 @@ namespace ContragentAnalyse.ViewModel
         private void InitializeData()
         {
             RiskCriteriasList = new ObservableCollection<Criteria>(_dbProvider.GetCriterias());
+            RaisePropertyChanged(nameof(RiskCriteriasList));
         }
 
         private void InitializeCommands()
@@ -113,16 +114,16 @@ namespace ContragentAnalyse.ViewModel
             EditCommand = new MyCommand(() => MessageBox.Show($"Редактировать"));
             SaveCommand = new MyCommand(()=>MessageBox.Show($"Сохранить изменения"));
             CalculateCommand = new MyCommand<string>(CalculateMethod);
-            SaveRiskRecordCommand = new MyCommand<string>(SaveRiskRecordMethod); ;//сохранить критерии и уровень риска
+            SaveRiskRecordCommand = new MyCommand(SaveRiskRecordMethod); ;//сохранить критерии и уровень риска
             ExportWordCommand = new MyCommand(()=> MessageBox.Show($"Скачать Word"));
             ExportExcelCommand = new MyCommand(()=> MessageBox.Show($"Exel"));
             SaveChangesCommand = new MyCommand(CommitMethod);
             StoreSelection = new MyCommand<object>(StoreSelectionMethod);
         }
 
-        private void SaveRiskRecordMethod(string obj)
+        private void SaveRiskRecordMethod()
         {
-            throw new NotImplementedException();
+            
         }
 
         private void CalculateMethod(string BINStr)
@@ -170,11 +171,12 @@ namespace ContragentAnalyse.ViewModel
         {
             if (!string.IsNullOrWhiteSpace(searchStr))
             {
+                List<Client> clients = _dbProvider.GetClients(searchStr).ToList();
 
                 //TODO продумать предупреждение о большом количестве результатов поиска при поиске строки '"' или 'А'
                 Func<IEnumerable<Client>> GetClientsFunc = GetSearchFunction(searchStr); //Func - какой то метод, который обязуется вернуть IEnumerable<Client>
                 FoundClients.Clear();
-                FoundClients.AddRange(GetClientsFunc?.Invoke()); // .Invoke - вызывает срабатывание метода
+                FoundClients.AddRange(GetClientsFunc.Invoke()); // .Invoke - вызывает срабатывание метода
             }                                               //FoundClients.AddRange - Extension Method или метод расширения. Реализация тут ContragentAnalyse.Extension
             else
             {

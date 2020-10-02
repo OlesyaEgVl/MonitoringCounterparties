@@ -46,11 +46,11 @@
                                             <TextBlock Text="Страна регистрации:"/>
                                             <TextBox Text="{Binding SelectedClient.Country}"  IsReadOnly="True"/>
                                             <TextBlock Text="Дата актуализации:"/>
-                                            <DatePicker Text="{Binding DataAct}" IsEnabled="False" />
+                                            <DatePicker Text="{Binding SelectedClient.ActualizationDate, Mode=OneWay}" IsEnabled="False" />
                                             <TextBlock Text="Другие БИНы Клиента:"/>
                                             <TextBox Text="{Binding SelectedClient.AdditionalBIN}" IsReadOnly="True"/>
                                             <TextBlock Text="Действующие договора:"/>
-                                            <TextBox Text="{Binding Contract}" IsReadOnly="True"/>
+                                            <TextBox Text="{Binding SelectedClient.GetContracts, Mode=OneWay}" IsReadOnly="True"/>
                                             <TextBlock Text="Счета в валюте:"/>
                                             <TextBox Text="{Binding AccountNumbers}" IsReadOnly="True"/>
                                             <StackPanel Orientation="Horizontal">

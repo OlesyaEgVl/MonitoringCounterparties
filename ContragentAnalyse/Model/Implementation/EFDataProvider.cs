@@ -19,14 +19,15 @@ namespace ContragentAnalyse.Model.Implementation
             _dbContext = new DatabaseContext();
         }
 
-        public IEnumerable<Client> GetClients(string BIN) => _dbContext.Client.
-            Include(i=>i.TypeClient).
-            Include(i => i.Actualization).
-            Include(i => i.PrescoringScoring).
-            Include(i=>i.Contracts).
-            Include(i => i.RestrictedAccounts).
-            Include(i => i.Contacts).
-            Include(i=>i.Requests).
+        public IEnumerable<Client> GetClients(string BIN) =>
+            _dbContext.Client.
+            //Include(i=>i.TypeClient).
+            //Include(i => i.Actualization).
+            //Include(i => i.PrescoringScoring).
+            //Include(i=>i.Contracts).
+            //Include(i => i.RestrictedAccounts).
+            //Include(i => i.Contacts).
+            //Include(i=>i.Requests).
             Where(i => i.BIN.ToLower().Equals(BIN.ToLower()));
 
         public IEnumerable<Client> GetClientsByName(string Name) => _dbContext.Client.
@@ -111,10 +112,11 @@ namespace ContragentAnalyse.Model.Implementation
             {
                 connection.Open();
                 SqlCommand command = new SqlCommand();
-                command.CommandText = @"INSERT INTO Client VALUES (@ClientManager, @Client_type_Id ,@BecomeClientDate,@ShortName,@FullName,@EnglName  ,@LicenceNumber,@LicenceEstDate,@RKC_BIK,@INN,@OGRN,@OGRN_Date,@RegName_RP,@RegDate_RP,@CurrencyLicence ,@RegistrationRegion,@NextScoringDate,@Country_Id)";
+                command.CommandText = @"INSERT INTO Client VALUES (@ClientManager, @Client_type_Id ,@BecomeClientDate,@AdditionalBIN,@ShortName,@FullName,@EnglName  ,@LicenceNumber,@LicenceEstDate,@RKC_BIK,@INN,@OGRN,@OGRN_Date,@RegName_RP,@RegDate_RP,@CurrencyLicence ,@RegistrationRegion,@NextScoringDate,@Country_Id,@Currency_Id)";
                 command.Parameters.Add("@ClientManager", SqlDbType.NVarChar);
                 command.Parameters.Add("@Client_type_Id", SqlDbType.Int);
                 command.Parameters.Add("@BecomeClientDate", SqlDbType.Date);
+                command.Parameters.Add("@AdditionalBIN", SqlDbType.NVarChar);
                 command.Parameters.Add("@ShortName", SqlDbType.NVarChar);
                 command.Parameters.Add("@FullName", SqlDbType.NVarChar);
                 command.Parameters.Add("@EnglName", SqlDbType.NVarChar);
@@ -130,6 +132,7 @@ namespace ContragentAnalyse.Model.Implementation
                 command.Parameters.Add("@RegistrationRegion", SqlDbType.NVarChar);
                 command.Parameters.Add("@NextScoringDate", SqlDbType.Date);
                 command.Parameters.Add("@Country_Id", SqlDbType.Int);
+                command.Parameters.Add("@Currency_Id", SqlDbType.Int);
                 // массив для хранения бинарных данных файла
                 byte[] imageData;
                 using (System.IO.FileStream fs = new System.IO.FileStream(connectionString, FileMode.Open))
@@ -141,6 +144,7 @@ namespace ContragentAnalyse.Model.Implementation
                 command.Parameters["@ClientManager"].Value = client.ClientManager;
                 command.Parameters["@Client_type_Id"].Value = client.Client_type_Id;
                 command.Parameters["@BecomeClientDate"].Value = client.BecomeClientDate;
+                command.Parameters["@AdditionalBIN"].Value = client.AdditionalBIN;
                 command.Parameters["@ShortName"].Value = client.ShortName;
                 command.Parameters["@FullName"].Value = client.FullName;
                 command.Parameters["@EnglName"].Value = client.EnglName;
@@ -156,6 +160,7 @@ namespace ContragentAnalyse.Model.Implementation
                 command.Parameters["@RegistrationRegion"].Value = client.RegistrationRegion;
                 command.Parameters["@NextScoringDate"].Value = client.NextScoringDate;
                 command.Parameters["@Country_Id"].Value = client.Country_Id;
+                command.Parameters["@Currency_Id"].Value = client.Currency_Id;
 
 
                 command.ExecuteNonQuery();
@@ -178,17 +183,8 @@ namespace ContragentAnalyse.Model.Implementation
             return null;
         }
 
-
-        string[] Country = new string[] { "HA" };
-        Country IDataProvider.GetCountry(string v)
-        {
-            if (BankTypeCodes.Any(i => i.Equals(v)))
-            {
-                return _dbContext.Country.FirstOrDefault(i => i.Name.Equals("Страна"));
-            }
-            
-            return null;
-        }
+        Country IDataProvider.GetCountry(string v) => _dbContext.Country.FirstOrDefault(cntr => cntr.Code.ToUpper().Equals(v.ToUpper()));
+        Currency IDataProvider.GetCurrency(string v) => _dbContext.Currency.FirstOrDefault(cntr => cntr.CodeCurrency.Equals(v.ToUpper()));
 
         public Criteria[] GetCriterialist(string bINStr)
         {
@@ -197,7 +193,12 @@ namespace ContragentAnalyse.Model.Implementation
 
         public void AddCriteriaList(Criteria[] criteriaslist)
         {
-            throw new NotImplementedException();
+          
+           foreach (Criteria crit in criteriaslist)
+            {
+               // sum=crit.Weight
+            }
+            //throw new NotImplementedException();
         }
     }
 }

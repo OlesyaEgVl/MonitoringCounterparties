@@ -12,10 +12,13 @@
                 <CheckBox IsChecked="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}"/>
             </StackPanel>
         </DataTemplate>
+        
     </UserControl.Resources>
+   
     <ScrollViewer VerticalScrollBarVisibility="Auto" >
 
         <Grid>
+            
             <StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Введите идентификатор клиента" Margin="5,0"/>
@@ -39,6 +42,7 @@
                     </GroupBox>
                 </StackPanel>
                 <GroupBox Header="Критерии риска" Margin="10,0">
+                   
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="5">
                             <ListView ItemsSource="{Binding RiskCriteriasList}" Grid.Column="1" Grid.Row="1" Name="selectoritems">

@@ -50,8 +50,6 @@
                                                 <GridViewColumn/>
                                             </GridView>
                                         </ListView.View>
-                                        
-
                                     </ListView>
                                 </StackPanel>
                             </StackPanel>

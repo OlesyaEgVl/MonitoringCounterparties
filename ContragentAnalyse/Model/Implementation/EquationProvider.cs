@@ -20,6 +20,7 @@ namespace ContragentAnalyse.Model.Implementation
         {
             
         }*/
+
         public EquationProvider(IDataProvider databaseProvider)
         {
             this.dataProvider = databaseProvider;
@@ -91,7 +92,8 @@ namespace ContragentAnalyse.Model.Implementation
             clients.LicenceNumber = LicenceNumber;
             string licenceDate = EUCL.ReadScreen(20, 33, 11);// 
             clients.LicenceEstDate = Convert.ToDateTime(licenceDate);
-            clients.Country = dataProvider.GetCountry(EUCL.ReadScreen(16, 33, 2));// страна регистрации-нужно сделать как типы клиента
+            string countrys = EUCL.ReadScreen(16, 33, 2);
+            clients.Country = dataProvider.GetCountry(countrys);
             
             
             pEnter();
@@ -113,7 +115,7 @@ namespace ContragentAnalyse.Model.Implementation
             pEnter();
             string currencylicence = EUCL.ReadScreen(7, 33, 1);// валютная лицензия
             clients.CurrencyLicence = Convert.ToBoolean(currencylicence);
-            string clientmanager = EUCL.ReadScreen(13, 39, 42);// КЛИНТ_МЕНЕДЖЕР имя и фамилию надо прописывать или код?
+            string clientmanager = EUCL.ReadScreen(13, 39, 42);// КЛИНТ_МЕНЕД7ЖЕР имя и фамилию надо прописывать или код?
             clients.ClientManager = clientmanager;
             pEnter();
             pEnter();
@@ -124,6 +126,51 @@ namespace ContragentAnalyse.Model.Implementation
             clients.Actualization.Add(act);
             pEnter();
             string levelrisk = EUCL.ReadScreen(5, 34, 11);//дата актуализации - это нигде не хранится
+            pEnter();//мб не столько энтеров
+            pEnter();
+            for (int i=1;i<=24;i++)
+            {
+                for (int j=1;j<=80;j++)
+                {
+                    if (BINStr== EUCL.ReadScreen(i, j, 6))
+                    { clients.AdditionalBIN += EUCL.ReadScreen(i, 28, 6)+", "; }
+                }
+            }
+            pEnter();
+            pEnter();
+            EUCL.SetCursorPos(21, 17);
+            EUCL.SendStr("PPP");
+            pEnter();
+            pEnter();
+            EUCL.SetCursorPos(6, 2);
+            EUCL.SendStr("1");
+            // тут энтер проставляется автоматически
+            EUCL.SetCursorPos(7, 69);
+            EUCL.SendStr(BINStr);
+            if (countrys == "RU")
+            {
+                EUCL.SetCursorPos(5, 5);
+                EUCL.SendStr("30109");
+            }
+            else
+            {
+                EUCL.SetCursorPos(5, 5);
+                EUCL.SendStr("30111");
+            }
+            pEnter();
+            for (int i = 1; i <= 24; i++)
+            {
+                if (EUCL.ReadScreen(i, 64, 6) == "")
+                {
+                    // счёт открыт
+                    clients.Currency = dataProvider.GetCurrency(EUCL.ReadScreen(i, 11,3));//счета в валюте
+                }
+            }
+            EUCL.SendStr("@8"); // правильно ли тут сделала преход вниз
+            EUCL.SendStr("@12");
+            EUCL.SendStr("@12");// мб это не нужно, т.к. это последняя функция
+
+
 
             Disconnect();
 
