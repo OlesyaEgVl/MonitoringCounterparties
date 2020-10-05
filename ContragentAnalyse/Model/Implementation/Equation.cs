@@ -1,6 +1,8 @@
-﻿using System;
+﻿using ContragentAnalyse.Extension;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows;
 
 namespace ContragentAnalyse.Model.Implementation
 {
@@ -10,6 +12,7 @@ namespace ContragentAnalyse.Model.Implementation
         public static extern uint hllapi(out uint Func, StringBuilder Data, out uint Length, out uint RetC);
 
     }
+
     /// <summary>
     /// Реализация основных функций Equation
     /// </summary>
@@ -174,34 +177,59 @@ namespace ContragentAnalyse.Model.Implementation
             return EUCLProgram.hllapi(out f, Data, out l, out rc);
         }
     }
+
     /// <summary>
     /// Собранные функции, необходимые для работы программы
     /// </summary>
     public class Equation
     {
-        /// <summary>
-        /// Проверить соединение с Equation
-        /// </summary>
-        /// <param name="session">Название сессии (буквенное обозначение), например "B"</param>
-        /// <returns>true - если Equation доступен, false, если соединение отсутствует</returns>
-        public bool CheckConnection(string session)
-        {
-            if (EUCL.Connect(session) == 0)
-            {
+        bool connected = true;
+        char sessionName = 'A';
+        //Наличие соединения с PCCOMM //нельзя объявлять переменные в этом пространстве - выдаёт ошибку
+        //public bool connected = true; 
+        //глупость
 
-                if (EUCL.ReadScreen(3, 19, 3).Equals("###"))
+
+        //это конструктор - метод вызываемый при создании экземпляра класса. А класс ты закомментировала
+        public Equation()
+        {
+            #region getConnection
+            int attempCount = 0;
+            Console.WriteLine("Connecting to Equation");
+            Console.WriteLine($"Trying connect to {sessionName}...");
+            while (EUCL.Connect(sessionName.ToString()) != 0)
+            {
+                if (attempCount++ > 5)
                 {
-                    EUCL.Disconnect("A");
-                    return false; // Сеанс в режиме ожидания
+                    connected = false;
+                    Console.WriteLine("Connection failed");
+                    break;
                 }
-                else
-                {
-                    EUCL.Disconnect("A");
-                    return true;// Сеанс готов к работе
-                }
+                sessionName++;
+                Console.WriteLine($"Trying connect to {sessionName}...");
             }
-            else
-                return false; //Сеанс закрыт
+            if (connected)
+            {
+                //ClearScreen();
+                EUCL.Disconnect($"{sessionName}");
+                connected = true;
+                Console.WriteLine("Connected.");
+            }
+            #endregion
         }
+
+        //какой-то метод для работы с EQ
+       /* public void SomeMethond()
+        {
+            if (!connected)
+            {
+                MessageBox.Show("Отсутствует подключение к Equation", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            } //вот и вся проверка
+
+            //дальше работа в Equation
+        }*/
     }
+
+
 }

@@ -106,7 +106,7 @@
                                             <Button x:Name="buttonCorr" Width="150" Height="25" Content="Редактировать" Click="Corr"
                                                     Command="{Binding EditCommand}"/>
                                             <Button x:Name="buttonSave" Width="150" Height="25" Content="Сохранить изменения" Click="Save"
-                                                    Command="{Binding SaveChangesCommand}"/>
+                                                    Command="{Binding SaveCommand}"/>
                                             <Button x:Name="buttonWord" Width="150" Height="25" Content="Выгрузить в Word" Click="Word"
                                                     Command="{Binding ExportWordCommand}"/>
                                         </StackPanel>

@@ -112,7 +112,7 @@ namespace ContragentAnalyse.ViewModel
             SearchCommand = new MyCommand<string>(SearchMethod);
             AddClientCommand = new MyCommand<string>(AddClientMethod);
             EditCommand = new MyCommand(() => MessageBox.Show($"Редактировать"));
-            SaveCommand = new MyCommand(()=>MessageBox.Show($"Сохранить изменения"));
+            SaveCommand = new MyCommand(SaveAncetaMethod);
             CalculateCommand = new MyCommand<string>(CalculateMethod);
             SaveRiskRecordCommand = new MyCommand(SaveRiskRecordMethod); ;//сохранить критерии и уровень риска
             ExportWordCommand = new MyCommand(()=> MessageBox.Show($"Скачать Word"));
@@ -120,6 +120,13 @@ namespace ContragentAnalyse.ViewModel
             SaveChangesCommand = new MyCommand(CommitMethod);
             StoreSelection = new MyCommand<object>(StoreSelectionMethod);
         }
+
+        private void SaveAncetaMethod()
+        {
+            throw new NotImplementedException();
+        }
+
+       
 
         private void SaveRiskRecordMethod()
         {
@@ -158,8 +165,11 @@ namespace ContragentAnalyse.ViewModel
             if (!string.IsNullOrWhiteSpace(BINStr))
             {
                 Client newClient = eqProvider.GetClient(BINStr); //найти клиента в EQ
-                _dbProvider.AddClient(newClient); //добавить в БД
-                SelectedClient = newClient;
+                if (newClient != null)
+                {
+                    _dbProvider.AddClient(newClient); //добавить в БД
+                    SelectedClient = newClient;
+                }
             }                                              
             else
             {

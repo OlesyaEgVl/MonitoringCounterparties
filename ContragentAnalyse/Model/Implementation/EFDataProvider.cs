@@ -133,6 +133,7 @@ namespace ContragentAnalyse.Model.Implementation
                 command.Parameters.Add("@NextScoringDate", SqlDbType.Date);
                 command.Parameters.Add("@Country_Id", SqlDbType.Int);
                 command.Parameters.Add("@Currency_Id", SqlDbType.Int);
+                
                 // массив для хранения бинарных данных файла
                 byte[] imageData;
                 using (System.IO.FileStream fs = new System.IO.FileStream(connectionString, FileMode.Open))
