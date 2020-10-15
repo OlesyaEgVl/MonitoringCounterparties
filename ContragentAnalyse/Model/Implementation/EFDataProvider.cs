@@ -8,6 +8,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows;
 
 namespace ContragentAnalyse.Model.Implementation
 {
@@ -21,13 +22,15 @@ namespace ContragentAnalyse.Model.Implementation
 
         public IEnumerable<Client> GetClients(string BIN) =>
             _dbContext.Client.
-            //Include(i=>i.TypeClient).
-            //Include(i => i.Actualization).
-            //Include(i => i.PrescoringScoring).
-            //Include(i=>i.Contracts).
-            //Include(i => i.RestrictedAccounts).
-            //Include(i => i.Contacts).
-            //Include(i=>i.Requests).
+            Include(i => i.TypeClient).
+            Include(i => i.Actualization).
+            Include(i => i.PrescoringScoring).
+            Include(i => i.Contracts).
+            Include(i => i.RestrictedAccounts).
+            Include(i => i.Contacts).
+            Include(i => i.Requests).
+            Include(i => i.ClientToCurrency).
+                ThenInclude(i => i.Currency).
             Where(i => i.BIN.ToLower().Equals(BIN.ToLower()));
 
         public IEnumerable<Client> GetClientsByName(string Name) => _dbContext.Client.
@@ -38,6 +41,8 @@ namespace ContragentAnalyse.Model.Implementation
             Include(i => i.RestrictedAccounts).
             Include(i => i.Contacts).
             Include(i => i.Requests).
+            Include(i=>i.ClientToCurrency).
+                ThenInclude(i=>i.Currency).
             Where(i => i.Name.ToLower().IndexOf(Name.ToLower()) > -1);
         public IEnumerable<Criteria> GetCriterias() => _dbContext.Criteria;
         public DateTime GetDateActual()
@@ -47,9 +52,26 @@ namespace ContragentAnalyse.Model.Implementation
             return DateAct;
         }
         #region
-        
+
         #endregion
-        
+
+        Currency IDataProvider.GetCurrencyByCode(string code)
+        {
+            if (!string.IsNullOrWhiteSpace(code))
+            {
+                return _dbContext.Currency.FirstOrDefault(i => i.CodeCurrency == code);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        Currency IDataProvider.GetCurrencyByName(string name)
+        {
+            return _dbContext.Currency.FirstOrDefault(i => i.Name.ToLower().Equals(name.ToLower()));
+        }
+
         public string GetCriterions()
         {
             Criteria criterion = _dbContext.Criteria.Include("Bank").FirstOrDefault(i => i.Id == 0); // Как соеденить таблицы и взять поле. которое нужно
@@ -105,9 +127,25 @@ namespace ContragentAnalyse.Model.Implementation
             _dbContext.SaveChanges();
         }
 
-        public void AddClient(Client client)
+        public IEnumerable<ContactType> GetContactTypes()
         {
-            string connectionString = @"Server=A105512\\A105512;Database=CounterpartyMonitoring;Integrated Security=false;Trusted_Connection=True;MultipleActiveResultSets=True;User Id = CounterPartyMonitoring_user; Password = orppaAdmin123!";
+            return _dbContext.ContactType;
+        }
+
+        public void AddClient(Client newClient)
+        {
+            if (_dbContext.Client.Any(client => client.BIN.Equals(newClient.BIN)))
+            {
+                MessageBox.Show("Клиент уже существует!");
+            }
+            else
+            {
+                _dbContext.Client.Add(newClient);
+                _dbContext.SaveChanges();
+                MessageBox.Show("Клиент добавлен!");
+            }
+            
+            /*string connectionString = @"Server=A105512\\A105512;Database=CounterpartyMonitoring;Integrated Security=false;Trusted_Connection=True;MultipleActiveResultSets=True;User Id = CounterPartyMonitoring_user; Password = orppaAdmin123!";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -166,7 +204,8 @@ namespace ContragentAnalyse.Model.Implementation
 
                 command.ExecuteNonQuery();
                 // throw new NotImplementedException();
-            }
+            }*/
+            
         }
         string [] BankTypeCodes = new string [] { "HA","HB","HD","HU","HC"};
         string[] LLCTypeCodes = new string[] { "HA" };
@@ -184,22 +223,55 @@ namespace ContragentAnalyse.Model.Implementation
             return null;
         }
 
-        Country IDataProvider.GetCountry(string v) => _dbContext.Country.FirstOrDefault(cntr => cntr.Code.ToUpper().Equals(v.ToUpper()));
-        Currency IDataProvider.GetCurrency(string v) => _dbContext.Currency.FirstOrDefault(cntr => cntr.CodeCurrency.Equals(v.ToUpper()));
+        Country IDataProvider.GetCountry(string v)
+        {
+            if (!string.IsNullOrWhiteSpace(v))
+            {
+                return _dbContext.Country.FirstOrDefault(cntr => cntr.Code.ToUpper().Equals(v.ToUpper()));
+            }
+            else { return null; }
+        }
 
         public Criteria[] GetCriterialist(string bINStr)
         {
             throw new NotImplementedException();
         }
 
-        public void AddCriteriaList(Criteria[] criteriaslist)
+        public string AddCriteriaList(Criteria[] criteriaslist)
         {
-          
+           string result="";
+           string bankproduct;
+           double sum=0;
            foreach (Criteria crit in criteriaslist)
             {
-               // sum=crit.Weight
+                sum += crit.Weight;
             }
-            //throw new NotImplementedException();
+            if (sum >= 13.1)
+            {
+                result= sum + " - Критичный";
+                bankproduct = "Сотрудничество приостановлено/запрещено";
+
+            }
+            else if ((sum >= 5.6) && (sum <= 13))
+            {
+                result = sum + " - Высокий";
+                bankproduct = "Открытие корреспондентских счетов в рублях; в иностранной валюте - только для внутренних расчетов и/или собственных операций;Привлечение / размещение межбанковских кредитов/ депозитов;Синдицированное кредитование;Безналичные конверсионные операции;Операции с производными финансовыми инструментами;Сделки с ценными бумагами;Сделки купли-продажи драгоценных металлов;Организация секьюритизаций;Объединение банкоматных сетей;Расчеты в рублях через международные платежные системы;";
+            }
+            else if ((sum >= 3.5) && (sum <= 5.5))
+            {
+                result = sum + " - Средний";
+                bankproduct = "Банковские продукты для клиентов с высоким уровнем комплаенс-риска + Зарплатные проекты;Документарные операции(аккредитивы, инкассо, гарантии);Банкнотные сделки;Сделки с векселями;Инкассация";
+            }
+            else if (sum <= 3.5)
+            {
+                result = sum + " - Низкий";
+                bankproduct = "Банковские продукты для клиентов со средним уровнем комплаенс-риска + Открытие корреспондентских счетов без ограничения по валюте счета и режиму счета;Трансграничные расчеты и / или расчеты в иностранной валюте через международные платежные системы;Брокерское обслуживание;Депозитарное обслуживание;";
+            }
+            return result;  
         }
+
+       
+
+       
     }
 }

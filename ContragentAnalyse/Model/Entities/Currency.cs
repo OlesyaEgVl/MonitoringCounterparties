@@ -7,9 +7,6 @@ namespace ContragentAnalyse.Model.Entities
 {
     public class Currency: NamedEntity
     {
-        public int CodeCurrency { get; set; }    //числовой КОД
-
-        public List<Client> Client { get; set; }
-
+        public string CodeCurrency { get; set; }
     }
 }

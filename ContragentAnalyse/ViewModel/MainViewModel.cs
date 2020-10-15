@@ -17,7 +17,7 @@ using Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal;
 
 namespace ContragentAnalyse.ViewModel
 {
-    public class MainViewModel :INotifyPropertyChanged
+    public class MainViewModel : INotifyPropertyChanged
     {
         #region Реализация Singleton
         private static MainViewModel instance;
@@ -46,12 +46,21 @@ namespace ContragentAnalyse.ViewModel
         private ObservableCollection<Criteria> _riskCriteria = new ObservableCollection<Criteria>();
         public ObservableCollection<Client> FoundClients { get => _foundClients; set => _foundClients = value; }
         public ObservableCollection<Criteria> RiskCriteriasList { get => _riskCriteria; set => _riskCriteria = value; }
+        private ObservableCollection<ContactType> _contactTypes = new ObservableCollection<ContactType>();
+        public ObservableCollection<ContactType> ContactTypes
+        {
+            get => _contactTypes;
+            set => _contactTypes = value;
+        }
 
 
         private ObservableCollection<Criteria> selectedCriterias = new ObservableCollection<Criteria>();
         public ObservableCollection<Criteria> SelectedCriterias => selectedCriterias;
-       
+
+        //private Contacts _selectedContacts;
+
         private Client _selectedClient;
+
         public Client SelectedClient
         {
             get => _selectedClient;
@@ -63,8 +72,8 @@ namespace ContragentAnalyse.ViewModel
         }
         #endregion
 
-        List<string>DictionaryCountry = new List<string>() { "Австралия", "Австрия", "Азербайджан", "Армения"};
-        
+        List<string> DictionaryCountry = new List<string>() { "Австралия", "Австрия", "Азербайджан", "Армения" };
+
         // код, заполняющий словарь
 
         // возвращает массив строк из словаря, соответствующих паттерну
@@ -77,14 +86,16 @@ namespace ContragentAnalyse.ViewModel
 
             return ret;
         }
-        
+
         #region Commands
         public MyCommand<string> SearchCommand { get; set; }
-        public MyCommand <string> AddClientCommand { get; set; }
+        public MyCommand<string> AddClientCommand { get; set; }
+        /*public MyCommand AddRequestsCommand { get; private set; } */
         public MyCommand EditCommand { get; set; }
         public MyCommand SaveCommand { get; set; }
         public MyCommand ExportWordCommand { get; set; }
         public MyCommand<string> CalculateCommand { get; set; }
+        public MyCommand <string> EstimationRiskCommand { get; set; }
         public MyCommand SaveRiskRecordCommand { get; set; }
         public MyCommand ExportExcelCommand { get; set; }
         public MyCommand SaveChangesCommand { get; set; }
@@ -97,12 +108,12 @@ namespace ContragentAnalyse.ViewModel
             this.eqProvider = eqProvider;
             InitializeCommands();
             InitializeData();
-            //eqProvider.reader(); /* Метод выбран, просто, чтобы работал код. Сейчас ничего нужного не выполняет*/
         }
 
         private void InitializeData()
         {
             RiskCriteriasList = new ObservableCollection<Criteria>(_dbProvider.GetCriterias());
+            _dbProvider.GetContactTypes().ToList().ForEach(ContactTypes.Add);
             RaisePropertyChanged(nameof(RiskCriteriasList));
         }
 
@@ -111,33 +122,73 @@ namespace ContragentAnalyse.ViewModel
             //TODO подставить реализацию команд
             SearchCommand = new MyCommand<string>(SearchMethod);
             AddClientCommand = new MyCommand<string>(AddClientMethod);
-            EditCommand = new MyCommand(() => MessageBox.Show($"Редактировать"));
-            SaveCommand = new MyCommand(SaveAncetaMethod);
-            CalculateCommand = new MyCommand<string>(CalculateMethod);
-            SaveRiskRecordCommand = new MyCommand(SaveRiskRecordMethod); ;//сохранить критерии и уровень риска
-            ExportWordCommand = new MyCommand(()=> MessageBox.Show($"Скачать Word"));
-            ExportExcelCommand = new MyCommand(()=> MessageBox.Show($"Exel"));
+            //AddRequestsCommand = new MyCommand(AddRequestsMethod);
+         
+            SaveCommand = new MyCommand(SaveAncetaMethod); //сохранение анкеты
+
+            CalculateCommand = new MyCommand<string>(CalculateMethod); //кнопка посчитать
+            EstimationRiskCommand = new MyCommand<string>(EstimationRiskMethod); //оценка риска
+            SaveRiskRecordCommand = new MyCommand(SaveRiskRecordMethod); //сохранить критерии и уровень риска
+            ExportWordCommand = new MyCommand(() => MessageBox.Show($"Скачать Word"));
+            ExportExcelCommand = new MyCommand(() => MessageBox.Show($"Exel"));
             SaveChangesCommand = new MyCommand(CommitMethod);
             StoreSelection = new MyCommand<object>(StoreSelectionMethod);
         }
 
-        private void SaveAncetaMethod()
+        private void EstimationRiskMethod(string BINStr)
         {
-            throw new NotImplementedException();
+            Criteria[] criteriaslist = _dbProvider.GetCriterialist(BINStr);
+           //SelectedClient.NextScoringDate = new DateTime?();
+            if (_dbProvider.AddCriteriaList(criteriaslist).IndexOf("Низкий") >-1)
+            {
+                SelectedClient.NextScoringDate = DateTime.Now.AddYears(2);
+                RaisePropertyChanged(nameof(SelectedClient.NextScoringDate));
+            }
+            else
+            {
+                SelectedClient.NextScoringDate = DateTime.Now.AddYears(1);
+                RaisePropertyChanged(nameof(SelectedClient.NextScoringDate));
+            }
         }
 
-       
+        //private void AddRequestsMethod()
+        //{
+        //    //проверка на null
+        //    if (SelectedClient.Requests == null) //??? нет ссылки на объект "Ссылка на объект не установлена на экземпляр объекта"    Контрагентанализ.модель представления.MainViewModel.SelectedClient.get возвращает null.
+        //    {
+        //        SelectedClient.Requests = new ObservableCollection<Request>();
+        //    }
+        //    SelectedClient.Requests.Add(new Request
+        //    {
+        //        SendDate = DateTime.Now
+        //    });
+        //    RaisePropertyChanged(nameof(SelectedClient.Requests));
+        //}
 
-        private void SaveRiskRecordMethod()
+
+
+        private void SaveAncetaMethod()
         {
-            
+         //   if (SelectedClient.ClientManager != null)//Не понимаю, как тут прописать условие
+            //{
+                CommitMethod();
+           // }
+        }
+
+
+
+        private void SaveRiskRecordMethod() // сохранение истории
+        {
+            string history;
+            CommitMethod();
         }
 
         private void CalculateMethod(string BINStr)
         {
             if (!string.IsNullOrWhiteSpace(BINStr))
             {
-                Criteria [] criteriaslist = _dbProvider.GetCriterialist(BINStr); //найти критерии для клиента по бину
+                
+                Criteria[] criteriaslist = _dbProvider.GetCriterialist(BINStr); //найти критерии для клиента по бину
                 _dbProvider.AddCriteriaList(criteriaslist); //Посчитать сумму баллов критериев
                 
             }
@@ -149,10 +200,10 @@ namespace ContragentAnalyse.ViewModel
 
         private void StoreSelectionMethod(object SelectedItems)
         {
-            if(SelectedItems is IEnumerable collection)
+            if (SelectedItems is IEnumerable collection)
             {
                 SelectedCriterias.Clear();
-                foreach(object obj in collection)
+                foreach (object obj in collection)
                 {
                     SelectedCriterias.Add(obj as Criteria);
                 }
@@ -162,21 +213,22 @@ namespace ContragentAnalyse.ViewModel
 
         private void AddClientMethod(string BINStr)
         {
-            if (!string.IsNullOrWhiteSpace(BINStr))
+
+            if (!string.IsNullOrWhiteSpace(BINStr.ToUpper()))
             {
-                Client newClient = eqProvider.GetClient(BINStr); //найти клиента в EQ
+                Client newClient = eqProvider.GetClient(BINStr.ToUpper()); //найти клиента в EQ
                 if (newClient != null)
                 {
                     _dbProvider.AddClient(newClient); //добавить в БД
                     SelectedClient = newClient;
                 }
-            }                                              
+            }
             else
             {
                 MessageBox.Show("Поле ввода не должно быть пустым!");
             }
         }
-    
+
         private void SearchMethod(string searchStr)
         {
             if (!string.IsNullOrWhiteSpace(searchStr))
@@ -198,16 +250,16 @@ namespace ContragentAnalyse.ViewModel
 
         private Func<IEnumerable<Client>> GetSearchFunction(string searchString)
         {
-           
-                //TODO обсудить с каких символов начинается ПИН клиента (Банка или юрлица)
-                char[] BinFirstLetters = { 'U', 'Y' };
-                if (string.IsNullOrWhiteSpace(searchString)) return null;
-                if (searchString.Length == 6 && BinFirstLetters.Any(i => i == searchString.ToUpper()[0]))
-                    return () => _dbProvider.GetClients(searchString);
-                else
-                    return () => _dbProvider.GetClientsByName(searchString);
-            
-            
+
+            //TODO обсудить с каких символов начинается ПИН клиента (Банка или юрлица)
+            char[] BinFirstLetters = { 'U', 'Y' };
+            if (string.IsNullOrWhiteSpace(searchString)) return null;
+            if (searchString.Length == 6 && BinFirstLetters.Any(i => i == searchString.ToUpper()[0]))
+                return () => _dbProvider.GetClients(searchString);
+            else
+                return () => _dbProvider.GetClientsByName(searchString);
+
+
         }
 
         private void CommitMethod()

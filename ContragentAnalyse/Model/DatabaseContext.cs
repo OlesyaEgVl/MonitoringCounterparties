@@ -31,6 +31,7 @@ namespace ContragentAnalyse.Model
             modelBuilder.Entity<Client>().HasMany(i => i.Requests).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.StopFactors).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.ClientToCrineria).WithOne(i => i.Client);
+            modelBuilder.Entity<Client>().HasMany(i => i.ClientToCurrency).WithOne(i => i.Client);
 
 
             /* modelBuilder.Entity<PrescoringScoring>().HasMany(i => i.CriteriaToScoring).WithOne(i => i.PrescoringScoring);
@@ -69,7 +70,6 @@ namespace ContragentAnalyse.Model
         public DbSet<RestrictedAccounts> RestrictedAccounts { get; set; }
         public DbSet<RiskCodes> RiskCodes { get; set; }
         public DbSet<ScoringType> ScoringType { get; set; }
-        public DbSet<Status> Status { get; set; }
         public DbSet<StatusActualization> StatusActualization { get; set; }
         public DbSet<StopFactors> StopFactors { get; set; }
         public DbSet<TypeAgreement> TypeAgreement { get; set; }

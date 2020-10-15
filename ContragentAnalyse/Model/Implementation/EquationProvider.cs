@@ -53,7 +53,7 @@ namespace ContragentAnalyse.Model.Implementation
                 sessionName++;
                 Console.WriteLine($"Trying connect to {sessionName}...");
             }
-            
+
             if (connected)
             {
                 EUCL.ClearScreen();
@@ -81,7 +81,7 @@ namespace ContragentAnalyse.Model.Implementation
                 //Бежишь по eq и ищешь инфу
                 //Возвращаешь заполненный инфой класс
 
-                
+
                 EUCL.SetCursorPos(21, 17);
                 EUCL.SendStr("ПБА");
                 pEnter();
@@ -93,20 +93,24 @@ namespace ContragentAnalyse.Model.Implementation
                  tc.Name = typeclient;
                  clients.TypeClient.add(tc);
                  clients.TypeClient.Name = typeclient;*/
+                clients.BIN = BINStr;
                 clients.TypeClient = dataProvider.GetClientType(EUCL.ReadScreen(4, 33, 2));
                 string RKCBIK = EUCL.ReadScreen(21, 33, 9);//
                 clients.RKC_BIK = RKCBIK;
                 string fullname = EUCL.ReadScreen(6, 33, 35);// 
                 clients.FullName = fullname.TrimSpaces(); //Удалять пробелы!!! + указать корректную длинну
-                string shortname = EUCL.ReadScreen(11, 33, 35)+ EUCL.ReadScreen(12, 33, 35) + EUCL.ReadScreen(13, 33,35);// 
-                clients.FullName = shortname;
-                string Englname = EUCL.ReadScreen(14, 33, 35)+ EUCL.ReadScreen(15, 33, 35);// 
+                string shortname = EUCL.ReadScreen(11, 33, 35) + EUCL.ReadScreen(12, 33, 35) + EUCL.ReadScreen(13, 33, 35);// 
+                clients.ShortName = shortname.TrimSpaces(); //WTF
+                string Englname = EUCL.ReadScreen(14, 33, 35) + EUCL.ReadScreen(15, 33, 35);// 
                 clients.EnglName = Englname.TrimSpaces();
                 string LicenceNumber = EUCL.ReadScreen(18, 33, 20);// 
                 clients.LicenceNumber = LicenceNumber.TrimSpaces();
+
                 string licenceDate = EUCL.ReadScreen(20, 33, 11);// 
-               //Исправить. Проверка некорректная
-                clients.LicenceEstDate = Convert.ToDateTime(licenceDate);
+                if (!licenceDate.Equals("           "))
+                {
+                    clients.LicenceEstDate = Convert.ToDateTime(licenceDate);
+                }
                 string countrys = EUCL.ReadScreen(16, 33, 2);
                 clients.Country = dataProvider.GetCountry(countrys.TrimSpaces());
                 pEnter();
@@ -115,16 +119,25 @@ namespace ContragentAnalyse.Model.Implementation
                 string ORGN = EUCL.ReadScreen(15, 33, 20);// 
                 clients.OGRN = ORGN.TrimSpaces();
                 string OGRNDate = EUCL.ReadScreen(15, 60, 11);// 
-                clients.OGRN_Date = Convert.ToDateTime(OGRNDate);
+                if (!OGRNDate.Equals("           "))
+                {
+                    clients.OGRN_Date = Convert.ToDateTime(OGRNDate);
+                }
                 string regname = EUCL.ReadScreen(17, 33, 35);// 
                 clients.RegName_RP = regname.TrimSpaces();
                 string regdate = EUCL.ReadScreen(16, 60, 11);// 
-                clients.RegDate_RP = Convert.ToDateTime(regdate);
+                if (!regdate.Equals("           "))
+                {
+                    clients.RegDate_RP = Convert.ToDateTime(regdate);
+                }
                 string regregion = EUCL.ReadScreen(20, 33, 35);// 
                 clients.RegistrationRegion = regregion.TrimSpaces();
                 pEnter();
                 string becomeclientdate = EUCL.ReadScreen(5, 33, 11);// дата перехода в клиенты 
-                clients.BecomeClientDate = Convert.ToDateTime(becomeclientdate.TrimSpaces());
+                if (!becomeclientdate.Equals("           "))
+                {
+                    clients.BecomeClientDate = Convert.ToDateTime(becomeclientdate.TrimSpaces());
+                }
                 pEnter();
                 string currencylicence = EUCL.ReadScreen(7, 33, 1);// валютная лицензия
                 clients.CurrencyLicence = currencylicence.Equals("Y");
@@ -133,41 +146,63 @@ namespace ContragentAnalyse.Model.Implementation
                 pEnter();
                 pEnter();
                 pEnter();
-                string actdate = EUCL.ReadScreen(17, 29, 2)+'.'+ EUCL.ReadScreen(17, 31, 2) + '.'+ EUCL.ReadScreen(17, 33, 2);//дата актуализации
-                Actualization act = new Actualization();
-                act.DateActEKS = Convert.ToDateTime(actdate);
-                if (clients != null) // get null ошибка
+                string actdate = EUCL.ReadScreen(17, 29, 2) + '.' + EUCL.ReadScreen(17, 31, 2) + '.' + EUCL.ReadScreen(17, 33, 2);//дата актуализации
+                if (!actdate.Equals("        "))
                 {
+                    Actualization act = new Actualization();
+                    act.DateActEKS = Convert.ToDateTime(actdate); //не совсем уверена, что верно сделала
+                    //У актуализации обязательное поле статус. Ты обязана инициировать все обязательные поля.
+                    if (act.DateActEKS.AddYears(1)>= DateTime.Now)
+                    {
+                        act.Status = "Заблокирован";
+                    }
+                    else 
+                    if(act.DateActEKS.AddMonths(10) >= DateTime.Now && act.DateActEKS.AddMonths(12) < DateTime.Now)
+                    {
+                        act.Status = "Подлежит актуализации";
+                    }
+                    else
+                    {
+                        act.Status = "Актуализирован";
+                    }
+                    if (clients.Actualization == null) //Потом убрать (не нужна - Клиент всегда null)
+                    {
+                        clients.Actualization = new List<Actualization>();
+                    }
                     clients.Actualization.Add(act);
                 }
-                
-                
                 pEnter();
-
-                string levelrisk = EUCL.ReadScreen(5, 34, 11);//уровень риска - это нигде не хранится
-                
+                //Здесь был уровень риска
                 pEnter();
-                if( !EUCL.ReadScreen(11, 4, 1).Equals(" "))
+                if (EUCL.ReadScreen(3, 6, 3).Equals("ИНН"))
                 {
-                    pEnter();
-                    for (int i = 1; i <= 24; i++)
+                    StringBuilder sb = new StringBuilder();
+                    for (int i = 5; i <= 20; i++)
                     {
-                        for (int j = 1; j <= 80; j++)
-                        {
-                            if (BINStr == EUCL.ReadScreen(i, j, 6))
-                            { clients.AdditionalBIN += EUCL.ReadScreen(i, 28, 6) + ", "; }
-                        }
-                    }
-                    EUCL.SendStr("@8");
-                    for (int i = 1; i <= 24; i++)
-                    {
-                        for (int j = 1; j <= 80; j++)
-                        {
-                            if (BINStr == EUCL.ReadScreen(i, j, 6))
-                            { clients.AdditionalBIN += EUCL.ReadScreen(i, 28, 6) + ", "; }
-                        }
-                    }
+                        string clientNameTemp = EUCL.ReadScreen(i, 40, 35);
 
+                        if (clientNameTemp.IndexOf(BINStr) > -1)
+                        {
+                            sb.Append($"{EUCL.ReadScreen(i, 28, 6)}; ");
+                        }
+
+
+                        clients.AdditionalBIN = sb.ToString();
+
+                    }
+                    if (EUCL.ReadScreen(20, 79, 1).Equals("+"))
+                    {
+                        EUCL.SendStr("@v");
+                        for (int i = 5; i <= 20; i++)
+                        {
+                            string clientNameTemp1 = EUCL.ReadScreen(i, 40, 35);
+                            if (clientNameTemp1.IndexOf(clients.BIN) > -1)
+                            {
+                                sb.Append($"{EUCL.ReadScreen(i, 28, 6)}; ");
+                            }
+                            clients.AdditionalBIN = sb.ToString();
+                        }
+                    }
                 }
 
                 EUCL.ClearScreen();
@@ -178,8 +213,7 @@ namespace ContragentAnalyse.Model.Implementation
                 EUCL.SetCursorPos(6, 2);
                 EUCL.SendStr("1");
                 // тут энтер проставляется автоматически
-                EUCL.SetCursorPos(7, 69);
-                EUCL.SendStr(BINStr);
+                
                 if (countrys.Equals("RU"))
                 {
                     EUCL.SetCursorPos(5, 5);
@@ -190,32 +224,69 @@ namespace ContragentAnalyse.Model.Implementation
                     EUCL.SetCursorPos(5, 5);
                     EUCL.SendStr("30111");
                 }
+                EUCL.SetCursorPos(7, 69);
+                EUCL.SendStr(clients.BIN);
                 pEnter();
-                for (int i = 1; i <= 24; i++)
+                do
                 {
-                    if (EUCL.ReadScreen(i, 64, 6).Equals(" "))
+                    //int i = 0;
+                    for ( int i = 8; i <= 20; i+=2)
                     {
-                        // счёт открыт
-                        clients.Currency = dataProvider.GetCurrency(EUCL.ReadScreen(i, 11, 3));//счета в валюте
+                        if(string.IsNullOrWhiteSpace(EUCL.ReadScreen(i, 5, 24)))
+                        {
+                            break;
+                        }
+                        if (string.IsNullOrWhiteSpace(EUCL.ReadScreen(i, 64, 1))) //если счет открыт И счёт вообще существует
+                        {
+                            // счёт открыт
+                            ClientToCurrency currtoclient = new ClientToCurrency();
+                            Currency currenc = new Currency();
+                            currtoclient.Currency = dataProvider.GetCurrencyByCode(EUCL.ReadScreen(i, 11, 3)); //Тут не должно быть List'a вообще
+                            /*У тебя  эта таблица содержит пары клиент - валюта
+                            клиент1 - доллар
+                            клиент1 - евро
+                            клиент1 - руфий
+                            клиент2 - доллар
+                            клиент2 - песо
+                            итп
+                            у тебя нету тут коллекций. или как в нашем случае ключ к клиенту-ключ к валюте
+                            1-1
+                            1-2
+                            1-3
+                            2-1
+                            2-4
+                            */
+                            currtoclient.Client = clients;
+                            if (clients.ClientToCurrency == null)
+                            {
+                                clients.ClientToCurrency = new List<ClientToCurrency>();
+                            }
+                            clients.ClientToCurrency.Add(currtoclient);
+                            /*   //не совсем уверена, что верно сделала
+                              clients.ClientToCurrency = new List<ClientToCurrency>();
+                              //clients.ClientToCurrency.Currency_Id.;
+                             // clients.Actualization.Add(act);*/
+                        }
                     }
-                }
-                EUCL.SendStr("@8"); // правильно ли тут сделала преход вниз
-                EUCL.SendStr("@12");
-               
+                    EUCL.SendStr("@v"); // правильно ли тут сделала преход вниз
+                } while (EUCL.ReadScreen(21, 79, 1).Equals("+"));
+                
+                // EUCL.SendStr("@12");
+                EUCL.ClearScreen();
                 Disconnect();
 
                 return clients;
             }
         }
         // это должно быть не тут, в эквейжене только эквейжн
-        public void FillClient(Client client) 
+        public void FillClient(Client client)
         {
             throw new NotImplementedException(); // заглушка
-            }
-
-
         }
 
-        
+
     }
+
+
+}
 

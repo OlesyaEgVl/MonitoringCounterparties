@@ -1,6 +1,8 @@
 ﻿using ContragentAnalyse.Model.Entities.Base;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
@@ -12,7 +14,7 @@ namespace ContragentAnalyse.Model.Entities
         public string ClientManager { get; set; }
         public bool? CardOP { get; set; }
         public int Client_type_Id { get; set; }
-        public DateTime BecomeClientDate { get; set; }
+        public DateTime? BecomeClientDate { get; set; }
         public int ResponsibleUnit_Id { get; set; }
         public int CoordinatingEmployee_Id { get; set; }
         public string BIN { get; set; }
@@ -35,7 +37,7 @@ namespace ContragentAnalyse.Model.Entities
         public string AddressPrime { get; set; }
         public DateTime? NextScoringDate { get; set; }
         public int? Country_Id { get; set; }
-        public int? Currency_Id { get; set; }
+        public int? ClientToCurrency_Id { get; set; }
         public string Level
         {
             get
@@ -74,21 +76,22 @@ namespace ContragentAnalyse.Model.Entities
             }
         }
 
-
-
         [ForeignKey(nameof(ResponsibleUnit_Id))]
         public virtual ResponsibleUnit ResponsibleUnit { get; set; }
         [ForeignKey(nameof(Client_type_Id))]
         public virtual TypeClient TypeClient { get; set; }
         [ForeignKey(nameof(CoordinatingEmployee_Id))]
-
         public virtual Employees Employees { get; set; }
         [ForeignKey(nameof(Country_Id))]
         public virtual Country Country { get; set; }
-        [ForeignKey(nameof(Currency_Id))]
-        public virtual Currency Currency { get; set; }
-        private List<Request> requests = new List<Request>();
-        public List<Request> Requests { get => requests; set => requests = value; }
+        public List<ClientToCurrency> ClientToCurrency { get; set; }
+
+        private ObservableCollection<Request> requests = new ObservableCollection<Request>();
+        public ObservableCollection<Request> Requests
+        {
+            get => requests;
+            set => requests = value;
+        }
         public List<Actualization> Actualization { get; set; }
         public List<PrescoringScoring> PrescoringScoring { get; set; }
         public List<Contracts> Contracts { get; set; }
