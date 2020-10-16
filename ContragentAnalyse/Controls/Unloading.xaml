@@ -50,8 +50,6 @@
                                                 <GridViewColumn/>
                                             </GridView>
                                         </ListView.View>
-                                        
-
                                     </ListView>
                                 </StackPanel>
                             </StackPanel>
@@ -323,8 +321,18 @@
                                 <CheckBox x:Name="CheckBox2_Copy" Width="300"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="5">
-                                <TextBlock Text="Запросы:" Width="200"/>
-                                <CheckBox x:Name="CheckBox1_Copy" Width="300"/>
+                                <TextBlock Text="Запросы (дата направления):" Width="200"/>
+                                    <Label Content="Начальная дата:"/>
+                                    <DatePicker Name="StartDate" SelectedDate="{Binding StartReportDate}" />
+                                    <Label Content="Конечная дата:"/>
+                                    <DatePicker Name="EndDate" SelectedDate="{Binding EndReportDate}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="5">
+                                <TextBlock Text="Запросы (дата получения):" Width="200"/>
+                                <Label Content="Начальная дата:"/>
+                                <DatePicker Name="StartDatefinish" SelectedDate="{Binding StartReportDate}" />
+                                <Label Content="Конечная дата:"/>
+                                <DatePicker Name="EndDatefinish" SelectedDate="{Binding EndReportDate}" />
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="5">
                                 <TextBlock Text="Счет с ограничениями:" Width="200"/>

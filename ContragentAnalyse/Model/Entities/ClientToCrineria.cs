@@ -10,10 +10,12 @@ namespace ContragentAnalyse.Model.Entities
     {
         public int Criteria_Id { get; set; }
         public int Client_Id { get; set; }
+       // public DateTime? DateAddCriteria { get; set; }
         [ForeignKey(nameof(Criteria_Id))]
         public virtual Criteria Criteria { get; set; }
         [ForeignKey(nameof(Client_Id))]
         public virtual Client Client { get; set; }
+        
 
 
     }

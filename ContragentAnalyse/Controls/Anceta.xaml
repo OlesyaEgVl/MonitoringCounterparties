@@ -42,15 +42,15 @@
                                     <GroupBox Header="Информация о Клиенте" Margin="10,0">
                                         <StackPanel MinWidth="300">
                                             <TextBlock Text="Полное наименование Клиента:" />
-                                            <TextBox Text="{Binding SelectedClient.FullName}" IsReadOnly="True"/>
+                                            <TextBox x:Name="FullName" Text="{Binding SelectedClient.FullName}" IsReadOnly="True"/>
                                             <TextBlock Text="Страна регистрации:"/>
                                             <TextBox Text="{Binding SelectedClient.Country}"  IsReadOnly="True"/>
                                             <TextBlock Text="Дата актуализации:"/>
-                                            <DatePicker Text="{Binding DataAct}" IsEnabled="False" />
+                                            <DatePicker Text="{Binding SelectedClient.ActualizationDate, Mode=OneWay}" IsEnabled="False" />
                                             <TextBlock Text="Другие БИНы Клиента:"/>
                                             <TextBox Text="{Binding SelectedClient.AdditionalBIN}" IsReadOnly="True"/>
                                             <TextBlock Text="Действующие договора:"/>
-                                            <TextBox Text="{Binding Contract}" IsReadOnly="True"/>
+                                            <TextBox Text="{Binding SelectedClient.GetContracts, Mode=OneWay}" IsReadOnly="True"/>
                                             <TextBlock Text="Счета в валюте:"/>
                                             <TextBox Text="{Binding AccountNumbers}" IsReadOnly="True"/>
                                             <StackPanel Orientation="Horizontal">
@@ -82,31 +82,32 @@
                                             </ListView.View>
                                         </ListView>
                                         <TextBlock Text="Запросы:"/>
-                                        <DataGrid ItemsSource="{Binding SelectedClient.Requests}" AutoGenerateColumns="False" >
+                                        <DataGrid ItemsSource="{Binding SelectedClient.Requests}" AutoGenerateColumns="False"
+                                                  IsReadOnly="False">
                                             <!--<i:EventTrigger EventName="LostFocus">
                                                         <i:InvokeCommandAction Command="{Binding CommitChanges}"/>
                                                     </i:EventTrigger>-->
                                             <DataGrid.Columns>
                                                 <DataGridTextColumn x:Name="SendDateColumn" Header="Дата направления" MinWidth="90" Binding="{Binding SendDate}" IsReadOnly="True"/>
-                                                <DataGridTextColumn x:Name="RecieveDateColumn" Header="Дата получения"  MinWidth="90" Binding="{Binding RecieveDate}" IsReadOnly="True"/>
-                                                <DataGridTextColumn x:Name="CommentColumn" Header="Комментарий" MinWidth="90" Binding="{Binding Comment}" IsReadOnly="True"/>
+                                                <DataGridTextColumn x:Name="RecieveDateColumn" Header="Дата получения"  MinWidth="90" Binding="{Binding RecieveDate}" IsReadOnly="False"/>
+                                                <DataGridTextColumn x:Name="CommentColumn" Header="Комментарий" MinWidth="90" Binding="{Binding Comment}" IsReadOnly="False"/>
                                             </DataGrid.Columns>
                                         </DataGrid>
                                         <TextBlock Text="Контакты:"/>
-                                        <ListView ItemsSource="{Binding SelectedClient.Contacts}">
-                                            <ListView.View>
-                                                <GridView>
-                                                    <GridViewColumn Header="Тип" DisplayMemberBinding="{Binding ContactType.Name}" Width="60"/>
-                                                    <GridViewColumn Header="ФИО" DisplayMemberBinding="{Binding ContactFIO}" Width="100"/>
-                                                    <GridViewColumn Header="Значение" DisplayMemberBinding="{Binding Value}" Width="100"/>
-                                                </GridView>
-                                            </ListView.View>
-                                        </ListView>
+                                       
+                                        <DataGrid ItemsSource="{Binding SelectedClient.Contacts}" AutoGenerateColumns="False">
+                                            <DataGrid.Columns>
+                                                <DataGridComboBoxColumn ItemsSource="{Binding Source={StaticResource Locator}, Path=Main.ContactTypes}" Header="ContactType" DisplayMemberPath="Name" SelectedItemBinding="{Binding ContactType}"/>
+                                                <DataGridTextColumn x:Name="FIOColumn" Header="ФИО"  MinWidth="100" Binding="{Binding ContactFIO}" IsReadOnly="False"/>
+                                                <DataGridTextColumn x:Name="ValueColumn" Header="Значение" MinWidth="110" Binding="{Binding Value}" IsReadOnly="False"/>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                       
                                         <StackPanel HorizontalAlignment="Right">
-                                            <Button x:Name="buttonCorr" Width="150" Height="25" Content="Редактировать" Click="Corr"
-                                                    Command="{Binding EditCommand}"/>
+                                            <Button x:Name="buttonCorr" Width="150" Height="25" Content="Редактировать" Click="Corr"/>
                                             <Button x:Name="buttonSave" Width="150" Height="25" Content="Сохранить изменения" Click="Save"
-                                                    Command="{Binding SaveChangesCommand}"/>
+                                                    Command="{Binding SaveCommand}"
+                                                    />
                                             <Button x:Name="buttonWord" Width="150" Height="25" Content="Выгрузить в Word" Click="Word"
                                                     Command="{Binding ExportWordCommand}"/>
                                         </StackPanel>

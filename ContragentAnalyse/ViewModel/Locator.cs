@@ -5,14 +5,21 @@ namespace ContragentAnalyse.ViewModel
 {
     public class Locator
     {
-        readonly IDataProvider provider = new EFDataProvider();
-        readonly IEquationProvider eqProvider = new EquationProvider();
+
+        readonly IDataProvider provider;
+        readonly IEquationProvider eqProvider;
         public MainViewModel Main
         {
             get
             {
                 return MainViewModel.GetInstance(provider, eqProvider);
             }
+        }
+
+        public Locator()
+        {
+            provider = new EFDataProvider();
+            eqProvider = new EquationProvider(provider);
         }
     }
 }

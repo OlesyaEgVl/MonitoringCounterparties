@@ -10,7 +10,12 @@ namespace ContragentAnalyse.Model.Entities
     {
         public int CountryCode { get; set; } 
         public string Code { get; set; }    //БУКВЕННЫЙ КОД
-        public string Currency { get; set; }
+        
         public List<Client> Client { get; set; }
+
+        internal object add(Country countrys)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

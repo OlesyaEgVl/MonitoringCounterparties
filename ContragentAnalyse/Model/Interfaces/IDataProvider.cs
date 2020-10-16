@@ -21,5 +21,12 @@ namespace ContragentAnalyse.Model.Interfaces
         IEnumerable<Criteria> GetCriterias();
         void Commit();
         void AddClient(Client newClient);
+        TypeClient GetClientType(string v);
+        Country GetCountry(string v);
+        Currency GetCurrencyByCode(string code);
+        Currency GetCurrencyByName(string name);
+        Criteria[] GetCriterialist(string bINStr);
+        string AddCriteriaList(Criteria[] criteriaslist); // не уверена, что строку должно возвращать
+        IEnumerable<ContactType> GetContactTypes();
     }
 }
