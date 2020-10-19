@@ -19,6 +19,7 @@ namespace ContragentAnalyse.Model.Interfaces
         IEnumerable<Client> GetClients(string BIN);
         IEnumerable<Client> GetClientsByName(string Name);
         IEnumerable<Criteria> GetCriterias();
+        IEnumerable<Contracts> GetCrontracts();
         void Commit();
         void AddClient(Client newClient);
         TypeClient GetClientType(string v);
@@ -26,7 +27,9 @@ namespace ContragentAnalyse.Model.Interfaces
         Currency GetCurrencyByCode(string code);
         Currency GetCurrencyByName(string name);
         Criteria[] GetCriterialist(string bINStr);
-        string AddCriteriaList(Criteria[] criteriaslist); // не уверена, что строку должно возвращать
         IEnumerable<ContactType> GetContactTypes();
+        Contracts GetContractByCode(string v);
+
+
     }
 }

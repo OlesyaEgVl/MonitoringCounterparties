@@ -29,7 +29,7 @@
                     </GroupBox>
                 </StackPanel>
             </StackPanel>
-            <ContentControl Name="Page1ContentController1" Margin="0,190,0,0">
+            <ContentControl Name="Page1ContentController1" Margin="0,190,0,0" IsEnabled="{Binding IsAnyClientSelected}" >
                 <TabControl VerticalAlignment="Top" HorizontalAlignment="Stretch">
                     <TabItem Header="Информация о Клиенте"  >
                         <TabItem.Content>
@@ -73,11 +73,11 @@
                                         <TextBlock Text="Дата пересмотра риска:"  HorizontalAlignment="Left"/>
                                         <DatePicker Text="{Binding SelectedClient.NextScoringDate}" IsEnabled="False"/>
                                         <TextBlock Text="Выявленные критерии риска:"/>
-                                        <ListView ItemsSource="{Binding SelectedClient.ClientToCrineria, Mode=OneWay}">
+                                        <ListView ItemsSource="{Binding SelectedClient.ClientToCriteria, Mode=OneWay}">
                                             <ListView.View>
                                                 <GridView>
-                                                    <GridViewColumn Header="Критерий" DisplayMemberBinding="{Binding Name}" Width="250"/>
-                                                    <GridViewColumn Header="Балл" DisplayMemberBinding="{Binding Weight}"/>
+                                                    <GridViewColumn Header="Критерий" DisplayMemberBinding="{Binding Criteria.Name}" Width="300"/>
+                                                    <GridViewColumn Header="Балл" DisplayMemberBinding="{Binding Criteria.Weight}"/>
                                                 </GridView>
                                             </ListView.View>
                                         </ListView>
@@ -90,7 +90,7 @@
                                             <DataGrid.Columns>
                                                 <DataGridTextColumn x:Name="SendDateColumn" Header="Дата направления" MinWidth="90" Binding="{Binding SendDate}" IsReadOnly="True"/>
                                                 <DataGridTextColumn x:Name="RecieveDateColumn" Header="Дата получения"  MinWidth="90" Binding="{Binding RecieveDate}" IsReadOnly="False"/>
-                                                <DataGridTextColumn x:Name="CommentColumn" Header="Комментарий" MinWidth="90" Binding="{Binding Comment}" IsReadOnly="False"/>
+                                                <DataGridTextColumn x:Name="CommentColumn" Header="Комментарий" MinWidth="125" Binding="{Binding Comment}" IsReadOnly="False"/>
                                             </DataGrid.Columns>
                                         </DataGrid>
                                         <TextBlock Text="Контакты:"/>
@@ -98,7 +98,7 @@
                                         <DataGrid ItemsSource="{Binding SelectedClient.Contacts}" AutoGenerateColumns="False">
                                             <DataGrid.Columns>
                                                 <DataGridComboBoxColumn ItemsSource="{Binding Source={StaticResource Locator}, Path=Main.ContactTypes}" Header="ContactType" DisplayMemberPath="Name" SelectedItemBinding="{Binding ContactType}"/>
-                                                <DataGridTextColumn x:Name="FIOColumn" Header="ФИО"  MinWidth="100" Binding="{Binding ContactFIO}" IsReadOnly="False"/>
+                                                <DataGridTextColumn x:Name="FIOColumn" Header="ФИО"  MinWidth="150" Binding="{Binding ContactFIO}" IsReadOnly="False"/>
                                                 <DataGridTextColumn x:Name="ValueColumn" Header="Значение" MinWidth="110" Binding="{Binding Value}" IsReadOnly="False"/>
                                             </DataGrid.Columns>
                                         </DataGrid>

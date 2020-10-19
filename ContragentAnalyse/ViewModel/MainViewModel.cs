@@ -44,8 +44,10 @@ namespace ContragentAnalyse.ViewModel
         #region Текущие значения
         private ObservableCollection<Client> _foundClients = new ObservableCollection<Client>();
         private ObservableCollection<Criteria> _riskCriteria = new ObservableCollection<Criteria>();
+        private ObservableCollection<Contracts> _contracts = new ObservableCollection<Contracts>();
         public ObservableCollection<Client> FoundClients { get => _foundClients; set => _foundClients = value; }
         public ObservableCollection<Criteria> RiskCriteriasList { get => _riskCriteria; set => _riskCriteria = value; }
+        public ObservableCollection<Contracts> ContractsList { get => _contracts; set => _contracts = value; }
         private ObservableCollection<ContactType> _contactTypes = new ObservableCollection<ContactType>();
         public ObservableCollection<ContactType> ContactTypes
         {
@@ -53,14 +55,23 @@ namespace ContragentAnalyse.ViewModel
             set => _contactTypes = value;
         }
 
-
         private ObservableCollection<Criteria> selectedCriterias = new ObservableCollection<Criteria>();
         public ObservableCollection<Criteria> SelectedCriterias => selectedCriterias;
-
-        //private Contacts _selectedContacts;
-
         private Client _selectedClient;
-
+       // public Employees _currentEmployee;
+        private bool _isAnyClientSelected = false;
+        public bool IsAnyClientSelected
+        {
+            get
+            {
+                return _isAnyClientSelected;
+            }
+            set
+            {
+                _isAnyClientSelected = value;
+                RaisePropertyChanged(nameof(IsAnyClientSelected));
+            }
+        }
         public Client SelectedClient
         {
             get => _selectedClient;
@@ -68,29 +79,33 @@ namespace ContragentAnalyse.ViewModel
             {
                 _selectedClient = value;
                 RaisePropertyChanged(nameof(SelectedClient));
+                if (!IsAnyClientSelected && SelectedClient != null)
+                {
+                    IsAnyClientSelected = true;
+                }
+                else
+                {
+                    IsAnyClientSelected = false;
+                }
             }
         }
-        #endregion
-
-        List<string> DictionaryCountry = new List<string>() { "Австралия", "Австрия", "Азербайджан", "Армения" };
-
-        // код, заполняющий словарь
-
-        // возвращает массив строк из словаря, соответствующих паттерну
-        List<string> GetItems(string pattern)
+      /*  public Employees LoadData
         {
-            List<string> ret = new List<string>();
-            foreach (string s in DictionaryCountry)
-                if (s.StartsWith(pattern))
-                    ret.Add(s);
-
-            return ret;
-        }
-
+            get => _currentEmployee;
+            set
+            {
+                _currentEmployee = value;
+                RaisePropertyChanged(nameof(LoadData));
+               /* if (SelectedClient.Employees.CodeName == Environment.UserName)
+                {
+                    _currentEmployee = SelectedClient.Employees;
+                } 
+            }
+        }*/
+        #endregion
         #region Commands
         public MyCommand<string> SearchCommand { get; set; }
         public MyCommand<string> AddClientCommand { get; set; }
-        /*public MyCommand AddRequestsCommand { get; private set; } */
         public MyCommand EditCommand { get; set; }
         public MyCommand SaveCommand { get; set; }
         public MyCommand ExportWordCommand { get; set; }
@@ -115,6 +130,12 @@ namespace ContragentAnalyse.ViewModel
             RiskCriteriasList = new ObservableCollection<Criteria>(_dbProvider.GetCriterias());
             _dbProvider.GetContactTypes().ToList().ForEach(ContactTypes.Add);
             RaisePropertyChanged(nameof(RiskCriteriasList));
+
+            ContractsList = new ObservableCollection<Contracts>(_dbProvider.GetContracts());
+            _dbProvider.GetContactTypes().ToList().ForEach(ContactTypes.Add);
+            RaisePropertyChanged(nameof(ContractsList));
+            //???
+           
         }
 
         private void InitializeCommands()
@@ -122,24 +143,29 @@ namespace ContragentAnalyse.ViewModel
             //TODO подставить реализацию команд
             SearchCommand = new MyCommand<string>(SearchMethod);
             AddClientCommand = new MyCommand<string>(AddClientMethod);
-            //AddRequestsCommand = new MyCommand(AddRequestsMethod);
-         
             SaveCommand = new MyCommand(SaveAncetaMethod); //сохранение анкеты
-
             CalculateCommand = new MyCommand<string>(CalculateMethod); //кнопка посчитать
             EstimationRiskCommand = new MyCommand<string>(EstimationRiskMethod); //оценка риска
             SaveRiskRecordCommand = new MyCommand(SaveRiskRecordMethod); //сохранить критерии и уровень риска
-            ExportWordCommand = new MyCommand(() => MessageBox.Show($"Скачать Word"));
+            ExportWordCommand = new MyCommand(ExportWordMethod);
             ExportExcelCommand = new MyCommand(() => MessageBox.Show($"Exel"));
             SaveChangesCommand = new MyCommand(CommitMethod);
             StoreSelection = new MyCommand<object>(StoreSelectionMethod);
         }
 
+        private void ExportWordMethod() //???
+        {
+            string path = System.IO.Directory.GetCurrentDirectory() + @"\" + "NewDocument.doc";
+            var Wordapp = new Microsoft.Office.Interop.Word.Application();
+            Microsoft.Office.Interop.Word.Document doc = Wordapp.Documents.Add(Visible: true);
+            Microsoft.Office.Interop.Word.Range rgange = doc.Range();
+
+        }
         private void EstimationRiskMethod(string BINStr)
         {
             Criteria[] criteriaslist = _dbProvider.GetCriterialist(BINStr);
            //SelectedClient.NextScoringDate = new DateTime?();
-            if (_dbProvider.AddCriteriaList(criteriaslist).IndexOf("Низкий") >-1)
+          /*  if (_dbProvider.AddCriteriaList(criteriaslist).IndexOf("Низкий") >-1)
             {
                 SelectedClient.NextScoringDate = DateTime.Now.AddYears(2);
                 RaisePropertyChanged(nameof(SelectedClient.NextScoringDate));
@@ -148,7 +174,7 @@ namespace ContragentAnalyse.ViewModel
             {
                 SelectedClient.NextScoringDate = DateTime.Now.AddYears(1);
                 RaisePropertyChanged(nameof(SelectedClient.NextScoringDate));
-            }
+            }*/
         }
 
         //private void AddRequestsMethod()
@@ -165,31 +191,39 @@ namespace ContragentAnalyse.ViewModel
         //    RaisePropertyChanged(nameof(SelectedClient.Requests));
         //}
 
-
-
         private void SaveAncetaMethod()
         {
-         //   if (SelectedClient.ClientManager != null)//Не понимаю, как тут прописать условие
-            //{
-                CommitMethod();
-           // }
-        }
-
-
-
-        private void SaveRiskRecordMethod() // сохранение истории
-        {
-            string history;
             CommitMethod();
         }
 
+        private void SaveRiskRecordMethod() // сохранение истории
+        {
+            if (SelectedClient.ClientToCriteria == null)
+            {
+                SelectedClient.ClientToCriteria = new List<ClientToCriteria>();
+            }
+            SelectedClient.ClientToCriteria.Clear();
+            foreach (Criteria criteria in SelectedCriterias)
+            {
+                SelectedClient.ClientToCriteria.Add(new ClientToCriteria
+                {
+                    Client = SelectedClient,
+                    Criteria = criteria
+                });
+            }
+            CommitMethod();
+           
+            /*SelectedCriterias.Clear(); ???
+            SelectedClient.ClientToCriteria.Clear();*/
+        }
+        
         private void CalculateMethod(string BINStr)
         {
             if (!string.IsNullOrWhiteSpace(BINStr))
             {
                 
                 Criteria[] criteriaslist = _dbProvider.GetCriterialist(BINStr); //найти критерии для клиента по бину
-                _dbProvider.AddCriteriaList(criteriaslist); //Посчитать сумму баллов критериев
+                //_dbProvider.AddCriteriaList(criteriaslist); //Посчитать сумму баллов критериев
                 
             }
             else
@@ -198,7 +232,7 @@ namespace ContragentAnalyse.ViewModel
             }
         }
 
-        private void StoreSelectionMethod(object SelectedItems)
+        private void StoreSelectionMethod(object SelectedItems) //метод отвечающий за выбранные критерии добовляет их в SelectedCriterias
         {
             if (SelectedItems is IEnumerable collection)
             {

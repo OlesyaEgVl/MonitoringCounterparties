@@ -41,18 +41,22 @@
                 <StackPanel >
                     <GroupBox Header="Выберете фильтры" Margin="10,0">
                         <StackPanel >
-                            <StackPanel Orientation="Horizontal" Margin="5">
-                                <TextBlock Text="Страна регистрации:" Width="200"/>
-                                <StackPanel Orientation="Horizontal" Margin="5">
-                                    <ListView MinWidth="100" MaxWidth="650" MinHeight="20" Height="90" Width="380">
-                                        <ListView.View>
-                                            <GridView>
-                                                <GridViewColumn/>
-                                            </GridView>
-                                        </ListView.View>
-                                    </ListView>
-                                </StackPanel>
-                            </StackPanel>
+                                <TextBlock Text="Страна регистрации:" />
+                            <ListView Margin="5" ItemsSource="{Binding ContractsList}" Grid.Column="1" Grid.Row="1" Name="selectoritems1">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="SelectionChanged1">
+                                            <i:InvokeCommandAction Command="{Binding StoreSelection}" CommandParameter="{Binding ElementName=selectoritems1, Path=SelectedItems}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <ListView.View>
+                                        <GridView>
+                                            <GridViewColumn CellTemplate="{StaticResource CheckBoxCell}" Width="30"/>
+                                            <GridViewColumn Header="Страна" DisplayMemberBinding="{Binding Path=Name}" Width="550"/>
+                                            <GridViewColumn Header="Буквенный код" DisplayMemberBinding="{Binding Path=Code}" Width="100"/>
+                                        </GridView>
+                                    </ListView.View>
+                                </ListView>
+                            
                             <StackPanel Orientation="Horizontal" Margin="5">
                                 <TextBlock Text="Дата актуализации:" Width="200"/>
                                 <StackPanel Orientation="Horizontal">
