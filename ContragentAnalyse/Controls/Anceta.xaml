@@ -29,11 +29,11 @@
                     </GroupBox>
                 </StackPanel>
             </StackPanel>
-            <ContentControl Name="Page1ContentController1" Margin="0,190,0,0" IsEnabled="{Binding IsAnyClientSelected}" >
+            <ContentControl Name="Page1ContentController1" Margin="0,190,0,0"  >
                 <TabControl VerticalAlignment="Top" HorizontalAlignment="Stretch">
                     <TabItem Header="Информация о Клиенте"  >
                         <TabItem.Content>
-                            <Grid ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                            <Grid ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Auto" >
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition/>
                                     <ColumnDefinition/>
@@ -65,7 +65,7 @@
                                     </GroupBox>
                                 </StackPanel>
                                 <GroupBox Header="Информация о Клиенте 2" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="1">
-                                    <StackPanel>
+                                    <StackPanel IsEnabled="{Binding IsAnyClientSelected}">
                                         <TextBlock Text="Комплаенс-менеджер:" HorizontalAlignment="Left"/>
                                         <TextBox Text="{Binding SelectedClient.ClientManager}" x:Name="TextClientMenedger" IsReadOnly="True"/>
                                         <TextBlock Text="Уровень риска:"  HorizontalAlignment="Left"/>

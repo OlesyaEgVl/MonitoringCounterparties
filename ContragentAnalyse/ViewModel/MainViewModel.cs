@@ -128,12 +128,11 @@ namespace ContragentAnalyse.ViewModel
         private void InitializeData()
         {
             RiskCriteriasList = new ObservableCollection<Criteria>(_dbProvider.GetCriterias());
-            _dbProvider.GetContactTypes().ToList().ForEach(ContactTypes.Add);
+            _dbProvider.GetContactTypes().ToList().ForEach(ContactTypes.Add); //???
             RaisePropertyChanged(nameof(RiskCriteriasList));
 
-            ContractsList = new ObservableCollection<Contracts>(_dbProvider.GetContracts());
-            _dbProvider.GetContactTypes().ToList().ForEach(ContactTypes.Add);
-            RaisePropertyChanged(nameof(ContractsList));
+          //  ContractsList = new ObservableCollection<Contracts>(_dbProvider.GetContracts());
+          //  RaisePropertyChanged(nameof(ContractsList));
             //???
            
         }

@@ -42,7 +42,7 @@ namespace ContragentAnalyse.Model.Entities
         {
             get
             {
-                float riskLevel = ClientToCriteria.Select(i => i.Criteria.Weight).Sum();
+                float riskLevel = ClientToCriteria.Select(i => i.Criteria.Weight).Sum(); // что-то ругался
                 string RiskLevelName = string.Empty;
                 switch (riskLevel)
                 {
@@ -108,7 +108,7 @@ namespace ContragentAnalyse.Model.Entities
             }
         }
 
-        public string GetContracts
+       /* public string GetContracts
         {
             get
             {
@@ -121,7 +121,7 @@ namespace ContragentAnalyse.Model.Entities
                     return string.Empty;
                 }
             }
-        }
+        }*/
 
         [ForeignKey(nameof(ResponsibleUnit_Id))]
         public virtual ResponsibleUnit ResponsibleUnit { get; set; }
@@ -141,7 +141,6 @@ namespace ContragentAnalyse.Model.Entities
         }
         public List<Actualization> Actualization { get; set; }
         public List<PrescoringScoring> PrescoringScoring { get; set; }
-        public List<Contracts> Contracts { get; set; }
         public List<StopFactors> StopFactors { get; set; }
         public List<RestrictedAccounts> RestrictedAccounts { get; set; }
         public List<Contacts> Contacts { get; set; }

@@ -25,7 +25,6 @@ namespace ContragentAnalyse.Model.Implementation
             Include(i => i.TypeClient).
             Include(i => i.Actualization).
             Include(i => i.PrescoringScoring).
-            Include(i => i.Contracts).
             Include(i => i.RestrictedAccounts).
             Include(i => i.Contacts).
             Include(i => i.Requests).
@@ -41,7 +40,6 @@ namespace ContragentAnalyse.Model.Implementation
             Include(i => i.TypeClient).
             Include(i => i.Actualization).
             Include(i => i.PrescoringScoring).
-            Include(i => i.Contracts).
             Include(i => i.RestrictedAccounts).
             Include(i => i.Contacts).
             Include(i => i.Requests).
