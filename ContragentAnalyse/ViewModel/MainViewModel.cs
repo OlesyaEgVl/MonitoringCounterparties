@@ -12,8 +12,10 @@ using ContragentAnalyse.Model.Entities;
 using ContragentAnalyse.Model.Implementation;
 using ContragentAnalyse.Model.Interfaces;
 using ContragentAnalyse.ViewModel.Commands;
-
+using NPOI;
+using WordAdapterLib;
 using Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal;
+using NPOI.XWPF.UserModel;
 
 namespace ContragentAnalyse.ViewModel
 {
@@ -58,7 +60,8 @@ namespace ContragentAnalyse.ViewModel
         private ObservableCollection<Criteria> selectedCriterias = new ObservableCollection<Criteria>();
         public ObservableCollection<Criteria> SelectedCriterias => selectedCriterias;
         private Client _selectedClient;
-       // public Employees _currentEmployee;
+        //private DateTime _nextScoringDate;
+        public Employees _currentEmployee;
         private bool _isAnyClientSelected = false;
         public bool IsAnyClientSelected
         {
@@ -79,6 +82,7 @@ namespace ContragentAnalyse.ViewModel
             {
                 _selectedClient = value;
                 RaisePropertyChanged(nameof(SelectedClient));
+
                 if (!IsAnyClientSelected && SelectedClient != null)
                 {
                     IsAnyClientSelected = true;
@@ -89,19 +93,46 @@ namespace ContragentAnalyse.ViewModel
                 }
             }
         }
-      /*  public Employees LoadData
+     
+        public DateTime? nextScoringDate
         {
-            get => _currentEmployee;
-            set
-            {
-                _currentEmployee = value;
-                RaisePropertyChanged(nameof(LoadData));
-               /* if (SelectedClient.Employees.CodeName == Environment.UserName)
-                {
-                    _currentEmployee = SelectedClient.Employees;
-                } 
-            }
-        }*/
+            get
+            { 
+                if (SelectedClient != null)
+                    {
+                    
+                    return (DateTime)SelectedClient.NextScoringDate;
+                    
+                }
+                    else
+                    {
+                        return null;
+                    }
+             }
+        }
+        
+        private MainViewModel(IDataProvider provider, IEquationProvider eqProvider)
+        {
+            _dbProvider = provider;
+            this.eqProvider = eqProvider;
+            InitializeCommands();
+            InitializeData();
+
+        }
+         public Employees LoadData
+          {
+              get => _currentEmployee;
+              set
+              {
+                  _currentEmployee = value;
+                  RaisePropertyChanged(nameof(LoadData));
+                  if (SelectedClient.Employees.CodeName == Environment.UserName)
+                  {
+                      _currentEmployee = SelectedClient.Employees;
+                  } 
+              }
+          }
+        public string history;
         #endregion
         #region Commands
         public MyCommand<string> SearchCommand { get; set; }
@@ -110,20 +141,14 @@ namespace ContragentAnalyse.ViewModel
         public MyCommand SaveCommand { get; set; }
         public MyCommand ExportWordCommand { get; set; }
         public MyCommand<string> CalculateCommand { get; set; }
-        public MyCommand <string> EstimationRiskCommand { get; set; }
+        public MyCommand EstimationRiskCommand { get; set; }
         public MyCommand SaveRiskRecordCommand { get; set; }
         public MyCommand ExportExcelCommand { get; set; }
         public MyCommand SaveChangesCommand { get; set; }
         public MyCommand<object> StoreSelection { get; set; }
         #endregion
 
-        private MainViewModel(IDataProvider provider, IEquationProvider eqProvider)
-        {
-            _dbProvider = provider;
-            this.eqProvider = eqProvider;
-            InitializeCommands();
-            InitializeData();
-        }
+        
 
         private void InitializeData()
         {
@@ -144,37 +169,84 @@ namespace ContragentAnalyse.ViewModel
             AddClientCommand = new MyCommand<string>(AddClientMethod);
             SaveCommand = new MyCommand(SaveAncetaMethod); //сохранение анкеты
             CalculateCommand = new MyCommand<string>(CalculateMethod); //кнопка посчитать
-            EstimationRiskCommand = new MyCommand<string>(EstimationRiskMethod); //оценка риска
+            EstimationRiskCommand = new MyCommand(EstimationRiskMethod); //оценка риска Почему ты используешь команду с параметром, если параметр не нужен?
             SaveRiskRecordCommand = new MyCommand(SaveRiskRecordMethod); //сохранить критерии и уровень риска
             ExportWordCommand = new MyCommand(ExportWordMethod);
             ExportExcelCommand = new MyCommand(() => MessageBox.Show($"Exel"));
             SaveChangesCommand = new MyCommand(CommitMethod);
             StoreSelection = new MyCommand<object>(StoreSelectionMethod);
         }
-
-        private void ExportWordMethod() //???
+        public readonly string TemplateFileName = @"C:\Projects\CounterpartyMonitoring\ContragentAnalyse\Anceta.docx";
+        private void ExportWordMethod() // SAVE WORD
         {
-            string path = System.IO.Directory.GetCurrentDirectory() + @"\" + "NewDocument.doc";
-            var Wordapp = new Microsoft.Office.Interop.Word.Application();
-            Microsoft.Office.Interop.Word.Document doc = Wordapp.Documents.Add(Visible: true);
-            Microsoft.Office.Interop.Word.Range rgange = doc.Range();
-
-        }
-        private void EstimationRiskMethod(string BINStr)
-        {
-            Criteria[] criteriaslist = _dbProvider.GetCriterialist(BINStr);
-           //SelectedClient.NextScoringDate = new DateTime?();
-          /*  if (_dbProvider.AddCriteriaList(criteriaslist).IndexOf("Низкий") >-1)
+            //Ты скопировала этот текст из интернета, а мне предлагаешь поправить.?)) Статьи читай а не видео смотри)
+            // Самые основы ООП гласят что один класс отвечает за что то одно. Equation отдельно, БД отдельно, а ворд почему то в куче
+            // MainViewModel не должен ничего знать о ворде. Нужно сделать интерфейс и создать имплементацию
+            // Microsoft.Interop.Office не совместима с твоим проектом. Найди другую библиотеку. Вводишь Ворд и смотришь предложенные.
+            // Ищи бесплатные, которые не отключатся через месяц
+            var DateAct = SelectedClient.ActualizationDate;
+            var Country = SelectedClient.Country;
+            var Contract = SelectedClient.ClientToContracts; // ! не id
+            var Currency = SelectedClient.ClientToCurrency;//список валют ! не id
+            var RestrictedAccounts = SelectedClient.RestrictedAccounts;
+            var COP = SelectedClient.CardOP;
+            var AdditionalBIN = SelectedClient.AdditionalBIN;
+            var NextScoringDate= nextScoringDate;
+            var LevelRisk = SelectedClient.Level;
+            var BankProducts = SelectedClient.BankProduct;
+            var Criteria = SelectedClient.ClientToCriteria;//! не id
+            
+            try
             {
-                SelectedClient.NextScoringDate = DateTime.Now.AddYears(2);
-                RaisePropertyChanged(nameof(SelectedClient.NextScoringDate));
+                
+               //POITextExtractor worddoc = new POITextExtractor(TemplateFileName) ;
+              Application wordApp = new Application();
+            //  Document wordDoc = wordApp.Documents.Open(TemplateFileName);
+                
+                /*
+                ReplaceWordStub("{DateAct}", Convert.ToString(DateAct),wordDocument);
+                ReplaceWordStub("{Country}", Convert.ToString(Country), wordDocument);
+                ReplaceWordStub("{Contract}", Convert.ToString(Contract), wordDocument);
+                ReplaceWordStub("{Currency}", Convert.ToString(Currency), wordDocument);
+                ReplaceWordStub("{RestrictedAccounts}", Convert.ToString(RestrictedAccounts), wordDocument);
+                ReplaceWordStub("{COP}", Convert.ToString(COP), wordDocument);
+                ReplaceWordStub("{AdditionalBIN}", AdditionalBIN, wordDocument);
+                ReplaceWordStub("{NextScoringDate}", Convert.ToString(NextScoringDate), wordDocument);
+                ReplaceWordStub("{LevelRisk}", LevelRisk, wordDocument);
+                ReplaceWordStub("{BankProducts}", BankProducts, wordDocument);
+                ReplaceWordStub("{Criteria}", Convert.ToString(Criteria), wordDocument);
+              //empl  ReplaceWordStub("{DateAct}", DateAct, wordDocument);
+                wordDocument.SaveAs(@"C:\result.docx");
+                wordaplication.Visible = true;
+                */
             }
-            else
-            {
-                SelectedClient.NextScoringDate = DateTime.Now.AddYears(1);
-                RaisePropertyChanged(nameof(SelectedClient.NextScoringDate));
-            }*/
+            catch { MessageBox.Show("Не выгружается документ"); }            
         }
+       /* private void ReplaceWordStub(string stubToReplace,string text, Microsoft.Office.Interop.Word.Document worddocument)
+        {
+            var range = worddocument.Content;
+            range.Find.ClearFormatting();
+            range.Find.Execute(FindText: stubToReplace, ReplaceWith: text);
+        }*/
+        private void EstimationRiskMethod()
+        {
+            if (SelectedClient.Level.IndexOf("Низкий") >-1)
+              {
+                  SelectedClient.NextScoringDate= DateTime.Now.AddYears(2);
+                  RaisePropertyChanged(nameof(nextScoringDate));
+              }
+              else
+              {
+                  SelectedClient.NextScoringDate = DateTime.Now.AddYears(1);
+                 RaisePropertyChanged(nameof(nextScoringDate));
+              }
+            
+            CommitMethod();
+          
+           
+        }
+
+
 
         //private void AddRequestsMethod()
         //{
@@ -210,9 +282,12 @@ namespace ContragentAnalyse.ViewModel
                     Criteria = criteria
                 });
             }
+            history = Convert.ToString(DateTime.Now) + " " +LoadData.Name+ " "/*+SelectedClient.NextScoringDate*/;
+            RaisePropertyChanged(nameof(history));
+
             CommitMethod();
            
-            /*SelectedCriterias.Clear(); ???
+            /*SelectedCriterias.Clear(); 
             SelectedClient.ClientToCriteria.Clear();*/
         }
         

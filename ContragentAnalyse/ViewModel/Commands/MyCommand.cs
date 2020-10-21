@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
 
+
+using Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal;
+
+
 namespace ContragentAnalyse.ViewModel.Commands
 {
     public class MyCommand : ICommand

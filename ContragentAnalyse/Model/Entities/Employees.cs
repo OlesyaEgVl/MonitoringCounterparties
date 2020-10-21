@@ -8,7 +8,7 @@ namespace ContragentAnalyse.Model.Entities
 {
     public class Employees : NamedEntity
     {
-        public int Position_Id { get; set; }
+        public int? Position_Id { get; set; }
         public string CodeName { get; set; }
 
         [ForeignKey(nameof(Position_Id))]

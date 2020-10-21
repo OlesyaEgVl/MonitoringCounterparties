@@ -42,7 +42,7 @@ namespace ContragentAnalyse.Model.Entities
         {
             get
             {
-                float riskLevel = ClientToCriteria.Select(i => i.Criteria.Weight).Sum(); // что-то ругался
+                float riskLevel = ClientToCriteria.Select(i => i.Criteria.Weight).Sum(); // ругается, что бывает нулевое значение
                 string RiskLevelName = string.Empty;
                 switch (riskLevel)
                 {

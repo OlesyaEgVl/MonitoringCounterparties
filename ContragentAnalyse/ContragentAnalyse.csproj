@@ -14,10 +14,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <COMReference Include="Microsoft.Office.Word.dll">
-      <Guid>00020905-0000-0000-c000-000000000046</Guid>
-      <VersionMajor>8</VersionMajor>
-      <VersionMinor>7</VersionMinor>
+    <COMReference Include="ExcelAdaptorLib.dll">
+      <Guid>7bcedf81-6a82-448f-9a27-63726d499727</Guid>
+      <VersionMajor>15</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Lcid>0</Lcid>
+      <Isolated>false</Isolated>
+    </COMReference>
+    <COMReference Include="WordAdapterLib.dll">
+      <Guid>cb7a8a3c-917e-4e4c-b731-667a63eb2803</Guid>
+      <VersionMajor>12</VersionMajor>
+      <VersionMinor>0</VersionMinor>
       <WrapperTool>tlbimp</WrapperTool>
       <Lcid>0</Lcid>
       <Isolated>false</Isolated>
@@ -36,6 +44,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.19" />
+    <PackageReference Include="NetOffice.Word" Version="1.7.4.11" />
+    <PackageReference Include="NPOI" Version="2.5.1" />
   </ItemGroup>
 
 </Project>

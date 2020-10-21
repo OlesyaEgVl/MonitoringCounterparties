@@ -98,7 +98,7 @@ namespace ContragentAnalyse.Model.Implementation
             string ClientManagers = clients.ClientManager;
             return ClientManagers;
         }
-        public string GetLevelRisk()
+       public string GetLevelRisk()
         {
             Client clients = _dbContext.Client.Include("Bank").FirstOrDefault(i => i.Id == 0); // Как соеденить таблицы и взять поле. которое нужно
             string ClientManagers = clients.ClientManager;
@@ -144,7 +144,11 @@ namespace ContragentAnalyse.Model.Implementation
         {
             return _dbContext.ContactType;
         }
-
+        public void AddDateNextScoring(Client newClient)
+        {
+            _dbContext.Client.Add(newClient);
+            _dbContext.SaveChanges();
+        }
         public void AddClient(Client newClient)
         {
             if (_dbContext.Client.Any(client => client.BIN.Equals(newClient.BIN)))

@@ -71,7 +71,7 @@
                                         <TextBlock Text="Уровень риска:"  HorizontalAlignment="Left"/>
                                         <TextBox Text="{Binding SelectedClient.Level, Mode=OneWay}" IsReadOnly="True"/>
                                         <TextBlock Text="Дата пересмотра риска:"  HorizontalAlignment="Left"/>
-                                        <DatePicker Text="{Binding SelectedClient.NextScoringDate}" IsEnabled="False"/>
+                                        <DatePicker Text="{Binding nextScoringDate}" IsEnabled="False"/>
                                         <TextBlock Text="Выявленные критерии риска:"/>
                                         <ListView ItemsSource="{Binding SelectedClient.ClientToCriteria, Mode=OneWay}">
                                             <ListView.View>
