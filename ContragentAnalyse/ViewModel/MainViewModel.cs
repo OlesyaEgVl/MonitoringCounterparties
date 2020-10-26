@@ -342,9 +342,13 @@ namespace ContragentAnalyse.ViewModel
                 });
             }
             //Добавить новое поле в PrescoringScoringHistory - метод;
-            SelectedScoringHistory.Employee_Id = CurrentEmployee.Id; 
-             SelectedScoringHistory.DatePresScor = DateTime.Now;
-           SelectedScoringHistory.Client_Id = SelectedClient.Id;
+            SelectedClient.PrescoringScoringHistory.Add(new PrescoringScoringHistory
+            {
+                Client = SelectedClient,
+                Employee_Id = CurrentEmployee.Id,
+                DatePresScor = DateTime.Now
+            });
+
             RaisePropertyChanged(nameof(SelectedScoringHistory));
             /*history = Convert.ToString(DateTime.Now) + " " + CurrentEmployee.Name + " "+SelectedClient.NextScoringDate; //не верно
             RaisePropertyChanged(nameof(history));*/

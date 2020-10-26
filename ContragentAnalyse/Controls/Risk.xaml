@@ -82,7 +82,7 @@
                         </StackPanel>
 
                         <TextBlock Text="История:" Margin="5"/>
-                        <TextBox Margin="5" Text="{Binding CurrentEmployee.Name}" TextWrapping="Wrap" MinHeight="300" MinWidth="300" 
+                        <TextBox Margin="5" Text="{Binding SelectedScoringHistory}" TextWrapping="Wrap" MinHeight="300" MinWidth="300" 
                                    IsEnabled="False" Background="{DynamicResource {x:Static SystemColors.InactiveCaptionBrushKey}}"
                                    />
                        

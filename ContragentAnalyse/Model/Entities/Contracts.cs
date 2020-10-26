@@ -6,6 +6,7 @@ using System.Linq;
 namespace ContragentAnalyse.Model.Entities
 {
     public class Contracts : NamedEntity
-    {  
+    {
+        //public List<ClientToContracts> ClientToContracts { get; set; }
     }
 }
