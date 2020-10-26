@@ -25,13 +25,14 @@ namespace ContragentAnalyse.Model
         {
             modelBuilder.Entity<Client>().HasMany(i => i.Actualization).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.PrescoringScoring).WithOne(i => i.Client);
-            modelBuilder.Entity<Client>().HasMany(i => i.Contracts).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.RestrictedAccounts).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.Contacts).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.Requests).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.StopFactors).WithOne(i => i.Client);
-            modelBuilder.Entity<Client>().HasMany(i => i.ClientToCrineria).WithOne(i => i.Client);
+            modelBuilder.Entity<Client>().HasMany(i => i.ClientToCriteria).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.ClientToCurrency).WithOne(i => i.Client);
+            modelBuilder.Entity<Client>().HasMany(i => i.ClientToContracts).WithOne(i => i.Client);
+            modelBuilder.Entity<Client>().HasMany(i => i.PrescoringScoringHistory).WithOne(i => i.Client);
 
 
             /* modelBuilder.Entity<PrescoringScoring>().HasMany(i => i.CriteriaToScoring).WithOne(i => i.PrescoringScoring);
@@ -53,18 +54,20 @@ namespace ContragentAnalyse.Model
         public DbSet<Actualization> Actualization { get; set; }
         public DbSet<BankProduct> BankProduct { get; set; }
         public DbSet<Client> Client { get; set; }
-        public DbSet<ClientToCrineria> ClientToCrineria { get; set; }
+        public DbSet<ClientToCriteria> ClientToCriteria { get; set; }
+        public DbSet<ClientToCurrency> ClientToCurrency { get; set; }
+        public DbSet<ClientToContracts> ClientToContracts { get; set; }
         public DbSet<Contacts> Contacts { get; set; }
         public DbSet<Contracts> Contracts { get; set; }
         public DbSet<ContactType> ContactType { get; set; }
         public DbSet<Country> Country { get; set; }
         public DbSet<Criteria> Criteria { get; set; }
-       
         public DbSet<Currency> Currency { get; set; }
         public DbSet<Employees> Employees { get; set; }
         public DbSet<Level> Level { get; set; }    
         public DbSet<Positions> Positions { get; set; }
         public DbSet<PrescoringScoring> PrescoringScoring { get; set; }
+        public DbSet<PrescoringScoringHistory> PrescoringScoringHistory { get; set; }
         public DbSet<ProductToScoring> ProductToScoring { get; set; }
         public DbSet<ResponsibleUnit> ResponsibleUnit { get; set; }
         public DbSet<RestrictedAccounts> RestrictedAccounts { get; set; }
