@@ -42,7 +42,7 @@
                     <GroupBox Header="Выберете фильтры" Margin="10,0">
                         <StackPanel >
                                 <TextBlock Text="Страна регистрации:" />
-                            <ListView Margin="5" ItemsSource="{Binding ContractsList}" Grid.Column="1" Grid.Row="1" Name="selectoritems1">
+                            <ListView Margin="5"  Grid.Column="1" Grid.Row="1" Name="selectoritems1" ItemsSource="{Binding CountryList}">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="SelectionChanged1">
                                             <i:InvokeCommandAction Command="{Binding StoreSelection}" CommandParameter="{Binding ElementName=selectoritems1, Path=SelectedItems}"/>
@@ -76,7 +76,7 @@
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="5">
                                 <TextBlock Text="Уровень риска:" Width="200"/>
-                                <ComboBox Width="300" />
+                                <ComboBox Text="{Binding SelectedClient.Level}" Width="300" />
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="5">
                                 <TextBlock Text="Дата пересмотра:" Width="200"/>

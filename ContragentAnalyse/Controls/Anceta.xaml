@@ -44,22 +44,22 @@
                                             <TextBlock Text="Полное наименование Клиента:" />
                                             <TextBox x:Name="FullName" Text="{Binding SelectedClient.FullName}" IsReadOnly="True"/>
                                             <TextBlock Text="Страна регистрации:"/>
-                                            <TextBox Text="{Binding SelectedClient.Country}"  IsReadOnly="True"/>
+                                            <TextBox Text="{Binding SelectedClient.Country.Name, Mode=OneWay}" IsReadOnly="True"/>
                                             <TextBlock Text="Дата актуализации:"/>
                                             <DatePicker Text="{Binding SelectedClient.ActualizationDate, Mode=OneWay}" IsEnabled="False" />
                                             <TextBlock Text="Другие БИНы Клиента:"/>
                                             <TextBox Text="{Binding SelectedClient.AdditionalBIN}" IsReadOnly="True"/>
                                             <TextBlock Text="Действующие договора:"/>
-                                            <TextBox Text="{Binding SelectedClient.GetContracts, Mode=OneWay}" IsReadOnly="True"/>
+                                            <TextBox Text="{Binding CurrentClientContracts, Mode=OneWay}" IsReadOnly="True"/>
                                             <TextBlock Text="Счета в валюте:"/>
-                                            <TextBox Text="{Binding AccountNumbers}" IsReadOnly="True"/>
+                                            <TextBox Text="{Binding CurrentClientCurrency, Mode=OneWay}" IsReadOnly="True"/>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="Наличие КОП:" Width="150"/>
-                                                <CheckBox x:Name="CheckBox2" IsEnabled="False"/>
+                                                <CheckBox x:Name="CheckBox" IsEnabled="False" IsChecked="{Binding SelectedClient.CardOP}"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="Счет с ограничениями:" Width="150"/>
-                                                <CheckBox x:Name="CheckBox1" IsEnabled="False"/>
+                                                <CheckBox x:Name="CheckBox1" IsEnabled="False" IsChecked="{Binding SelectedClient.RestrictedAccount}"/>
                                             </StackPanel>
                                         </StackPanel>
                                     </GroupBox>
@@ -71,7 +71,7 @@
                                         <TextBlock Text="Уровень риска:"  HorizontalAlignment="Left"/>
                                         <TextBox Text="{Binding SelectedClient.Level, Mode=OneWay}" IsReadOnly="True"/>
                                         <TextBlock Text="Дата пересмотра риска:"  HorizontalAlignment="Left"/>
-                                        <DatePicker Text="{Binding nextScoringDate}" IsEnabled="False"/>
+                                        <DatePicker SelectedDate="{Binding NextScoringDate, Mode=OneWay}"/>
                                         <TextBlock Text="Выявленные критерии риска:"/>
                                         <ListView ItemsSource="{Binding SelectedClient.ClientToCriteria, Mode=OneWay}">
                                             <ListView.View>

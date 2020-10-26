@@ -32,6 +32,7 @@ namespace ContragentAnalyse.Model
             modelBuilder.Entity<Client>().HasMany(i => i.ClientToCriteria).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.ClientToCurrency).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.ClientToContracts).WithOne(i => i.Client);
+            modelBuilder.Entity<Client>().HasMany(i => i.PrescoringScoringHistory).WithOne(i => i.Client);
 
 
             /* modelBuilder.Entity<PrescoringScoring>().HasMany(i => i.CriteriaToScoring).WithOne(i => i.PrescoringScoring);
@@ -66,6 +67,7 @@ namespace ContragentAnalyse.Model
         public DbSet<Level> Level { get; set; }    
         public DbSet<Positions> Positions { get; set; }
         public DbSet<PrescoringScoring> PrescoringScoring { get; set; }
+        public DbSet<PrescoringScoringHistory> PrescoringScoringHistory { get; set; }
         public DbSet<ProductToScoring> ProductToScoring { get; set; }
         public DbSet<ResponsibleUnit> ResponsibleUnit { get; set; }
         public DbSet<RestrictedAccounts> RestrictedAccounts { get; set; }

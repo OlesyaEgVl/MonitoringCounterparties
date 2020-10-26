@@ -13,6 +13,7 @@ namespace ContragentAnalyse.Model.Entities
         public string Mnemonic { get; set; }
         public string ClientManager { get; set; }
         public bool? CardOP { get; set; }
+        public bool? RestrictedAccount { get; set; }
         public int Client_type_Id { get; set; }
         public DateTime? BecomeClientDate { get; set; }
         public int ResponsibleUnit_Id { get; set; }
@@ -42,29 +43,40 @@ namespace ContragentAnalyse.Model.Entities
         {
             get
             {
-                float riskLevel = ClientToCriteria.Select(i => i.Criteria.Weight).Sum(); // ругается, что бывает нулевое значение
-                string RiskLevelName = string.Empty;
-                switch (riskLevel)
+                float riskLevel = 0;
+                string RiskLevelName = "Не определено";
+                if (ClientToCriteria == null)
                 {
-                    case float n when n > 13.1:
-                        RiskLevelName = $"{riskLevel} - Критичный";
-                        break;
-                    case float n when n >= 5.6 && n <= 13.1:
-                        RiskLevelName = $"{riskLevel} - Высокий";
-                        break;
-                    case float n when n >= 3.5 && n <= 5.5:
-                        RiskLevelName = $"{riskLevel} - Средний";
-                        break;
-                    case float n when n <= 3.4:
-                        RiskLevelName = $"{riskLevel} - Низкий";
-                        break;
-                    default:
-                        RiskLevelName = "Не определено";
-                        break;
+                    RiskLevelName = "Не определено";
+                    return RiskLevelName;
                 }
-                return RiskLevelName;
+                else
+                {
+                    riskLevel = ClientToCriteria.Select(i => i.Criteria.Weight).Sum(); // ругается, что бывает нулевое значение
+                    RiskLevelName = string.Empty;
+                    switch (riskLevel)
+                    {
+                        case float n when n > 13.1:
+                            RiskLevelName = $"{riskLevel} - Критичный";
+                            break;
+                        case float n when n >= 5.6 && n <= 13.1:
+                            RiskLevelName = $"{riskLevel} - Высокий";
+                            break;
+                        case float n when n >= 3.5 && n <= 5.5:
+                            RiskLevelName = $"{riskLevel} - Средний";
+                            break;
+                        case float n when n <= 3.4:
+                            RiskLevelName = $"{riskLevel} - Низкий";
+                            break;
+                        default:
+                            RiskLevelName = "Не определено";
+                            break;
+                    }
+                    return RiskLevelName;
+                }
             }
         }
+               
         public string BankProduct
         {
             get
@@ -107,22 +119,6 @@ namespace ContragentAnalyse.Model.Entities
                 }
             }
         }
-
-       /* public string GetContracts
-        {
-            get
-            {
-                if(Contracts !=null && Contracts.Count > 0)
-                {
-                    return string.Join(", ", Contracts?.Select(i => i.Name).ToArray());
-                }
-                else
-                {
-                    return string.Empty;
-                }
-            }
-        }*/
-
         [ForeignKey(nameof(ResponsibleUnit_Id))]
         public virtual ResponsibleUnit ResponsibleUnit { get; set; }
         [ForeignKey(nameof(Client_type_Id))]
@@ -141,6 +137,7 @@ namespace ContragentAnalyse.Model.Entities
         }
         public List<Actualization> Actualization { get; set; }
         public List<PrescoringScoring> PrescoringScoring { get; set; }
+        public List<PrescoringScoringHistory> PrescoringScoringHistory { get; set; }
         public List<StopFactors> StopFactors { get; set; }
         public List<RestrictedAccounts> RestrictedAccounts { get; set; }
         public List<Contacts> Contacts { get; set; }

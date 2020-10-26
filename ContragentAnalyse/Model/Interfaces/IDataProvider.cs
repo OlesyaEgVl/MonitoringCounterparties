@@ -20,6 +20,7 @@ namespace ContragentAnalyse.Model.Interfaces
         IEnumerable<Client> GetClientsByName(string Name);
         IEnumerable<Criteria> GetCriterias();
         IEnumerable<Contracts> GetCrontracts();
+        IEnumerable<Country> GetCountrys();
         void Commit();
         void AddClient(Client newClient);
         TypeClient GetClientType(string v);
@@ -29,7 +30,7 @@ namespace ContragentAnalyse.Model.Interfaces
         Criteria[] GetCriterialist(string bINStr);
         IEnumerable<ContactType> GetContactTypes();
         Contracts GetContractByCode(string v);
-
-
+        Employees GetCurrentEmployee();
+       
     }
 }

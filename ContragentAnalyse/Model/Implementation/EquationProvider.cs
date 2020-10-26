@@ -102,6 +102,7 @@ namespace ContragentAnalyse.Model.Implementation
                 }
                 string countrys = EUCL.ReadScreen(16, 33, 2);
                 clients.Country = dataProvider.GetCountry(countrys.TrimSpaces());
+               
                 pEnter();
                 string INN = EUCL.ReadScreen(10, 33, 12);// 
                 clients.INN = INN.TrimSpaces();
@@ -132,6 +133,7 @@ namespace ContragentAnalyse.Model.Implementation
                 clients.CurrencyLicence = currencylicence.Equals("Y");
                 string clientmanager = EUCL.ReadScreen(13, 39, 42);// КЛИНТ_МЕНЕД7ЖЕР имя и фамилию надо прописывать или код?
                 clients.ClientManager = clientmanager.TrimSpaces();
+                
                 pEnter();
                 pEnter();
                 pEnter();
@@ -266,40 +268,17 @@ namespace ContragentAnalyse.Model.Implementation
                 EUCL.SetCursorPos(6, 30);
                 EUCL.SendStr("*");
                 pEnter();
-                if (EUCL.ReadScreen(21, 79, 1) != " ")
+                if (EUCL.ReadScreen(6, 5, 1) != " ")
                 {
                     for (int i = 6; i <= 19; i++)
                     {
-                        EUCL.SetCursorPos(i, 2);
-                        EUCL.SendStr("1");
-                        pEnter();
-                        //проваливаемся в карточку
-                        if (EUCL.ReadScreen(10, 30, 6) == "      ")
-                        {
-                            ClientToContracts contractclient = new ClientToContracts();
-                            Contracts contract = new Contracts();
-                            contractclient.Contracts = dataProvider.GetContractByCode(EUCL.ReadScreen(8, 41, 34).TrimSpaces());
-                            contractclient.Client = clients;
-                            if (clients.ClientToContracts == null)
-                            {
-                                clients.ClientToContracts = new List<ClientToContracts>();
-                            }
-                            clients.ClientToContracts.Add(contractclient);
-                            pEnter();
-                            EUCL.SetCursorPos(3, 30);
-                            EUCL.SendStr("*");
-                        }
-                    }
-                    if (EUCL.ReadScreen(21, 79, 1).Equals("+"))
-                    {
-                        EUCL.SendStr("@v");
-                        for (int i = 6; i <= 19; i++)
+                        if (EUCL.ReadScreen(i, 5, 1) != " ")
                         {
                             EUCL.SetCursorPos(i, 2);
                             EUCL.SendStr("1");
                             pEnter();
                             //проваливаемся в карточку
-                            if (EUCL.ReadScreen(10, 30, 6) == "      ")
+                            if (EUCL.ReadScreen(10, 30, 1) == " ")
                             {
                                 ClientToContracts contractclient = new ClientToContracts();
                                 Contracts contract = new Contracts();
@@ -310,9 +289,57 @@ namespace ContragentAnalyse.Model.Implementation
                                     clients.ClientToContracts = new List<ClientToContracts>();
                                 }
                                 clients.ClientToContracts.Add(contractclient);
+                                if ((EUCL.ReadScreen(8, 41, 3) == "   ") && (Convert.ToDateTime(EUCL.ReadScreen(10, 30, 6)) <= Convert.ToDateTime("01.01.16")))  //kop
+                                {
+                                    clients.CardOP = true;
+                                }
+                                else
+                                {
+                                    clients.CardOP = true;
+                                }
+                            }
+                            pEnter();
+                            EUCL.SetCursorPos(6, 30);
+                            EUCL.SendStr("*");
+                            pEnter();
+                        }
+                    }
+                    if (EUCL.ReadScreen(21, 79, 1).Equals("+"))
+                    {
+                        EUCL.SendStr("@v");
+                        for (int i = 6; i <= 19; i++)
+                        {
+                            if (EUCL.ReadScreen(i, 5, 1) != " ")
+                            {
+                                EUCL.SetCursorPos(i, 2);
+                                EUCL.SendStr("1");
+                                pEnter();
+                                //проваливаемся в карточку
+                                if (EUCL.ReadScreen(10, 30, 1) == " ")
+                                {
+                                    ClientToContracts contractclient = new ClientToContracts();
+                                    Contracts contract = new Contracts();
+                                    contractclient.Contracts = dataProvider.GetContractByCode(EUCL.ReadScreen(8, 41, 34).TrimSpaces());
+                                    contractclient.Client = clients;
+                                    if (clients.ClientToContracts == null)
+                                    {
+                                        clients.ClientToContracts = new List<ClientToContracts>();
+                                    }
+                                    clients.ClientToContracts.Add(contractclient);
+                                    if ((EUCL.ReadScreen(8, 41, 3) == "   ") && (Convert.ToDateTime(EUCL.ReadScreen(10, 30, 6)) <= Convert.ToDateTime("01.01.16")))  //kop
+                                    {
+                                        clients.CardOP = true;
+                                    }
+                                    else
+                                    {
+                                        clients.CardOP = true;
+                                    }
+
+                                }
                                 pEnter();
                                 EUCL.SetCursorPos(6, 30);
                                 EUCL.SendStr("*");
+                                pEnter();
                             }
                         }
                     }

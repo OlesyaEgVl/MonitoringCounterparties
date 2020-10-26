@@ -16,6 +16,7 @@ using NPOI;
 using WordAdapterLib;
 using Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal;
 using NPOI.XWPF.UserModel;
+using System.Windows.Controls;
 
 namespace ContragentAnalyse.ViewModel
 {
@@ -46,9 +47,24 @@ namespace ContragentAnalyse.ViewModel
         #region Текущие значения
         private ObservableCollection<Client> _foundClients = new ObservableCollection<Client>();
         private ObservableCollection<Criteria> _riskCriteria = new ObservableCollection<Criteria>();
+        private ObservableCollection<Country> _country = new ObservableCollection<Country>();
         private ObservableCollection<Contracts> _contracts = new ObservableCollection<Contracts>();
         public ObservableCollection<Client> FoundClients { get => _foundClients; set => _foundClients = value; }
         public ObservableCollection<Criteria> RiskCriteriasList { get => _riskCriteria; set => _riskCriteria = value; }
+        public ObservableCollection<Country> CountryList { get => _country; set => _country = value; }
+        /*    //ViewModel
+          //  public ICollectionView BusinessCollection { get; set; }
+            public List<RiskCriteriasList> SelectedObject { get; set; }
+
+            //Codebehind
+            private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+            {
+                MainViewModel DataContext = null;
+                var viewmodel = (MainViewModel)DataContext;
+                viewmodel.SelectedItems = selectoritems.SelectedItems
+                    .Cast<RiskCriteriasList>()
+                    .ToList();
+            }*/
         public ObservableCollection<Contracts> ContractsList { get => _contracts; set => _contracts = value; }
         private ObservableCollection<ContactType> _contactTypes = new ObservableCollection<ContactType>();
         public ObservableCollection<ContactType> ContactTypes
@@ -56,12 +72,89 @@ namespace ContragentAnalyse.ViewModel
             get => _contactTypes;
             set => _contactTypes = value;
         }
-
         private ObservableCollection<Criteria> selectedCriterias = new ObservableCollection<Criteria>();
         public ObservableCollection<Criteria> SelectedCriterias => selectedCriterias;
+        private ObservableCollection<Contracts> selectedContracts = new ObservableCollection<Contracts>();
+        public ObservableCollection<Contracts> SelectedContracts => selectedContracts;
+
         private Client _selectedClient;
-        //private DateTime _nextScoringDate;
-        public Employees _currentEmployee;
+        public Client SelectedClient
+        {
+            get => _selectedClient;
+            set
+            {
+                _selectedClient = value;
+                RaisePropertyChanged(nameof(SelectedClient));
+                RaisePropertyChanged(nameof(NextScoringDate));
+
+                if (!IsAnyClientSelected && SelectedClient != null)
+                {
+                    IsAnyClientSelected = true;
+                }
+                else
+                {
+                    IsAnyClientSelected = false;
+                }
+            }
+        }
+        //История PrescoringScoring
+        private PrescoringScoringHistory _selectedScoringHistory;
+        public PrescoringScoringHistory SelectedScoringHistory
+        {
+            get => _selectedScoringHistory;
+            set
+            {
+                _selectedScoringHistory = value;
+                RaisePropertyChanged(nameof(SelectedScoringHistory));
+            }
+        }
+
+        public string CurrentClientContracts //добавляем договора в один список, чтобы вывести на экран
+        {
+            get
+            {
+                if(SelectedClient != null)
+                {
+                    List<Contracts> contracts = new List<Contracts>();
+                    foreach(ClientToContracts pair in SelectedClient.ClientToContracts)
+                    {
+                        contracts.Add(pair.Contracts);
+                    }
+                    return string.Join(", ", contracts);
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+        }
+        public string CurrentClientCurrency //добавляем валюту в один список, чтобы вывести на экран
+        {
+            get
+            {
+                if (SelectedClient != null)
+                {
+                    List<Currency> currency = new List<Currency>();
+                    foreach (ClientToCurrency listcurrency in SelectedClient.ClientToCurrency)
+                    {
+                        currency.Add(listcurrency.Currency);
+                    }
+                    return string.Join(", ", currency);
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+        }
+
+        public Employees _currentEmployee = new Employees();
+        public Employees CurrentEmployee
+        {
+            get => _currentEmployee;
+            set => _currentEmployee = value;
+        }
+
         private bool _isAnyClientSelected = false;
         public bool IsAnyClientSelected
         {
@@ -75,42 +168,24 @@ namespace ContragentAnalyse.ViewModel
                 RaisePropertyChanged(nameof(IsAnyClientSelected));
             }
         }
-        public Client SelectedClient
-        {
-            get => _selectedClient;
-            set
-            {
-                _selectedClient = value;
-                RaisePropertyChanged(nameof(SelectedClient));
+       
+        //Счета в валюте
 
-                if (!IsAnyClientSelected && SelectedClient != null)
+        public DateTime? NextScoringDate
+        {
+            get
+            {
+                if (SelectedClient != null)
                 {
-                    IsAnyClientSelected = true;
+                    return SelectedClient.NextScoringDate;
                 }
                 else
                 {
-                    IsAnyClientSelected = false;
+                    return null;
                 }
             }
-        }
-     
-        public DateTime? nextScoringDate
-        {
-            get
-            { 
-                if (SelectedClient != null)
-                    {
-                    
-                    return (DateTime)SelectedClient.NextScoringDate;
-                    
-                }
-                    else
-                    {
-                        return null;
-                    }
-             }
-        }
-        
+        } // ctrl + K + F
+
         private MainViewModel(IDataProvider provider, IEquationProvider eqProvider)
         {
             _dbProvider = provider;
@@ -119,47 +194,18 @@ namespace ContragentAnalyse.ViewModel
             InitializeData();
 
         }
-         public Employees LoadData
-          {
-              get => _currentEmployee;
-              set
-              {
-                  _currentEmployee = value;
-                  RaisePropertyChanged(nameof(LoadData));
-                  if (SelectedClient.Employees.CodeName == Environment.UserName)
-                  {
-                      _currentEmployee = SelectedClient.Employees;
-                  } 
-              }
-          }
-        public string history;
-        #endregion
-        #region Commands
-        public MyCommand<string> SearchCommand { get; set; }
-        public MyCommand<string> AddClientCommand { get; set; }
-        public MyCommand EditCommand { get; set; }
-        public MyCommand SaveCommand { get; set; }
-        public MyCommand ExportWordCommand { get; set; }
-        public MyCommand<string> CalculateCommand { get; set; }
-        public MyCommand EstimationRiskCommand { get; set; }
-        public MyCommand SaveRiskRecordCommand { get; set; }
-        public MyCommand ExportExcelCommand { get; set; }
-        public MyCommand SaveChangesCommand { get; set; }
-        public MyCommand<object> StoreSelection { get; set; }
-        #endregion
 
-        
-
+        /// <summary>
+        /// Инициализирует все поля при старте программы
+        /// </summary>
         private void InitializeData()
         {
             RiskCriteriasList = new ObservableCollection<Criteria>(_dbProvider.GetCriterias());
             _dbProvider.GetContactTypes().ToList().ForEach(ContactTypes.Add); //???
             RaisePropertyChanged(nameof(RiskCriteriasList));
-
-          //  ContractsList = new ObservableCollection<Contracts>(_dbProvider.GetContracts());
-          //  RaisePropertyChanged(nameof(ContractsList));
-            //???
-           
+            CurrentEmployee = _dbProvider.GetCurrentEmployee();
+            CountryList = new ObservableCollection<Country>(_dbProvider.GetCountrys());
+            RaisePropertyChanged(nameof(CountryList));
         }
 
         private void InitializeCommands()
@@ -176,7 +222,26 @@ namespace ContragentAnalyse.ViewModel
             SaveChangesCommand = new MyCommand(CommitMethod);
             StoreSelection = new MyCommand<object>(StoreSelectionMethod);
         }
+
+
+        public string history;
+        #endregion
+        #region Commands
+        public MyCommand<string> SearchCommand { get; set; }
+        public MyCommand<string> AddClientCommand { get; set; }
+        public MyCommand EditCommand { get; set; }
+        public MyCommand SaveCommand { get; set; }
+        public MyCommand ExportWordCommand { get; set; }
+        public MyCommand<string> CalculateCommand { get; set; }
+        public MyCommand EstimationRiskCommand { get; set; }
+        public MyCommand SaveRiskRecordCommand { get; set; }
+        public MyCommand ExportExcelCommand { get; set; }
+        public MyCommand SaveChangesCommand { get; set; }
+        public MyCommand<object> StoreSelection { get; set; }
+        #endregion
+
         public readonly string TemplateFileName = @"C:\Projects\CounterpartyMonitoring\ContragentAnalyse\Anceta.docx";
+
         private void ExportWordMethod() // SAVE WORD
         {
             //Ты скопировала этот текст из интернета, а мне предлагаешь поправить.?)) Статьи читай а не видео смотри)
@@ -191,7 +256,7 @@ namespace ContragentAnalyse.ViewModel
             var RestrictedAccounts = SelectedClient.RestrictedAccounts;
             var COP = SelectedClient.CardOP;
             var AdditionalBIN = SelectedClient.AdditionalBIN;
-            var NextScoringDate= nextScoringDate;
+            var NextScoringDate= this.NextScoringDate;
             var LevelRisk = SelectedClient.Level;
             var BankProducts = SelectedClient.BankProduct;
             var Criteria = SelectedClient.ClientToCriteria;//! не id
@@ -233,21 +298,15 @@ namespace ContragentAnalyse.ViewModel
             if (SelectedClient.Level.IndexOf("Низкий") >-1)
               {
                   SelectedClient.NextScoringDate= DateTime.Now.AddYears(2);
-                  RaisePropertyChanged(nameof(nextScoringDate));
+                  RaisePropertyChanged(nameof(NextScoringDate));
               }
               else
               {
                   SelectedClient.NextScoringDate = DateTime.Now.AddYears(1);
-                 RaisePropertyChanged(nameof(nextScoringDate));
+                 RaisePropertyChanged(nameof(NextScoringDate));
               }
-            
-            CommitMethod();
-          
-           
+            CommitMethod();    
         }
-
-
-
         //private void AddRequestsMethod()
         //{
         //    //проверка на null
@@ -282,23 +341,22 @@ namespace ContragentAnalyse.ViewModel
                     Criteria = criteria
                 });
             }
-            history = Convert.ToString(DateTime.Now) + " " +LoadData.Name+ " "/*+SelectedClient.NextScoringDate*/;
-            RaisePropertyChanged(nameof(history));
-
-            CommitMethod();
-           
-            /*SelectedCriterias.Clear(); 
-            SelectedClient.ClientToCriteria.Clear();*/
+            //Добавить новое поле в PrescoringScoringHistory - метод;
+            SelectedScoringHistory.Employee_Id = CurrentEmployee.Id; 
+             SelectedScoringHistory.DatePresScor = DateTime.Now;
+           SelectedScoringHistory.Client_Id = SelectedClient.Id;
+            RaisePropertyChanged(nameof(SelectedScoringHistory));
+            /*history = Convert.ToString(DateTime.Now) + " " + CurrentEmployee.Name + " "+SelectedClient.NextScoringDate; //не верно
+            RaisePropertyChanged(nameof(history));*/
+            CommitMethod();  
         }
-        
+
         private void CalculateMethod(string BINStr)
         {
             if (!string.IsNullOrWhiteSpace(BINStr))
             {
-                
                 Criteria[] criteriaslist = _dbProvider.GetCriterialist(BINStr); //найти критерии для клиента по бину
-                //_dbProvider.AddCriteriaList(criteriaslist); //Посчитать сумму баллов критериев
-                
+                //_dbProvider.AddCriteriaList(criteriaslist); //Посчитать сумму баллов критериев 
             }
             else
             {
@@ -315,13 +373,11 @@ namespace ContragentAnalyse.ViewModel
                 {
                     SelectedCriterias.Add(obj as Criteria);
                 }
-
             }
         }
 
         private void AddClientMethod(string BINStr)
         {
-
             if (!string.IsNullOrWhiteSpace(BINStr.ToUpper()))
             {
                 Client newClient = eqProvider.GetClient(BINStr.ToUpper()); //найти клиента в EQ
@@ -350,8 +406,6 @@ namespace ContragentAnalyse.ViewModel
             }                                               //FoundClients.AddRange - Extension Method или метод расширения. Реализация тут ContragentAnalyse.Extension
             else
             {
-
-
                 MessageBox.Show("Поле ввода не должно быть пустым!");
             }
         }
@@ -366,8 +420,6 @@ namespace ContragentAnalyse.ViewModel
                 return () => _dbProvider.GetClients(searchString);
             else
                 return () => _dbProvider.GetClientsByName(searchString);
-
-
         }
 
         private void CommitMethod()

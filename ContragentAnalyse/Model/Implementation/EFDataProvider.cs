@@ -25,8 +25,10 @@ namespace ContragentAnalyse.Model.Implementation
             Include(i => i.TypeClient).
             Include(i => i.Actualization).
             Include(i => i.PrescoringScoring).
+            Include(i => i.PrescoringScoringHistory).
             Include(i => i.RestrictedAccounts).
             Include(i => i.Contacts).
+            Include(i => i.Country).
             Include(i => i.Requests).
             Include(i => i.ClientToCurrency).
                 ThenInclude(i => i.Currency).
@@ -40,9 +42,11 @@ namespace ContragentAnalyse.Model.Implementation
             Include(i => i.TypeClient).
             Include(i => i.Actualization).
             Include(i => i.PrescoringScoring).
+            Include(i => i.PrescoringScoringHistory).
             Include(i => i.RestrictedAccounts).
             Include(i => i.Contacts).
             Include(i => i.Requests).
+            Include(i=>i.Country).
             Include(i=>i.ClientToCurrency).
                 ThenInclude(i=>i.Currency).
             Include(i => i.ClientToCriteria).
@@ -51,6 +55,7 @@ namespace ContragentAnalyse.Model.Implementation
                 ThenInclude(i => i.Contracts).
             Where(i => i.Name.ToLower().IndexOf(Name.ToLower()) > -1);
         public IEnumerable<Criteria> GetCriterias() => _dbContext.Criteria;
+        public IEnumerable<Country> GetCountrys() => _dbContext.Country;
         public IEnumerable<Contracts>  GetCrontracts ()=> _dbContext.Contracts;
         public DateTime GetDateActual()
         {
@@ -190,6 +195,23 @@ namespace ContragentAnalyse.Model.Implementation
         public Criteria[] GetCriterialist(string bINStr)
         {
             throw new NotImplementedException();
+        }
+
+        public Employees GetCurrentEmployee()
+        {
+            string login = Environment.UserName;
+            if (_dbContext.Employees.Any(i => i.CodeName.ToLower().Equals(Environment.UserName.ToLower())))
+            {
+                return _dbContext.Employees.FirstOrDefault(i => i.CodeName.ToLower().Equals(login.ToLower()));
+            }
+            else
+            {
+                Employees newEmpl = new Employees();
+                newEmpl.CodeName = login;
+                _dbContext.Employees.Add(newEmpl);
+                _dbContext.SaveChanges();
+                return newEmpl;
+            }
         }
     }
 }
