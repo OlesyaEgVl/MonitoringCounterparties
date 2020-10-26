@@ -25,6 +25,8 @@ namespace ContragentAnalyse.Controls
         private void Search2(object sender, RoutedEventArgs e)
         {
             buttonSearch2.Background = Brushes.DarkGray;
+            
+            //SaveHistoryTime.IsEnabled = true;
         }
         private void SaveHistoryTime_Click(object sender, RoutedEventArgs e)
         {
@@ -33,6 +35,7 @@ namespace ContragentAnalyse.Controls
             BankProduct.IsEnabled = false;
             ItogRiskButton.IsEnabled = false;
             ItogRisk.IsEnabled = false;
+            
         }
 
         private void Redact_Click(object sender, RoutedEventArgs e)

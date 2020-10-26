@@ -10,10 +10,6 @@ namespace ContragentAnalyse.Model.Entities
         public DateTime DatePresScor { get; set; }
         public int ScoringType_Id { get; set; }
         public int Client_Id { get; set; }
-        public double? NO_Score { get; set; }
-        public double? Nostro_Score { get; set; }
-        
-
         [ForeignKey(nameof(Client_Id))]
         public virtual Client Client { get; set; }
         [ForeignKey(nameof(ScoringType_Id))]

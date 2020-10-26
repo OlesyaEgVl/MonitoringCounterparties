@@ -49,6 +49,7 @@ namespace ContragentAnalyse.Controls
             RecieveDateColumn.IsReadOnly = true;
             CommentColumn.IsReadOnly = true;
             CheckBox1.IsEnabled = false;
+
         }
 
         private void Word(object sender, RoutedEventArgs e)
