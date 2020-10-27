@@ -79,12 +79,26 @@ namespace ContragentAnalyse.Model.Implementation
             }
         }
         Contracts IDataProvider.GetContractByCode(string v)
-        { 
-            if (!string.IsNullOrWhiteSpace(v))
+        {
+            if (string.IsNullOrWhiteSpace(v))
             {
-                return _dbContext.Contracts.FirstOrDefault(cntr => cntr.Name.ToUpper().Equals(v.ToUpper()));
+                return null;
             }
-            else { return null; }
+            if (_dbContext.Contracts.Any(i => i.Name.ToLower().Equals(v.ToLower())))
+            {
+                return _dbContext.Contracts.First(cntr => cntr.Name.ToUpper().Equals(v.ToUpper()));
+            }
+            else
+            {
+                Contracts contracts = new Contracts
+                {
+                    Name = v
+                };
+                _dbContext.Contracts.Add(contracts);
+                _dbContext.SaveChanges();
+                return contracts;
+            }
+
         }
         Currency IDataProvider.GetCurrencyByName(string name)
         {
@@ -208,10 +222,16 @@ namespace ContragentAnalyse.Model.Implementation
             {
                 Employees newEmpl = new Employees();
                 newEmpl.CodeName = login;
+                newEmpl.Name = "Null";
                 _dbContext.Employees.Add(newEmpl);
                 _dbContext.SaveChanges();
                 return newEmpl;
             }
+        }
+
+        public IEnumerable<PrescoringScoringHistory> GetClientHistory(Client client)
+        {
+            return _dbContext.PrescoringScoringHistory.Where(i => i.Client_Id == client.Id);
         }
     }
 }

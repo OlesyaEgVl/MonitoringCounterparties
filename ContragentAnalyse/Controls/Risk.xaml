@@ -31,8 +31,8 @@
                         <ListView Name="FoundItemsList2" Margin="5" MinWidth="600" MinHeight="100" ItemsSource="{Binding FoundClients}" SelectedItem="{Binding SelectedClient}">
                             <ListView.View>
                                 <GridView>
-                                    <GridViewColumn Header="БИН" DisplayMemberBinding="{Binding Path=BIN}" />
-                                    <GridViewColumn Header="Название" DisplayMemberBinding="{Binding Path=ShortName}"/>
+                                    <GridViewColumn Header="БИН" DisplayMemberBinding="{Binding Path=BIN}" Width="50"/>
+                                    <GridViewColumn Header="Название" DisplayMemberBinding="{Binding Path=ShortName}" Width="450"/>
                                     <GridViewColumn Header="Мнемоника" DisplayMemberBinding="{Binding Path=Mnemonic}"/>
                                     <GridViewColumn Header="Тип клиента" DisplayMemberBinding="{Binding Path=TypeClient.Name}"/>
                                 </GridView>
@@ -69,11 +69,9 @@
                         
                             <TextBlock Text="Несоответствие банковских продуктов:" MinWidth="220" Margin="5"/>
                         <TextBox Text="{Binding SelectedClient.BankProduct , Mode=OneWay}" x:Name="BankProduct" Margin="5" MinWidth="300" Height="100"/>
-
-
                         <StackPanel Orientation="Horizontal" Margin="5">
                             <TextBlock Text="Оценка комплаенс риска завершена" MinWidth="225"/>
-                            <Button x:Name="Check"   Width="110" Height="25" Content="Завершено!"  Command="{Binding EstimationRiskCommand}"/>
+                            <Button x:Name="Check"   Width="110" Height="25" Content="Завершить!"  Command="{Binding EstimationRiskCommand}"/>
                             
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="5">
@@ -82,9 +80,17 @@
                         </StackPanel>
 
                         <TextBlock Text="История:" Margin="5"/>
-                        <TextBox Margin="5" Text="{Binding SelectedScoringHistory}" TextWrapping="Wrap" MinHeight="300" MinWidth="300" 
-                                   IsEnabled="False" Background="{DynamicResource {x:Static SystemColors.InactiveCaptionBrushKey}}"
-                                   />
+ 
+                        <ListView Name="HistoryList" ItemsSource="{Binding CurrentClientHistory, Mode=OneWay}" MinHeight="300" MinWidth="300">
+                            <ListView.View>
+                                <GridView>
+                                    <GridView.Columns>
+                                        <GridViewColumn Header="Дата" DisplayMemberBinding="{Binding DatePresScor}"/>
+                                        <GridViewColumn Header="Сотрудник" DisplayMemberBinding="{Binding Employees.Name}"/>
+                                    </GridView.Columns>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
                        
                         <StackPanel Orientation="Vertical" Margin="5" HorizontalAlignment="Right">
                             <Button x:Name="RedactHistory" Width="150" Height="25" Content="Редактировать" Click="Redact_Click" />

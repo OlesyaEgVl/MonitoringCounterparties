@@ -138,7 +138,7 @@ namespace ContragentAnalyse.Model.Implementation
                 pEnter();
                 pEnter();
                 string actdate = EUCL.ReadScreen(17, 29, 2) + '.' + EUCL.ReadScreen(17, 31, 2) + '.' + EUCL.ReadScreen(17, 33, 2);//дата актуализации
-                if (EUCL.ReadScreen(17, 29, 2)!=("  "))
+                if (EUCL.ReadScreen(17, 29, 1)!=(" "))
                 {
                     Actualization act = new Actualization();
                     act.DateActEKS = Convert.ToDateTime(actdate); //не совсем уверена, что верно сделала
@@ -220,7 +220,6 @@ namespace ContragentAnalyse.Model.Implementation
                 pEnter();
                 do
                 {
-                    //int i = 0;
                     for (int i = 8; i <= 20; i += 2)
                     {
                         if (string.IsNullOrWhiteSpace(EUCL.ReadScreen(i, 5, 24)))
@@ -233,20 +232,6 @@ namespace ContragentAnalyse.Model.Implementation
                             ClientToCurrency currtoclient = new ClientToCurrency();
                             Currency currenc = new Currency();
                             currtoclient.Currency = dataProvider.GetCurrencyByCode(EUCL.ReadScreen(i, 11, 3)); //Тут не должно быть List'a вообще
-                            /*У тебя  эта таблица содержит пары клиент - валюта
-                            клиент1 - доллар
-                            клиент1 - евро
-                            клиент1 - руфий
-                            клиент2 - доллар
-                            клиент2 - песо
-                            итп
-                            у тебя нету тут коллекций. или как в нашем случае ключ к клиенту-ключ к валюте
-                            1-1
-                            1-2
-                            1-3
-                            2-1
-                            2-4
-                            */
                             currtoclient.Client = clients;
                             if (clients.ClientToCurrency == null)
                             {

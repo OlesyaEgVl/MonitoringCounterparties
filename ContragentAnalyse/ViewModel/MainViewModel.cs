@@ -76,7 +76,8 @@ namespace ContragentAnalyse.ViewModel
         public ObservableCollection<Criteria> SelectedCriterias => selectedCriterias;
         private ObservableCollection<Contracts> selectedContracts = new ObservableCollection<Contracts>();
         public ObservableCollection<Contracts> SelectedContracts => selectedContracts;
-
+        public delegate void OnSelectedClientChanged();
+        public event OnSelectedClientChanged SelectedClientChanged;
         private Client _selectedClient;
         public Client SelectedClient
         {
@@ -84,8 +85,9 @@ namespace ContragentAnalyse.ViewModel
             set
             {
                 _selectedClient = value;
-                RaisePropertyChanged(nameof(SelectedClient));
-                RaisePropertyChanged(nameof(NextScoringDate));
+                SelectedClientChanged?.Invoke();
+
+
 
                 if (!IsAnyClientSelected && SelectedClient != null)
                 {
@@ -97,30 +99,20 @@ namespace ContragentAnalyse.ViewModel
                 }
             }
         }
-        //История PrescoringScoring
-        private PrescoringScoringHistory _selectedScoringHistory;
-        public PrescoringScoringHistory SelectedScoringHistory
-        {
-            get => _selectedScoringHistory;
-            set
-            {
-                _selectedScoringHistory = value;
-                RaisePropertyChanged(nameof(SelectedScoringHistory));
-            }
-        }
 
         public string CurrentClientContracts //добавляем договора в один список, чтобы вывести на экран
         {
             get
             {
-                if(SelectedClient != null)
+                if (SelectedClient != null && SelectedClient.ClientToContracts!=null)
                 {
                     List<Contracts> contracts = new List<Contracts>();
-                    foreach(ClientToContracts pair in SelectedClient.ClientToContracts)
+                    
+                    foreach (ClientToContracts pair in SelectedClient.ClientToContracts)
                     {
                         contracts.Add(pair.Contracts);
                     }
-                    return string.Join(", ", contracts);
+                    return string.Join(", ", contracts.Select(i=>i.Name));
                 }
                 else
                 {
@@ -128,18 +120,30 @@ namespace ContragentAnalyse.ViewModel
                 }
             }
         }
+
+        public List<PrescoringScoringHistory> CurrentClientHistory
+        {
+            get
+            {
+                if (SelectedClient == null)
+                    return null;
+                return _dbProvider.GetClientHistory(SelectedClient).ToList();
+            }
+        }
+        
+
         public string CurrentClientCurrency //добавляем валюту в один список, чтобы вывести на экран
         {
             get
             {
-                if (SelectedClient != null)
+                if (SelectedClient != null && SelectedClient.ClientToCurrency != null)
                 {
                     List<Currency> currency = new List<Currency>();
                     foreach (ClientToCurrency listcurrency in SelectedClient.ClientToCurrency)
                     {
                         currency.Add(listcurrency.Currency);
                     }
-                    return string.Join(", ", currency);
+                    return string.Join(", ", currency.Select(i => i.Name));
                 }
                 else
                 {
@@ -168,7 +172,7 @@ namespace ContragentAnalyse.ViewModel
                 RaisePropertyChanged(nameof(IsAnyClientSelected));
             }
         }
-       
+
         //Счета в валюте
 
         public DateTime? NextScoringDate
@@ -190,9 +194,23 @@ namespace ContragentAnalyse.ViewModel
         {
             _dbProvider = provider;
             this.eqProvider = eqProvider;
+            Initialize();
             InitializeCommands();
             InitializeData();
 
+        }
+
+        private void Initialize()
+        {
+            //Если что то нужно подписать на изменения SelectedClient то допиши это сюда
+            SelectedClientChanged += () =>
+            {
+                RaisePropertyChanged(nameof(SelectedClient));
+                RaisePropertyChanged(nameof(NextScoringDate));
+                RaisePropertyChanged(nameof(CurrentClientContracts));
+                RaisePropertyChanged(nameof(CurrentClientCurrency));
+                RaisePropertyChanged(nameof(CurrentClientHistory));
+            };
         }
 
         /// <summary>
@@ -224,7 +242,6 @@ namespace ContragentAnalyse.ViewModel
         }
 
 
-        public string history;
         #endregion
         #region Commands
         public MyCommand<string> SearchCommand { get; set; }
@@ -256,18 +273,18 @@ namespace ContragentAnalyse.ViewModel
             var RestrictedAccounts = SelectedClient.RestrictedAccounts;
             var COP = SelectedClient.CardOP;
             var AdditionalBIN = SelectedClient.AdditionalBIN;
-            var NextScoringDate= this.NextScoringDate;
+            var NextScoringDate = this.NextScoringDate;
             var LevelRisk = SelectedClient.Level;
             var BankProducts = SelectedClient.BankProduct;
             var Criteria = SelectedClient.ClientToCriteria;//! не id
-            
+
             try
             {
-                
-               //POITextExtractor worddoc = new POITextExtractor(TemplateFileName) ;
-              Application wordApp = new Application();
-            //  Document wordDoc = wordApp.Documents.Open(TemplateFileName);
-                
+
+                //POITextExtractor worddoc = new POITextExtractor(TemplateFileName) ;
+                Application wordApp = new Application();
+                //  Document wordDoc = wordApp.Documents.Open(TemplateFileName);
+
                 /*
                 ReplaceWordStub("{DateAct}", Convert.ToString(DateAct),wordDocument);
                 ReplaceWordStub("{Country}", Convert.ToString(Country), wordDocument);
@@ -285,27 +302,27 @@ namespace ContragentAnalyse.ViewModel
                 wordaplication.Visible = true;
                 */
             }
-            catch { MessageBox.Show("Не выгружается документ"); }            
+            catch { MessageBox.Show("Не выгружается документ"); }
         }
-       /* private void ReplaceWordStub(string stubToReplace,string text, Microsoft.Office.Interop.Word.Document worddocument)
-        {
-            var range = worddocument.Content;
-            range.Find.ClearFormatting();
-            range.Find.Execute(FindText: stubToReplace, ReplaceWith: text);
-        }*/
+        /* private void ReplaceWordStub(string stubToReplace,string text, Microsoft.Office.Interop.Word.Document worddocument)
+         {
+             var range = worddocument.Content;
+             range.Find.ClearFormatting();
+             range.Find.Execute(FindText: stubToReplace, ReplaceWith: text);
+         }*/
         private void EstimationRiskMethod()
         {
-            if (SelectedClient.Level.IndexOf("Низкий") >-1)
-              {
-                  SelectedClient.NextScoringDate= DateTime.Now.AddYears(2);
-                  RaisePropertyChanged(nameof(NextScoringDate));
-              }
-              else
-              {
-                  SelectedClient.NextScoringDate = DateTime.Now.AddYears(1);
-                 RaisePropertyChanged(nameof(NextScoringDate));
-              }
-            CommitMethod();    
+            if (SelectedClient.Level.IndexOf("Низкий") > -1)
+            {
+                SelectedClient.NextScoringDate = DateTime.Now.AddYears(2);
+                RaisePropertyChanged(nameof(NextScoringDate));
+            }
+            else
+            {
+                SelectedClient.NextScoringDate = DateTime.Now.AddYears(1);
+                RaisePropertyChanged(nameof(NextScoringDate));
+            }
+            CommitMethod();
         }
         //private void AddRequestsMethod()
         //{
@@ -338,7 +355,8 @@ namespace ContragentAnalyse.ViewModel
                 SelectedClient.ClientToCriteria.Add(new ClientToCriteria
                 {
                     Client = SelectedClient,
-                    Criteria = criteria
+                    Criteria = criteria,
+                    DateAdd = DateTime.Now
                 });
             }
             //Добавить новое поле в PrescoringScoringHistory - метод;
@@ -348,11 +366,7 @@ namespace ContragentAnalyse.ViewModel
                 Employee_Id = CurrentEmployee.Id,
                 DatePresScor = DateTime.Now
             });
-
-            RaisePropertyChanged(nameof(SelectedScoringHistory));
-            /*history = Convert.ToString(DateTime.Now) + " " + CurrentEmployee.Name + " "+SelectedClient.NextScoringDate; //не верно
-            RaisePropertyChanged(nameof(history));*/
-            CommitMethod();  
+            CommitMethod();
         }
 
         private void CalculateMethod(string BINStr)
@@ -382,18 +396,22 @@ namespace ContragentAnalyse.ViewModel
 
         private void AddClientMethod(string BINStr)
         {
-            if (!string.IsNullOrWhiteSpace(BINStr.ToUpper()))
+            if (string.IsNullOrWhiteSpace(BINStr.ToUpper()))
             {
-                Client newClient = eqProvider.GetClient(BINStr.ToUpper()); //найти клиента в EQ
-                if (newClient != null)
-                {
-                    _dbProvider.AddClient(newClient); //добавить в БД
-                    SelectedClient = newClient;
-                }
+                MessageBox.Show("Поле ввода не должно быть пустым!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                return;
             }
-            else
+            if (_dbProvider.GetClients(BINStr).Count() != 0)
             {
-                MessageBox.Show("Поле ввода не должно быть пустым!");
+                MessageBox.Show("Такой Клиент уже есть в БД. Добавление не требуется", "Клиент уже существует", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                return;
+            }
+
+            Client newClient = eqProvider.GetClient(BINStr.ToUpper()); //найти клиента в EQ
+            if (newClient != null)
+            {
+                _dbProvider.AddClient(newClient); //добавить в БД
+                SelectedClient = newClient;
             }
         }
 

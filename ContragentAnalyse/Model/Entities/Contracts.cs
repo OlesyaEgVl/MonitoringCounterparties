@@ -8,5 +8,9 @@ namespace ContragentAnalyse.Model.Entities
     public class Contracts : NamedEntity
     {
         //public List<ClientToContracts> ClientToContracts { get; set; }
+        //public override string ToString()
+        //{
+        //    return Name;
+        //}
     }
 }

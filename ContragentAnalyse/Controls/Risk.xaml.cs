@@ -35,7 +35,9 @@ namespace ContragentAnalyse.Controls
             BankProduct.IsEnabled = false;
             ItogRiskButton.IsEnabled = false;
             ItogRisk.IsEnabled = false;
-            
+           // selectoritems.SelectedItem = null;
+
+
         }
 
         private void Redact_Click(object sender, RoutedEventArgs e)
