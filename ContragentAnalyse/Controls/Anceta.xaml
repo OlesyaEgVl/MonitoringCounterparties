@@ -105,7 +105,7 @@
                                             </DataGrid.Columns>
                                         </DataGrid>
                                         <TextBlock Text="Клинет менеджер:"  HorizontalAlignment="Left"/>
-                                        <TextBox Text="{Binding SelectedClient, Mode=OneWay}" IsReadOnly="True"/>
+                                        <TextBox Text="{Binding SelectedClient.ClientManagerNew, Mode=OneWay}" IsReadOnly="True"/>
                                         <StackPanel HorizontalAlignment="Right">
                                             <Button x:Name="buttonCorr" Width="150" Height="25" Content="Редактировать" Click="Corr"/>
                                             <Button x:Name="buttonSave" Width="150" Height="25" Content="Сохранить изменения" Click="Save"

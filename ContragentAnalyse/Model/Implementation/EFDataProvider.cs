@@ -178,7 +178,7 @@ namespace ContragentAnalyse.Model.Implementation
             {
                 _dbContext.Client.Add(newClient);
                 _dbContext.SaveChanges();
-                MessageBox.Show("Клиент добавлен!");
+               // MessageBox.Show("Клиент добавлен!");
             }
         }
         string [] BankTypeCodes = new string [] { "HA","HB","HD","HU","HC"};
