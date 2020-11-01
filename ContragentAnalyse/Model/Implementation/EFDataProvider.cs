@@ -172,7 +172,9 @@ namespace ContragentAnalyse.Model.Implementation
         {
             if (_dbContext.Client.Any(client => client.BIN.Equals(newClient.BIN)))
             {
-                MessageBox.Show("Клиент уже существует!");
+                // MessageBox.Show("Клиент уже существует!");
+               // _dbContext.Client.Add(newClient.Name);
+                _dbContext.SaveChanges();
             }
             else
             {

@@ -14,25 +14,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <COMReference Include="ExcelAdaptorLib.dll">
-      <Guid>7bcedf81-6a82-448f-9a27-63726d499727</Guid>
-      <VersionMajor>15</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Lcid>0</Lcid>
-      <Isolated>false</Isolated>
-    </COMReference>
-    <COMReference Include="WordAdapterLib.dll">
-      <Guid>cb7a8a3c-917e-4e4c-b731-667a63eb2803</Guid>
-      <VersionMajor>12</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Lcid>0</Lcid>
-      <Isolated>false</Isolated>
-    </COMReference>
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="EPPlus" Version="5.4.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.8">
       <PrivateAssets>all</PrivateAssets>

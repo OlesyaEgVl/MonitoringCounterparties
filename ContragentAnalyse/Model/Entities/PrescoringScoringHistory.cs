@@ -9,10 +9,14 @@ namespace ContragentAnalyse.Model.Entities
     {
         public DateTime DatePresScor { get; set; }
         public int Employee_Id { get; set; }
+        public int Criteria_Id { get; set; }
         public int Client_Id { get; set; }
+
         [ForeignKey(nameof(Client_Id))]
         public virtual Client Client { get; set; }
         [ForeignKey(nameof(Employee_Id))]
         public virtual Employees Employees { get; set; }
+        [ForeignKey(nameof(Criteria_Id))]
+        public virtual Criteria Criteria{ get; set; }
     }
 }

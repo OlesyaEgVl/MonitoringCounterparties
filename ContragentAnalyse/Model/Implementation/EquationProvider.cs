@@ -195,7 +195,6 @@ namespace ContragentAnalyse.Model.Implementation
                         }
                     }
                 }
-
                 EUCL.ClearScreen();
                 EUCL.SetCursorPos(21, 17);
                 EUCL.SendStr("PPP");
