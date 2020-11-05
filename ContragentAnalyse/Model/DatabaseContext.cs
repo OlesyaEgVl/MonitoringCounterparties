@@ -53,6 +53,7 @@ namespace ContragentAnalyse.Model
         public DbSet<AccountStates> AccountStates { get; set; }
         public DbSet<Actualization> Actualization { get; set; }
         public DbSet<BankProduct> BankProduct { get; set; }
+        public DbSet<BanksProductHistory> BanksProductHistory { get; set; }
         public DbSet<Client> Client { get; set; }
         public DbSet<ClientToCriteria> ClientToCriteria { get; set; }
         public DbSet<ClientToCurrency> ClientToCurrency { get; set; }

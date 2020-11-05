@@ -19,8 +19,8 @@
                         <ListView Name="FoundItemsList" Margin="5" MinWidth="600" MinHeight="100" ItemsSource="{Binding FoundClients}" SelectedItem="{Binding SelectedClient}">
                             <ListView.View>
                                 <GridView>
-                                    <GridViewColumn Header="БИН" DisplayMemberBinding="{Binding Path=BIN}"/>
-                                    <GridViewColumn Header="Название" DisplayMemberBinding="{Binding Path=ShortName}"/>
+                                    <GridViewColumn Header="БИН" DisplayMemberBinding="{Binding Path=BIN}" Width="50"/>
+                                    <GridViewColumn Header="Название" DisplayMemberBinding="{Binding Path=FullName}" Width="450"/>
                                     <GridViewColumn Header="Мнемоника" DisplayMemberBinding="{Binding Path=Mnemonic}"/>
                                     <GridViewColumn Header="Тип клиента" DisplayMemberBinding="{Binding Path=TypeClient.Name}"/>
                                 </GridView>
@@ -41,15 +41,17 @@
                                 <StackPanel>
                                     <GroupBox Header="Информация о Клиенте" Margin="10,0">
                                         <StackPanel MinWidth="300">
+                                            <TextBlock Text="Статус клиента:" />
+                                            <TextBox x:Name="ActStatus" Text="{Binding SelectedClient.ActualizationStatus, Mode=OneWay}" IsReadOnly="True"/>
                                             <TextBlock Text="Полное наименование Клиента:" />
                                             <TextBox x:Name="FullName" Text="{Binding SelectedClient.FullName}" IsReadOnly="True"/>
                                             <TextBlock Text="Страна регистрации:"/>
                                             <TextBox Text="{Binding SelectedClient.Country.Name, Mode=OneWay}" IsReadOnly="True"/>
                                             <TextBlock Text="Дата актуализации:"/>
-                                            <DatePicker Text="{Binding SelectedClient.ActualizationDate, Mode=OneWay}" IsEnabled="False" />
+                                            <DatePicker SelectedDate="{Binding SelectedClient.ActualizationDate, Mode=OneWay}" IsEnabled="False" />
                                             <TextBlock Text="Другие БИНы Клиента:"/>
                                             <TextBox Text="{Binding SelectedClient.AdditionalBIN}" IsReadOnly="True"/>
-                                            <TextBlock Text="Действующие договора:"/>
+                                            <TextBlock Text="Действующие договоры:"/>
                                             <TextBox Text="{Binding CurrentClientContracts, Mode=OneWay}" IsReadOnly="True"/>
                                             <TextBlock Text="Счета в валюте:"/>
                                             <TextBox Text="{Binding CurrentClientCurrency, Mode=OneWay}" IsReadOnly="True"/>
@@ -67,7 +69,7 @@
                                 <GroupBox Header="Информация о Клиенте 2" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="1">
                                     <StackPanel IsEnabled="{Binding IsAnyClientSelected}">
                                         <TextBlock Text="Комплаенс-менеджер:" HorizontalAlignment="Left"/>
-                                        <TextBox Text="{Binding SelectedClient.ClientManager}" x:Name="TextClientMenedger" IsReadOnly="True"/>
+                                        <TextBox Text="{Binding SelectedClient.ClientManagerNew}" x:Name="TextClientMenedger" IsReadOnly="True"/>
                                         <TextBlock Text="Уровень риска:"  HorizontalAlignment="Left"/>
                                         <TextBox Text="{Binding SelectedClient.Level, Mode=OneWay}" IsReadOnly="True"/>
                                         <TextBlock Text="Дата пересмотра риска:"  HorizontalAlignment="Left"/>
@@ -102,7 +104,8 @@
                                                 <DataGridTextColumn x:Name="ValueColumn" Header="Значение" MinWidth="110" Binding="{Binding Value}" IsReadOnly="False"/>
                                             </DataGrid.Columns>
                                         </DataGrid>
-                                       
+                                        <TextBlock Text="Клинет менеджер:"  HorizontalAlignment="Left"/>
+                                        <TextBox Text="{Binding SelectedClient.ClientManagerNew, Mode=OneWay}" IsReadOnly="True"/>
                                         <StackPanel HorizontalAlignment="Right">
                                             <Button x:Name="buttonCorr" Width="150" Height="25" Content="Редактировать" Click="Corr"/>
                                             <Button x:Name="buttonSave" Width="150" Height="25" Content="Сохранить изменения" Click="Save"

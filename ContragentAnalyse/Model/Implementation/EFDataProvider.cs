@@ -78,13 +78,33 @@ namespace ContragentAnalyse.Model.Implementation
                 return null;
             }
         }
+
+        public bool IsAnyClientExist(string Bin)
+        {
+            return _dbContext.Client.Any(i => i.BIN.ToLower().Equals(Bin.ToLower()));
+        }
+
         Contracts IDataProvider.GetContractByCode(string v)
-        { 
-            if (!string.IsNullOrWhiteSpace(v))
+        {
+            if (string.IsNullOrWhiteSpace(v))
             {
-                return _dbContext.Contracts.FirstOrDefault(cntr => cntr.Name.ToUpper().Equals(v.ToUpper()));
+                return null;
             }
-            else { return null; }
+            if (_dbContext.Contracts.Any(i => i.Name.ToLower().Equals(v.ToLower())))
+            {
+                return _dbContext.Contracts.First(cntr => cntr.Name.ToUpper().Equals(v.ToUpper()));
+            }
+            else
+            {
+                Contracts contracts = new Contracts
+                {
+                    Name = v
+                };
+                _dbContext.Contracts.Add(contracts);
+                _dbContext.SaveChanges();
+                return contracts;
+            }
+
         }
         Currency IDataProvider.GetCurrencyByName(string name)
         {
@@ -158,13 +178,15 @@ namespace ContragentAnalyse.Model.Implementation
         {
             if (_dbContext.Client.Any(client => client.BIN.Equals(newClient.BIN)))
             {
-                MessageBox.Show("Клиент уже существует!");
+                // MessageBox.Show("Клиент уже существует!");
+               // _dbContext.Client.Add(newClient.Name);
+                _dbContext.SaveChanges();
             }
             else
             {
                 _dbContext.Client.Add(newClient);
                 _dbContext.SaveChanges();
-                MessageBox.Show("Клиент добавлен!");
+               // MessageBox.Show("Клиент добавлен!");
             }
         }
         string [] BankTypeCodes = new string [] { "HA","HB","HD","HU","HC"};
@@ -208,10 +230,37 @@ namespace ContragentAnalyse.Model.Implementation
             {
                 Employees newEmpl = new Employees();
                 newEmpl.CodeName = login;
+                newEmpl.Name = "Null";
                 _dbContext.Employees.Add(newEmpl);
                 _dbContext.SaveChanges();
                 return newEmpl;
             }
+        }
+
+        public IEnumerable<ScoringHistoryGrouped> GetClientHistory(Client client)
+        {
+            List<ScoringHistoryGrouped> output = new List<ScoringHistoryGrouped>();
+            List<PrescoringScoringHistory> historyRecords = _dbContext.PrescoringScoringHistory.Where(i => i.Client_Id == client.Id).ToList();
+            foreach(PrescoringScoringHistory rec in historyRecords)
+            {
+                if(output.Any(i=>i.HistoryDate.Date == rec.DatePresScor.Date))
+                {
+                    output.First(i => i.HistoryDate.Date == rec.DatePresScor.Date).HistoryRecords.Add(rec);
+                }
+                else
+                {
+                    ScoringHistoryGrouped newValue = new ScoringHistoryGrouped
+                    {
+                        HistoryDate = rec.DatePresScor.Date,
+                        HistoryRecords = new List<PrescoringScoringHistory>(),
+                        EmployeeName = rec.Employees.Name,
+                        ClosedClient = rec.ClosedClient
+                    };
+                    newValue.HistoryRecords.Add(rec);
+                    output.Add(newValue);
+                }
+            }
+            return output;
         }
     }
 }

@@ -5,6 +5,8 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using LicenseContext = OfficeOpenXml.LicenseContext;
+using OfficeOpenXml;
 
 namespace ContragentAnalyse.Model.Entities
 {
@@ -39,11 +41,97 @@ namespace ContragentAnalyse.Model.Entities
         public DateTime? NextScoringDate { get; set; }
         public int? Country_Id { get; set; }
         public int? ClientToCurrency_Id { get; set; }
+        public string ClientManagerNew { get; set; }
         public string Level
         {
             get
             {
                 float riskLevel = 0;
+                int kolsheets = 0;
+                //\\moscow\hdfs:\WORK\Middle Office\International Compliance\Operations and Investments\Investigations\
+                //\\moscow\hdfs:\WORK\Middle Office\International Compliance\SANCTIONS\NOSTRO\Off-line запросы\
+                //\\moscow\hdfs:\000 Мониторинг ЛОРО\
+                const string excel_input = @"C:\Users\U_M166J\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\netcoreapp3.1\input.xlsx";
+                const string excel_input2 = @"C:\Users\U_M166J\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\netcoreapp3.1\input2.xlsx";
+                const string excel_input3 = @"C:\Users\U_M166J\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\netcoreapp3.1\input3.xlsx";
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                //НОСТРО 1
+                using (ExcelPackage excel = new ExcelPackage(new System.IO.FileInfo(excel_input)))
+                {
+                    ExcelWorkbook XlWB = excel.Workbook;
+                    foreach (ExcelWorksheet sheets in XlWB.Worksheets)
+                    {
+                        kolsheets++;
+                    }
+                    for (int j = kolsheets; j >= kolsheets - 12; j--)
+                    {
+                        ExcelWorksheet sheet = excel.Workbook.Worksheets[j];
+                        for (int i = 1; i < sheet.Dimension.Rows; i++)
+                        {
+                            if ((sheet.Cells[i, 6].Text == BIN) && (sheet.Cells[i, 24].Text != null) && (sheet.Cells[i, 25].Text == null))
+                            {
+                                riskLevel += 0.5f;
+                            }
+
+                        }
+                    }
+                }
+                kolsheets=0;
+                // НОСТРО 2
+                using (ExcelPackage excel = new ExcelPackage(new System.IO.FileInfo(excel_input2), "789456"))
+                {
+                    int numsheet = 0;
+                    ExcelWorkbook XlWB = excel.Workbook;
+                    foreach (ExcelWorksheet sheets in XlWB.Worksheets)
+                    {
+                        kolsheets++;
+                        if (sheets.Name.IndexOf("по наст время") > -1)
+                        {
+                            numsheet = kolsheets;
+
+                        }
+                    }
+                    ExcelWorksheet sheet = excel.Workbook.Worksheets[numsheet];
+                    for (int i = 1; i < sheet.Dimension.Rows; i++)
+                    {
+                        if ((sheet.Cells[i, 6].Text == BIN) && (sheet.Cells[i, 24].Text != null) && (sheet.Cells[i, 25].Text == null))
+                        {
+                            riskLevel += 0.5f;
+                        }
+                    }
+                }
+                kolsheets = 0;
+                //ЛОРО
+                using (ExcelPackage excel = new ExcelPackage(new System.IO.FileInfo(excel_input3)))
+                {
+                    int todaydateyear = DateTime.Now.Year;
+                    int dateDay = DateTime.Now.Day;
+                    int dateMonth = DateTime.Now.Month;
+                    int dateYear= DateTime.Now.Year-1;
+                    DateTime date = new DateTime(dateYear, dateMonth, dateDay, 0, 0, 0); //не уверена день месяц/месяц день
+                    DateTime todaydate = new DateTime(todaydateyear, dateMonth, dateDay, 0, 0, 0);
+                    System.TimeSpan dateTo= todaydate.Subtract(date);
+                    DateTime newdate = todaydate.Subtract(dateTo);
+                    int numsheet = 0;
+                    ExcelWorkbook XlWB = excel.Workbook;
+                    foreach (ExcelWorksheet sheets in XlWB.Worksheets)
+                    {
+                        kolsheets++;
+                        if (sheets.Name.IndexOf("Сводный") > -1)
+                        {
+                            numsheet = kolsheets;
+
+                        }
+                    }
+                    ExcelWorksheet sheet = excel.Workbook.Worksheets[numsheet];
+                    for (int i = 1; i < sheet.Dimension.Rows; i++)
+                    {
+                        if ((sheet.Cells[i, 4].Text == BIN)&&(Convert.ToDateTime(sheet.Cells[i, 13].Text) >= Convert.ToDateTime(newdate.Date.ToString("d"))) && (sheet.Cells[i, 21].Text != null) && (sheet.Cells[i, 25].Text == null)&&(sheet.Cells[i, 13].Text!="нет") && (sheet.Cells[i, 13].Text != null))
+                        {
+                            riskLevel += 1.5f;
+                        }
+                    }
+                }
                 string RiskLevelName = "Не определено";
                 if (ClientToCriteria == null)
                 {
@@ -89,19 +177,20 @@ namespace ContragentAnalyse.Model.Entities
                         BankProductName = "Сотрудничество приостановлено/запрещено";
                         break;
                     case float n when n >= 5.6 && n <= 13.1:
-                        BankProductName = "Открытие корреспондентских счетов в рублях; " + "\n" + " в иностранной валюте - только для внутренних расчетов и/или собственных операций; " + "\n" + "Привлечение / размещение межбанковских кредитов/ депозитов;Синдицированное кредитование;Безналичные конверсионные операции;Операции с производными финансовыми инструментами;Сделки с ценными бумагами; " + "\n" + "Сделки купли-продажи драгоценных металлов;Организация секьюритизаций;Объединение банкоматных сетей;" + "\n" + "Расчеты в рублях через международные платежные системы;";
+                        BankProductName = "Кор.счета рублевые ;Кор.счета валютные + Счет с ограничениями V ;Межбанк ; Синдицированное кредитование ;ALFA-FOREX и/или RISDA и/или ISDA и/или RISDA FI и/или RISDA онлайн и/или CSA онлайн;ALFA-FOREX и/или RISDA и/или ISDA и/или RISDA FI и/или RISDA онлайн и/или CSA онлайн и/или ISMA и/или Соглашения по ценным бумагам;ISMA и/или Соглашения по ценным бумагам;Драгметаллы;Организация секьюритизаций;Объединение банкоматных сетей;Кор.счета рублевые + Пластиковые карты и/или Договор по операциям ПК и/или Процессинг и/или Договор НПС (нац.платеж.сист.);";
                         break;
                     case float n when n >= 3.5 && n <= 5.5:
-                        BankProductName = "Банковские продукты для клиентов с высоким уровнем комплаенс-риска + " + "\n" + "Зарплатные проекты;" + "\n"+"Документарные операции(аккредитивы, инкассо, гарантии);Банкнотные сделки;Сделки с векселями;Инкассация;";
+                        BankProductName = "Зарплатные проекты;Электр.банк.гарантия и/или Непокрыт.аккредитив.Бенефициар;Банкнотные сделки;Собственные векселя;Договор на инкассацию; ";
                         break;
                     case float n when n <= 3.4 && n>0:
-                        BankProductName = "Банковские продукты для клиентов со средним уровнем комплаенс-риска + " + "\n" + "Открытие корреспондентских счетов без ограничения по валюте счета и режиму счета;Трансграничные расчеты и / или расчеты в иностранной валюте через международные платежные системы; " + "\n" + "Брокерское обслуживание;Депозитарное обслуживание;";
+                        BankProductName = "Кор.счета валютные;Кор.счета валютные + Пластиковые карты и/или Договор по операциям ПК и/или Процессинг и/или Договор НПС (нац.платеж.сист.);Брокерское обслуживание;Депозитарное обслуживание;";
                         break;
                     default:
                         BankProductName = "Не определено";
                         break;
                 }
                 return BankProductName;
+               
             }
         }
 
@@ -112,6 +201,20 @@ namespace ContragentAnalyse.Model.Entities
                 if(Actualization != null && Actualization.Count > 0)
                 {
                     return Actualization?.Max(i => i.DateActEKS);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+        public string ActualizationStatus
+        {
+            get
+            {
+                if (Actualization != null && Actualization.Count > 0)
+                {
+                    return Actualization?.Max(i => i.Status);
                 }
                 else
                 {
