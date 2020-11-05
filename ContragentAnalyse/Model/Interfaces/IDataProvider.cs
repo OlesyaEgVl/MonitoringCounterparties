@@ -16,11 +16,13 @@ namespace ContragentAnalyse.Model.Interfaces
         bool? GetCardOP();
         string GetAccountNumber();
         string GetContacts();
+        IEnumerable<ScoringHistoryGrouped> GetClientHistory(Client client);
         IEnumerable<Client> GetClients(string BIN);
         IEnumerable<Client> GetClientsByName(string Name);
         IEnumerable<Criteria> GetCriterias();
         IEnumerable<Contracts> GetCrontracts();
         IEnumerable<Country> GetCountrys();
+        bool IsAnyClientExist(string Bin);
         void Commit();
         void AddClient(Client newClient);
         TypeClient GetClientType(string v);

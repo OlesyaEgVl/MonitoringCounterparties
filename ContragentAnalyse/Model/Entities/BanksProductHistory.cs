@@ -5,12 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 namespace ContragentAnalyse.Model.Entities
 {
-    public class Contracts : NamedEntity
+    public class BanksProductHistory : NamedEntity
     {
-        //public List<ClientToContracts> ClientToContracts { get; set; }
-        //public override string ToString()
-        //{
-        //    return Name;
-        //}
     }
 }

@@ -76,7 +76,7 @@
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="5">
                                 <TextBlock Text="Уровень риска:" Width="200"/>
-                                <ComboBox Text="{Binding SelectedClient.Level}" Width="300" />
+                                <ComboBox Width="300" />
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="5">
                                 <TextBlock Text="Дата пересмотра:" Width="200"/>
