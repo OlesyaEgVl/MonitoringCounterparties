@@ -11,6 +11,7 @@ namespace ContragentAnalyse.Model.Entities
         public int Employee_Id { get; set; }
         public int Criteria_Id { get; set; }
         public int Client_Id { get; set; }
+        public bool ClosedClient { get; set; }
 
         [ForeignKey(nameof(Client_Id))]
         public virtual Client Client { get; set; }

@@ -78,6 +78,12 @@ namespace ContragentAnalyse.Model.Implementation
                 return null;
             }
         }
+
+        public bool IsAnyClientExist(string Bin)
+        {
+            return _dbContext.Client.Any(i => i.BIN.ToLower().Equals(Bin.ToLower()));
+        }
+
         Contracts IDataProvider.GetContractByCode(string v)
         {
             if (string.IsNullOrWhiteSpace(v))
@@ -231,9 +237,30 @@ namespace ContragentAnalyse.Model.Implementation
             }
         }
 
-        public IEnumerable<PrescoringScoringHistory> GetClientHistory(Client client)
+        public IEnumerable<ScoringHistoryGrouped> GetClientHistory(Client client)
         {
-            return _dbContext.PrescoringScoringHistory.Where(i => i.Client_Id == client.Id);
+            List<ScoringHistoryGrouped> output = new List<ScoringHistoryGrouped>();
+            List<PrescoringScoringHistory> historyRecords = _dbContext.PrescoringScoringHistory.Where(i => i.Client_Id == client.Id).ToList();
+            foreach(PrescoringScoringHistory rec in historyRecords)
+            {
+                if(output.Any(i=>i.HistoryDate.Date == rec.DatePresScor.Date))
+                {
+                    output.First(i => i.HistoryDate.Date == rec.DatePresScor.Date).HistoryRecords.Add(rec);
+                }
+                else
+                {
+                    ScoringHistoryGrouped newValue = new ScoringHistoryGrouped
+                    {
+                        HistoryDate = rec.DatePresScor.Date,
+                        HistoryRecords = new List<PrescoringScoringHistory>(),
+                        EmployeeName = rec.Employees.Name,
+                        ClosedClient = rec.ClosedClient
+                    };
+                    newValue.HistoryRecords.Add(rec);
+                    output.Add(newValue);
+                }
+            }
+            return output;
         }
     }
 }

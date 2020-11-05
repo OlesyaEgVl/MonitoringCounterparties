@@ -5,6 +5,8 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using LicenseContext = OfficeOpenXml.LicenseContext;
+using OfficeOpenXml;
 
 namespace ContragentAnalyse.Model.Entities
 {
@@ -45,6 +47,88 @@ namespace ContragentAnalyse.Model.Entities
             get
             {
                 float riskLevel = 0;
+                int kolsheets = 0;
+                const string excel_input = @"C:\Users\U_M166J\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\netcoreapp3.1\input.xlsx";
+                const string excel_input2 = @"C:\Users\U_M166J\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\netcoreapp3.1\input2.xlsx";
+                const string excel_input3 = @"C:\Users\U_M166J\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\netcoreapp3.1\input3.xlsx";
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                //НОСТРО 1
+                using (ExcelPackage excel = new ExcelPackage(new System.IO.FileInfo(excel_input)))
+                {
+                    ExcelWorkbook XlWB = excel.Workbook;
+                    foreach (ExcelWorksheet sheets in XlWB.Worksheets)
+                    {
+                        kolsheets++;
+                    }
+                    for (int j = kolsheets; j >= kolsheets - 12; j--)
+                    {
+                        ExcelWorksheet sheet = excel.Workbook.Worksheets[j];
+                        for (int i = 1; i < sheet.Dimension.Rows; i++)
+                        {
+                            if ((sheet.Cells[i, 6].Text == BIN) && (sheet.Cells[i, 24].Text != null) && (sheet.Cells[i, 25].Text == null))
+                            {
+                                riskLevel += 0.5f;
+                            }
+
+                        }
+                    }
+                }
+                kolsheets=0;
+                // НОСТРО 2
+                using (ExcelPackage excel = new ExcelPackage(new System.IO.FileInfo(excel_input2), "789456"))
+                {
+                    int numsheet = 0;
+                    ExcelWorkbook XlWB = excel.Workbook;
+                    foreach (ExcelWorksheet sheets in XlWB.Worksheets)
+                    {
+                        kolsheets++;
+                        if (sheets.Name.IndexOf("по наст время") > -1)
+                        {
+                            numsheet = kolsheets;
+
+                        }
+                    }
+                    ExcelWorksheet sheet = excel.Workbook.Worksheets[numsheet];
+                    for (int i = 1; i < sheet.Dimension.Rows; i++)
+                    {
+                        if ((sheet.Cells[i, 6].Text == BIN) && (sheet.Cells[i, 24].Text != null) && (sheet.Cells[i, 25].Text == null))
+                        {
+                            riskLevel += 0.5f;
+                        }
+                    }
+                }
+                kolsheets = 0;
+                //ЛОРО
+                using (ExcelPackage excel = new ExcelPackage(new System.IO.FileInfo(excel_input3)))
+                {
+                    int todaydateyear = DateTime.Now.Year;
+                    int dateDay = DateTime.Now.Day;
+                    int dateMonth = DateTime.Now.Month;
+                    int dateYear= DateTime.Now.Year-1;
+                    DateTime date = new DateTime(dateYear, dateMonth, dateDay, 0, 0, 0); //не уверена день месяц/месяц день
+                    DateTime todaydate = new DateTime(todaydateyear, dateMonth, dateDay, 0, 0, 0);
+                    System.TimeSpan dateTo= todaydate.Subtract(date);
+                    DateTime newdate = todaydate.Subtract(dateTo);
+                    int numsheet = 0;
+                    ExcelWorkbook XlWB = excel.Workbook;
+                    foreach (ExcelWorksheet sheets in XlWB.Worksheets)
+                    {
+                        kolsheets++;
+                        if (sheets.Name.IndexOf("Сводный") > -1)
+                        {
+                            numsheet = kolsheets;
+
+                        }
+                    }
+                    ExcelWorksheet sheet = excel.Workbook.Worksheets[numsheet];
+                    for (int i = 1; i < sheet.Dimension.Rows; i++)
+                    {
+                        if ((sheet.Cells[i, 4].Text == BIN)&&(Convert.ToDateTime(sheet.Cells[i, 13].Text) >= Convert.ToDateTime(newdate.Date.ToString("d"))) && (sheet.Cells[i, 21].Text != null) && (sheet.Cells[i, 25].Text == null)&&(sheet.Cells[i, 13].Text!="нет") && (sheet.Cells[i, 13].Text != null))
+                        {
+                            riskLevel += 0.5f;
+                        }
+                    }
+                }
                 string RiskLevelName = "Не определено";
                 if (ClientToCriteria == null)
                 {

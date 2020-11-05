@@ -10,7 +10,7 @@ namespace ContragentAnalyse.Model.Entities
     public class Request :BaseEntity
     {
         public int Client_Id { get; set; }
-        public DateTime SendDate { get; set; }
+        public DateTime? SendDate { get; set; }
         public DateTime? RecieveDate { get; set; }
         public string Comment { get; set; }
         [ForeignKey(nameof(Client_Id))]

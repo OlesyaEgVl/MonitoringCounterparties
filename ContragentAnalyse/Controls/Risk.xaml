@@ -44,7 +44,8 @@
                    
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="5">
-                            <ListView ItemsSource="{Binding RiskCriteriasList}" Grid.Column="1" Grid.Row="1" Name="selectoritems">
+                            <ListView ItemsSource="{Binding RiskCriteriasList}"
+                                      Grid.Column="1" Grid.Row="1" Name="selectoritems">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="SelectionChanged">
                                         <i:InvokeCommandAction Command="{Binding StoreSelection}" CommandParameter="{Binding ElementName=selectoritems, Path=SelectedItems}"/>
@@ -84,11 +85,11 @@
                             <ListView.View>
                                 <GridView>
                                     <GridView.Columns>
-                                        <GridViewColumn Header="Дата" DisplayMemberBinding="{Binding DatePresScor}" Width="100"/>
-                                        <GridViewColumn Header="Сотрудник" DisplayMemberBinding="{Binding Employees.Name}" Width="200"/>
-                                        <GridViewColumn Header="Уровень риска" DisplayMemberBinding="{Binding Client.Level}" Width="100"/>
-                                        <GridViewColumn Header="Несоответствие банковских продуктов" DisplayMemberBinding="{Binding BanksProductHistory.Name}" Width="200"/>
-                                        <GridViewColumn Header="Дата пересмотра" DisplayMemberBinding="{Binding Client.NextScoringDate}" Width="100"/>
+                                        <GridViewColumn Header="Дата" DisplayMemberBinding="{Binding HistoryDate, StringFormat=dd.MM.yyyy}" Width="100"/>
+                                        <GridViewColumn Header="Сотрудник" DisplayMemberBinding="{Binding EmployeeName}" Width="200"/>
+                                        <GridViewColumn Header="Уровень риска" DisplayMemberBinding="{Binding Level, Mode=OneWay}" Width="100"/>
+                                        <GridViewColumn Header="Несоответствие банковских продуктов" DisplayMemberBinding="{Binding InappropriateBankProducts, Mode=OneWay}" Width="200"/>
+                                        <GridViewColumn Header="Оценка завершена" DisplayMemberBinding="{Binding ClosedClient, Mode=OneWay}" Width="200"/>
                                     </GridView.Columns>
                                 </GridView>
                             </ListView.View>
