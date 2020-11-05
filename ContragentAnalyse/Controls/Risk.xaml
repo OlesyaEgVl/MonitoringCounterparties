@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"        
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"     
+             xmlns:local="clr-namespace:ContragentAnalyse.Extension"
              mc:Ignorable="d" DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
     <UserControl.Resources>
         <DataTemplate x:Key="CheckBoxCell">
@@ -45,6 +46,7 @@
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="5">
                             <ListView ItemsSource="{Binding RiskCriteriasList}"
+                                      local:ListViewExtensions.SelectedValues="{Binding SelectedHistory}"
                                       Grid.Column="1" Grid.Row="1" Name="selectoritems">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="SelectionChanged">
