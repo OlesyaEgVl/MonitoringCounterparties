@@ -48,6 +48,9 @@ namespace ContragentAnalyse.Model.Entities
             {
                 float riskLevel = 0;
                 int kolsheets = 0;
+                //\\moscow\hdfs:\WORK\Middle Office\International Compliance\Operations and Investments\Investigations\
+                //\\moscow\hdfs:\WORK\Middle Office\International Compliance\SANCTIONS\NOSTRO\Off-line запросы\
+                //\\moscow\hdfs:\000 Мониторинг ЛОРО\
                 const string excel_input = @"C:\Users\U_M166J\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\netcoreapp3.1\input.xlsx";
                 const string excel_input2 = @"C:\Users\U_M166J\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\netcoreapp3.1\input2.xlsx";
                 const string excel_input3 = @"C:\Users\U_M166J\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\netcoreapp3.1\input3.xlsx";
@@ -125,7 +128,7 @@ namespace ContragentAnalyse.Model.Entities
                     {
                         if ((sheet.Cells[i, 4].Text == BIN)&&(Convert.ToDateTime(sheet.Cells[i, 13].Text) >= Convert.ToDateTime(newdate.Date.ToString("d"))) && (sheet.Cells[i, 21].Text != null) && (sheet.Cells[i, 25].Text == null)&&(sheet.Cells[i, 13].Text!="нет") && (sheet.Cells[i, 13].Text != null))
                         {
-                            riskLevel += 0.5f;
+                            riskLevel += 1.5f;
                         }
                     }
                 }
