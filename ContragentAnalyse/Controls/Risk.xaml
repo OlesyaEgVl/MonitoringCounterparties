@@ -46,14 +46,13 @@
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="5">
                             <ListView ItemsSource="{Binding RiskCriteriasList}"
-                                      local:ListViewExtensions.SelectedValues="{Binding SelectedHistory}"
+                                      local:ListViewExtensions.SelectedValues="{Binding SelectedCriterias}"
                                       Grid.Column="1" Grid.Row="1" Name="selectoritems">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="SelectionChanged">
                                         <i:InvokeCommandAction Command="{Binding StoreSelection}" CommandParameter="{Binding ElementName=selectoritems, Path=SelectedItems}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
-                                
                                 <ListView.View>
                                     <GridView>
                                         <GridViewColumn CellTemplate="{StaticResource CheckBoxCell}" Width="30"/>
@@ -62,15 +61,20 @@
                                     </GridView>
                                 </ListView.View>
                             </ListView>
-                        
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="5">
-                            <TextBlock Text="Итоговый балл (Уровень риска Клиента):" MinWidth="220"/>
-                            <TextBox Text="{Binding SelectedClient.Level , Mode=OneWay}" x:Name="ItogRisk" MinWidth="300" IsEnabled="False"/>
-                            <Button x:Name="ItogRiskButton"   Width="110" Height="25" Content="Посчитать" Command="{Binding ContractBankProducts}"/>
+                            <TextBlock Text="Итоговый балл (Уровень риска Клиента):" MinWidth="250"/>
+                            <TextBox Text="{Binding SelectedCriteriasLevel , Mode=OneWay}" x:Name="ItogRisk" MinWidth="300" Height="25" IsReadOnly="True"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="5">
+                            <TextBlock Text="Итоговый балл с учётом НОСТРО и ЛОРО:" MinWidth="250"/>
+                            <TextBox Text="{Binding NostroUnusualOperationsString, Mode=OneWay}" x:Name="ItogNOSTRO" MinWidth="300" IsReadOnly="True"/>
+                            <Button x:Name="ItogRiskButton" Width="110" Height="25" Content="Посчитать" Command="{Binding ContractBankProducts}"/>
                         </StackPanel>
                         <TextBlock Text="Несоответствие банковских продуктов:" MinWidth="220" Margin="5"/>
-                        <TextBox Text="{Binding BankProductHistory.Name}" x:Name="BankProduct" Margin="5" MinWidth="300" Height="100"/>
+                        <TextBox Text="{Binding BankProductHistory.Name, Mode=OneWay}" x:Name="BankProduct" Margin="5" MinWidth="300" Height="100"/>
+                        <TextBlock Text="Комментарий к скорингу:" MinWidth="220" Margin="5"/>
+                        <TextBox Text="{Binding CurrentHistoryComment}" x:Name="Comments" Margin="5" MinWidth="300" Height="100"/>
                         <StackPanel Orientation="Horizontal" Margin="5">
                             <TextBlock Text="Оценка комплаенс риска завершена" MinWidth="225"/>
                             <Button x:Name="Check"   Width="110" Height="25" Content="Завершить!"  Command="{Binding EstimationRiskCommand}"/>
@@ -82,25 +86,32 @@
                         </StackPanel>
 
                         <TextBlock Text="История:" Margin="5"/>
- 
-                        <ListView Name="HistoryList" ItemsSource="{Binding CurrentClientHistory, Mode=OneWay}" MinHeight="300" MinWidth="300">
+
+                        <ListView Name="HistoryList" ItemsSource="{Binding CurrentClientHistory, Mode=OneWay}" SelectedItem="{Binding SelectedHistoryRecord}" MinHeight="300" MinWidth="300">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding SelectHistoryRecord}" CommandParameter="{Binding ElementName = HistoryList, Path=SelectedItem}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
                             <ListView.View>
                                 <GridView>
                                     <GridView.Columns>
                                         <GridViewColumn Header="Дата" DisplayMemberBinding="{Binding HistoryDate, StringFormat=dd.MM.yyyy}" Width="100"/>
                                         <GridViewColumn Header="Сотрудник" DisplayMemberBinding="{Binding EmployeeName}" Width="200"/>
                                         <GridViewColumn Header="Уровень риска" DisplayMemberBinding="{Binding Level, Mode=OneWay}" Width="100"/>
-                                        <GridViewColumn Header="Несоответствие банковских продуктов" DisplayMemberBinding="{Binding InappropriateBankProducts, Mode=OneWay}" Width="200"/>
                                         <GridViewColumn Header="Оценка завершена" DisplayMemberBinding="{Binding ClosedClient, Mode=OneWay}" Width="200"/>
+                                        <GridViewColumn Header="Комментарий" DisplayMemberBinding="{Binding CurrentHistoryComment, Mode=OneWay}" Width="200"/>
+                                        <GridViewColumn Header="Уровень риска ЛОРО/НОСТРО" DisplayMemberBinding="{Binding NostroUnusualOperationsString, Mode=OneWay}" Width="200"/>
                                     </GridView.Columns>
                                 </GridView>
                             </ListView.View>
                         </ListView>
                        
                         <StackPanel Orientation="Vertical" Margin="5" HorizontalAlignment="Right">
-                            <Button x:Name="RedactHistory" Width="150" Height="25" Content="Редактировать" Click="Redact_Click" />
-                            <Button x:Name="SaveHistoryTime" Width="150" Height="25" Content="Сохранить историю" Click="SaveHistoryTime_Click" Command="{Binding SaveRiskRecordCommand}"/>
-                            <Button Width="150" Height="25" Content="Выгрузить историю" Click="Button_Click" Command="{Binding ExportExcelCommand}"/>
+                            <Button x:Name="AddScoring" Width="150" Height="25" Content="Добавить скоринг" Click="AddScoring_Click" Command="{Binding AddScoringCommand}"/>
+                            <Button x:Name="RedactHistory" Width="150" Height="25" Content="Редактировать" Click="Redact_Click"/>
+                            <Button x:Name="SaveHistoryTime" Width="150" Height="25" Content="Сохранить историю" Click="SaveHistoryTime_Click" Command="{Binding SaveRiskRecordCommand}" IsEnabled="{Binding IsCurrentHistoryRecordClosed}"/>
+                            <Button Width="150" Height="25" Content="Выгрузить историю" Click="Button_Click" Command="{Binding ExportExcelCommand}" CommandParameter="{Binding SelectedClient.BIN}"/>
                         </StackPanel>
                     </StackPanel>
                 </GroupBox>

@@ -45,12 +45,18 @@ namespace ContragentAnalyse.Controls
             RedactHistory.Background = Brushes.DarkGray;
             SaveHistoryTime.Background = Brushes.LightGray;
             BankProduct.IsEnabled = true;
-            ItogRiskButton.IsEnabled = true;
+           // ItogRiskButton.IsEnabled = true;
             ItogRisk.IsEnabled = true;
 
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            RedactHistory.Background = Brushes.LightGray;
+            SaveHistoryTime.Background = Brushes.LightGray;
+        }
+
+        private void AddScoring_Click(object sender, RoutedEventArgs e)
         {
             RedactHistory.Background = Brushes.LightGray;
             SaveHistoryTime.Background = Brushes.LightGray;

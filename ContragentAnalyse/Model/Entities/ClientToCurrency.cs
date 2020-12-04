@@ -13,5 +13,6 @@ namespace ContragentAnalyse.Model.Entities
         public virtual Client Client { get; set; }
         [ForeignKey(nameof(Currency_Id))]
         public Currency Currency { get; set; }
+
     }
 }

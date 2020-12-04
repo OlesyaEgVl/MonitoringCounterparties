@@ -358,8 +358,8 @@ namespace ContragentAnalyse.Migrations
                     DatePresScor = table.Column<DateTime>(nullable: false),
                     ScoringType_Id = table.Column<int>(nullable: false),
                     Client_Id = table.Column<int>(nullable: false),
-                    NO_Score = table.Column<double>(nullable: true),
-                    Nostro_Score = table.Column<double>(nullable: true),
+                    NO_Score = table.Column<float>(nullable: true),
+                    Nostro_Score = table.Column<float>(nullable: true),
                     DateNextScoring = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>

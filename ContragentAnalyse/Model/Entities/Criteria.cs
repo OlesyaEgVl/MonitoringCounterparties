@@ -8,6 +8,6 @@ namespace ContragentAnalyse.Model.Entities
 {
     public class Criteria: NamedEntity
     {
-        public float Weight { get; set; }
+        public double Weight { get; set; }
     }
 }

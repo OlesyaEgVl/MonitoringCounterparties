@@ -48,11 +48,11 @@
                                             <TextBlock Text="Страна регистрации:"/>
                                             <TextBox Text="{Binding SelectedClient.Country.Name, Mode=OneWay}" IsReadOnly="True"/>
                                             <TextBlock Text="Дата актуализации:"/>
-                                            <DatePicker SelectedDate="{Binding SelectedClient.ActualizationDate, Mode=OneWay}" IsEnabled="False" />
+                                            <TextBox Text="{Binding SelectedClient.ActualizationDate, Mode=OneWay, StringFormat=dd.MM.yyyy}"   IsReadOnly="False" />
                                             <TextBlock Text="Другие БИНы Клиента:"/>
                                             <TextBox Text="{Binding SelectedClient.AdditionalBIN}" IsReadOnly="True"/>
                                             <TextBlock Text="Действующие договоры:"/>
-                                            <TextBox Text="{Binding CurrentClientContracts, Mode=OneWay}" IsReadOnly="True"/>
+                                            <TextBox Text="{Binding CurrentClientContracts, Mode=OneWay}" IsReadOnly="True" MinHeight="50" TextWrapping="Wrap"/>
                                             <TextBlock Text="Счета в валюте:"/>
                                             <TextBox Text="{Binding CurrentClientCurrency, Mode=OneWay}" IsReadOnly="True"/>
                                             <StackPanel Orientation="Horizontal">
@@ -63,17 +63,23 @@
                                                 <TextBlock Text="Счет с ограничениями:" Width="150"/>
                                                 <CheckBox x:Name="CheckBox1" IsEnabled="False" IsChecked="{Binding SelectedClient.RestrictedAccount}"/>
                                             </StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Проверка СЭБ действует:" Width="150"/>
+                                                <CheckBox x:Name="CheckBox2" IsEnabled="False" IsChecked="{Binding SelectedClient.SEB}"/>
+                                            </StackPanel>
                                         </StackPanel>
                                     </GroupBox>
                                 </StackPanel>
                                 <GroupBox Header="Информация о Клиенте 2" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="1">
                                     <StackPanel IsEnabled="{Binding IsAnyClientSelected}">
-                                        <TextBlock Text="Комплаенс-менеджер:" HorizontalAlignment="Left"/>
-                                        <TextBox Text="{Binding SelectedClient.ClientManagerNew}" x:Name="TextClientMenedger" IsReadOnly="True"/>
+                                        <TextBlock Text="Комплаенс-менеджер:"  HorizontalAlignment="Left"/>
+                                        <TextBox x:Name="ClientManagerAnceta" Text="{Binding SelectedClient.ClientManagerNew}" IsReadOnly="True"/>
+                                        <TextBlock Text="Клинет менеджер:" HorizontalAlignment="Left"/>
+                                        <TextBox Text="{Binding SelectedClient.ClientManager}" x:Name="TextClientMenedger" IsReadOnly="True"/>
                                         <TextBlock Text="Уровень риска:"  HorizontalAlignment="Left"/>
                                         <TextBox Text="{Binding SelectedClient.Level, Mode=OneWay}" IsReadOnly="True"/>
                                         <TextBlock Text="Дата пересмотра риска:"  HorizontalAlignment="Left"/>
-                                        <DatePicker SelectedDate="{Binding NextScoringDate, Mode=OneWay}"/>
+                                        <DatePicker SelectedDate="{Binding NextScoringDate, Mode=OneWay, StringFormat=dd.MM.yyyy}" IsEnabled="False"/>
                                         <TextBlock Text="Выявленные критерии риска:"/>
                                         <ListView ItemsSource="{Binding SelectedClient.ClientToCriteria, Mode=OneWay}">
                                             <ListView.View>
@@ -83,6 +89,12 @@
                                                 </GridView>
                                             </ListView.View>
                                         </ListView>
+                                        <TextBlock Text="НОСТРО:"  HorizontalAlignment="Left"/>
+                                        <TextBox Text="{Binding NostroUnusualOperationsNOSTRO, Mode=OneWay}" IsReadOnly="True"/>
+                                        <TextBlock Text="ЛОРО:"  HorizontalAlignment="Left"/>
+                                        <TextBox Text="{Binding NostroUnusualOperationsLORO, Mode=OneWay}" IsReadOnly="True"/>
+                                        <TextBlock Text="Уровень риска с учетом ЛОРО/НОСТРО:"  HorizontalAlignment="Left"/>
+                                        <TextBox Text="{Binding NostroUnusualOperationsString, Mode=OneWay}" IsReadOnly="True"/>
                                         <TextBlock Text="Запросы:"/>
                                         <DataGrid ItemsSource="{Binding SelectedClient.Requests}" AutoGenerateColumns="False"
                                                   IsReadOnly="False">
@@ -90,27 +102,29 @@
                                                         <i:InvokeCommandAction Command="{Binding CommitChanges}"/>
                                                     </i:EventTrigger>-->
                                             <DataGrid.Columns>
-                                                <DataGridTextColumn x:Name="SendDateColumn" Header="Дата направления" MinWidth="90" Binding="{Binding SendDate}" IsReadOnly="True"/>
-                                                <DataGridTextColumn x:Name="RecieveDateColumn" Header="Дата получения"  MinWidth="90" Binding="{Binding RecieveDate}" IsReadOnly="False"/>
-                                                <DataGridTextColumn x:Name="CommentColumn" Header="Комментарий" MinWidth="125" Binding="{Binding Comment}" IsReadOnly="False"/>
+                                                <DataGridTextColumn x:Name="SendDateColumn" Header="Дата направления" MinWidth="90" Binding="{Binding SendDate, StringFormat=dd.MM.yyyy}" IsReadOnly="True"/>
+                                                <DataGridTextColumn x:Name="RecieveDateColumn" Header="Дата получения"  MinWidth="90" Binding="{Binding RecieveDate, StringFormat=dd.MM.yyyy}" IsReadOnly="True"/>
+                                                <DataGridTextColumn x:Name="CommentColumn" Header="Комментарий" MinWidth="125" Binding="{Binding Comment}" IsReadOnly="True"/>
                                             </DataGrid.Columns>
                                         </DataGrid>
                                         <TextBlock Text="Контакты:"/>
                                        
                                         <DataGrid ItemsSource="{Binding SelectedClient.Contacts}" AutoGenerateColumns="False">
                                             <DataGrid.Columns>
-                                                <DataGridComboBoxColumn ItemsSource="{Binding Source={StaticResource Locator}, Path=Main.ContactTypes}" Header="ContactType" DisplayMemberPath="Name" SelectedItemBinding="{Binding ContactType}"/>
-                                                <DataGridTextColumn x:Name="FIOColumn" Header="ФИО"  MinWidth="150" Binding="{Binding ContactFIO}" IsReadOnly="False"/>
-                                                <DataGridTextColumn x:Name="ValueColumn" Header="Значение" MinWidth="110" Binding="{Binding Value}" IsReadOnly="False"/>
+                                                <DataGridComboBoxColumn x:Name="TypeContact" ItemsSource="{Binding Source={StaticResource Locator}, Path=Main.ContactTypes}" Header="ContactType" DisplayMemberPath="Name" SelectedItemBinding="{Binding ContactType}" IsReadOnly="True"/>
+                                                <DataGridTextColumn x:Name="FIOColumn" Header="ФИО"  MinWidth="150" Binding="{Binding ContactFIO}" IsReadOnly="True"/>
+                                                <DataGridTextColumn x:Name="ValueColumn" Header="Значение" MinWidth="110" Binding="{Binding Value}" IsReadOnly="True"/>
                                             </DataGrid.Columns>
                                         </DataGrid>
-                                        <TextBlock Text="Клинет менеджер:"  HorizontalAlignment="Left"/>
-                                        <TextBox Text="{Binding SelectedClient.ClientManagerNew, Mode=OneWay}" IsReadOnly="True"/>
+                                        
                                         <StackPanel HorizontalAlignment="Right">
                                             <Button x:Name="buttonCorr" Width="150" Height="25" Content="Редактировать" Click="Corr"/>
                                             <Button x:Name="buttonSave" Width="150" Height="25" Content="Сохранить изменения" Click="Save"
                                                     Command="{Binding SaveCommand}"
                                                     />
+                                            <Button x:Name="buttonNew" Width="150" Height="25" Content="Обновить клиента" Click="Word"
+                                                    Command="{Binding UpdateCommand}"
+                                                    CommandParameter="{Binding SelectedClient.BIN}"/>
                                             <Button x:Name="buttonWord" Width="150" Height="25" Content="Выгрузить в Word" Click="Word"
                                                     Command="{Binding ExportWordCommand}"/>
                                         </StackPanel>

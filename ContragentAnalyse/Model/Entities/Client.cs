@@ -15,6 +15,7 @@ namespace ContragentAnalyse.Model.Entities
         public string Mnemonic { get; set; }
         public string ClientManager { get; set; }
         public bool? CardOP { get; set; }
+        public bool?  SEB { get; set; }
         public bool? RestrictedAccount { get; set; }
         public int Client_type_Id { get; set; }
         public DateTime? BecomeClientDate { get; set; }
@@ -46,115 +47,28 @@ namespace ContragentAnalyse.Model.Entities
         {
             get
             {
-                float riskLevel = 0;
-                int kolsheets = 0;
-                //\\moscow\hdfs:\WORK\Middle Office\International Compliance\Operations and Investments\Investigations\
-                //\\moscow\hdfs:\WORK\Middle Office\International Compliance\SANCTIONS\NOSTRO\Off-line запросы\
-                //\\moscow\hdfs:\000 Мониторинг ЛОРО\
-                const string excel_input = @"C:\Users\U_M166J\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\netcoreapp3.1\input.xlsx";
-                const string excel_input2 = @"C:\Users\U_M166J\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\netcoreapp3.1\input2.xlsx";
-                const string excel_input3 = @"C:\Users\U_M166J\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\netcoreapp3.1\input3.xlsx";
-                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-                //НОСТРО 1
-                using (ExcelPackage excel = new ExcelPackage(new System.IO.FileInfo(excel_input)))
-                {
-                    ExcelWorkbook XlWB = excel.Workbook;
-                    foreach (ExcelWorksheet sheets in XlWB.Worksheets)
-                    {
-                        kolsheets++;
-                    }
-                    for (int j = kolsheets; j >= kolsheets - 12; j--)
-                    {
-                        ExcelWorksheet sheet = excel.Workbook.Worksheets[j];
-                        for (int i = 1; i < sheet.Dimension.Rows; i++)
-                        {
-                            if ((sheet.Cells[i, 6].Text == BIN) && (sheet.Cells[i, 24].Text != null) && (sheet.Cells[i, 25].Text == null))
-                            {
-                                riskLevel += 0.5f;
-                            }
-
-                        }
-                    }
-                }
-                kolsheets=0;
-                // НОСТРО 2
-                using (ExcelPackage excel = new ExcelPackage(new System.IO.FileInfo(excel_input2), "789456"))
-                {
-                    int numsheet = 0;
-                    ExcelWorkbook XlWB = excel.Workbook;
-                    foreach (ExcelWorksheet sheets in XlWB.Worksheets)
-                    {
-                        kolsheets++;
-                        if (sheets.Name.IndexOf("по наст время") > -1)
-                        {
-                            numsheet = kolsheets;
-
-                        }
-                    }
-                    ExcelWorksheet sheet = excel.Workbook.Worksheets[numsheet];
-                    for (int i = 1; i < sheet.Dimension.Rows; i++)
-                    {
-                        if ((sheet.Cells[i, 6].Text == BIN) && (sheet.Cells[i, 24].Text != null) && (sheet.Cells[i, 25].Text == null))
-                        {
-                            riskLevel += 0.5f;
-                        }
-                    }
-                }
-                kolsheets = 0;
-                //ЛОРО
-                using (ExcelPackage excel = new ExcelPackage(new System.IO.FileInfo(excel_input3)))
-                {
-                    int todaydateyear = DateTime.Now.Year;
-                    int dateDay = DateTime.Now.Day;
-                    int dateMonth = DateTime.Now.Month;
-                    int dateYear= DateTime.Now.Year-1;
-                    DateTime date = new DateTime(dateYear, dateMonth, dateDay, 0, 0, 0); //не уверена день месяц/месяц день
-                    DateTime todaydate = new DateTime(todaydateyear, dateMonth, dateDay, 0, 0, 0);
-                    System.TimeSpan dateTo= todaydate.Subtract(date);
-                    DateTime newdate = todaydate.Subtract(dateTo);
-                    int numsheet = 0;
-                    ExcelWorkbook XlWB = excel.Workbook;
-                    foreach (ExcelWorksheet sheets in XlWB.Worksheets)
-                    {
-                        kolsheets++;
-                        if (sheets.Name.IndexOf("Сводный") > -1)
-                        {
-                            numsheet = kolsheets;
-
-                        }
-                    }
-                    ExcelWorksheet sheet = excel.Workbook.Worksheets[numsheet];
-                    for (int i = 1; i < sheet.Dimension.Rows; i++)
-                    {
-                        if ((sheet.Cells[i, 4].Text == BIN)&&(Convert.ToDateTime(sheet.Cells[i, 13].Text) >= Convert.ToDateTime(newdate.Date.ToString("d"))) && (sheet.Cells[i, 21].Text != null) && (sheet.Cells[i, 25].Text == null)&&(sheet.Cells[i, 13].Text!="нет") && (sheet.Cells[i, 13].Text != null))
-                        {
-                            riskLevel += 1.5f;
-                        }
-                    }
-                }
+                double riskLevel = 0;
                 string RiskLevelName = "Не определено";
                 if (ClientToCriteria == null)
                 {
-                    RiskLevelName = "Не определено";
                     return RiskLevelName;
                 }
                 else
                 {
                     riskLevel = ClientToCriteria.Select(i => i.Criteria.Weight).Sum(); // ругается, что бывает нулевое значение
-                    RiskLevelName = string.Empty;
                     switch (riskLevel)
                     {
-                        case float n when n > 13.1:
-                            RiskLevelName = $"{riskLevel} - Критичный";
+                        case double n when n > 13.1:
+                            RiskLevelName = $"{riskLevel.ToString("N1")} - Критичный";
                             break;
-                        case float n when n >= 5.6 && n <= 13.1:
-                            RiskLevelName = $"{riskLevel} - Высокий";
+                        case double n when n >= 5.6 && n <= 13.1:
+                            RiskLevelName = $"{riskLevel.ToString("N1")} - Высокий";
                             break;
-                        case float n when n >= 3.5 && n <= 5.5:
-                            RiskLevelName = $"{riskLevel} - Средний";
+                        case double n when n >= 3.5 && n <= 5.5:
+                            RiskLevelName = $"{riskLevel.ToString("N1")} - Средний";
                             break;
-                        case float n when n <= 3.4:
-                            RiskLevelName = $"{riskLevel} - Низкий";
+                        case double n when n <= 3.4:
+                            RiskLevelName = $"{riskLevel.ToString("N1")} - Низкий";
                             break;
                         default:
                             RiskLevelName = "Не определено";
@@ -169,20 +83,20 @@ namespace ContragentAnalyse.Model.Entities
         {
             get
             {
-                float riskLevel = ClientToCriteria.Select(i => i.Criteria.Weight).Sum();
+                double riskLevel = ClientToCriteria.Select(i => i.Criteria.Weight).Sum();
                 string BankProductName = string.Empty;
                 switch (riskLevel)
                 {
-                    case float n when n > 13.1:
+                    case double n when n > 13.1:
                         BankProductName = "Сотрудничество приостановлено/запрещено";
                         break;
-                    case float n when n >= 5.6 && n <= 13.1:
+                    case double n when n >= 5.6 && n <= 13.1:
                         BankProductName = "Кор.счета рублевые ;Кор.счета валютные + Счет с ограничениями V ;Межбанк ; Синдицированное кредитование ;ALFA-FOREX и/или RISDA и/или ISDA и/или RISDA FI и/или RISDA онлайн и/или CSA онлайн;ALFA-FOREX и/или RISDA и/или ISDA и/или RISDA FI и/или RISDA онлайн и/или CSA онлайн и/или ISMA и/или Соглашения по ценным бумагам;ISMA и/или Соглашения по ценным бумагам;Драгметаллы;Организация секьюритизаций;Объединение банкоматных сетей;Кор.счета рублевые + Пластиковые карты и/или Договор по операциям ПК и/или Процессинг и/или Договор НПС (нац.платеж.сист.);";
                         break;
-                    case float n when n >= 3.5 && n <= 5.5:
+                    case double n when n >= 3.5 && n <= 5.5:
                         BankProductName = "Зарплатные проекты;Электр.банк.гарантия и/или Непокрыт.аккредитив.Бенефициар;Банкнотные сделки;Собственные векселя;Договор на инкассацию; ";
                         break;
-                    case float n when n <= 3.4 && n>0:
+                    case double n when n <= 3.4 && n>0:
                         BankProductName = "Кор.счета валютные;Кор.счета валютные + Пластиковые карты и/или Договор по операциям ПК и/или Процессинг и/или Договор НПС (нац.платеж.сист.);Брокерское обслуживание;Депозитарное обслуживание;";
                         break;
                     default:
@@ -207,6 +121,7 @@ namespace ContragentAnalyse.Model.Entities
                     return null;
                 }
             }
+            
         }
         public string ActualizationStatus
         {
@@ -238,6 +153,13 @@ namespace ContragentAnalyse.Model.Entities
             get => requests;
             set => requests = value;
         }
+        private ObservableCollection<BanksProductHistory> requestsBanksProductHistory = new ObservableCollection<BanksProductHistory>();
+        public ObservableCollection<BanksProductHistory> BanksProductHistory
+        {
+            get => requestsBanksProductHistory;
+            set => requestsBanksProductHistory = value;
+        }
+
         public List<Actualization> Actualization { get; set; }
         public List<PrescoringScoring> PrescoringScoring { get; set; }
         public List<PrescoringScoringHistory> PrescoringScoringHistory { get; set; }

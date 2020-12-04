@@ -10,6 +10,13 @@ namespace ContragentAnalyse.Model.Entities
         public List<PrescoringScoringHistory> HistoryRecords { get; set; }
         public DateTime HistoryDate { get; set; }
         public string EmployeeName { get; set; }
+        public string CurrentHistoryComment
+        {
+            get
+            {
+                return HistoryRecords.Select(i => i.Comment).First();
+            }
+        }
         public bool ClosedClient { get; set; }
         public string Level
         {
@@ -17,22 +24,23 @@ namespace ContragentAnalyse.Model.Entities
             {
                 if (HistoryRecords == null)
                     return string.Empty;
-                float riskLevel = 0f;
+                double riskLevel = 0f;
                 riskLevel = HistoryRecords.Select(i => i.Criteria.Weight).Sum();
                 string RiskLevelName = string.Empty;
+                
                 switch (riskLevel)
                 {
-                    case float n when n > 13.1:
-                        RiskLevelName = $"{riskLevel} - Критичный";
+                    case double n when n > 13.1:
+                        RiskLevelName = $"{riskLevel.ToString("N1")} - Критичный";
                         break;
-                    case float n when n >= 5.6 && n <= 13.1:
-                        RiskLevelName = $"{riskLevel} - Высокий";
+                    case double n when n >= 5.6 && n <= 13.1:
+                        RiskLevelName = $"{riskLevel.ToString("N1")} - Высокий";
                         break;
-                    case float n when n >= 3.5 && n <= 5.5:
-                        RiskLevelName = $"{riskLevel} - Средний";
+                    case double n when n >= 3.5 && n <= 5.5:
+                        RiskLevelName = $"{riskLevel.ToString("N1")} - Средний";
                         break;
-                    case float n when n <= 3.4:
-                        RiskLevelName = $"{riskLevel} - Низкий";
+                    case double n when n <= 3.4:
+                        RiskLevelName = $"{riskLevel.ToString("N1")} - Низкий";
                         break;
                     default:
                         RiskLevelName = "Не определено";
@@ -41,6 +49,16 @@ namespace ContragentAnalyse.Model.Entities
                 return RiskLevelName;
             }
         }
+        public string NostroLevel
+        {
+            get
+            {
+                return HistoryRecords[0].NostroLevel;
+            }
+            set { }
+            
+        }
+       
         public string InappropriateBankProducts
         {
             get

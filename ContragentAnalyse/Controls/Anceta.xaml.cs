@@ -36,6 +36,10 @@ namespace ContragentAnalyse.Controls
             SendDateColumn.IsReadOnly = false;
             RecieveDateColumn.IsReadOnly = false;
             CommentColumn.IsReadOnly = false;
+            ClientManagerAnceta.IsReadOnly = false;
+            TypeContact.IsReadOnly = false;
+            FIOColumn.IsReadOnly = false;
+            ValueColumn.IsReadOnly = false;
             CheckBox1.IsEnabled = true;
         }
 
@@ -48,6 +52,10 @@ namespace ContragentAnalyse.Controls
             SendDateColumn.IsReadOnly = true;
             RecieveDateColumn.IsReadOnly = true;
             CommentColumn.IsReadOnly = true;
+            ClientManagerAnceta.IsReadOnly = true;
+            TypeContact.IsReadOnly = true;
+            FIOColumn.IsReadOnly = true;
+            ValueColumn.IsReadOnly = true;
             CheckBox1.IsEnabled = false;
 
         }

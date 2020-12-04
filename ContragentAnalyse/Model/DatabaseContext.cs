@@ -28,6 +28,7 @@ namespace ContragentAnalyse.Model
             modelBuilder.Entity<Client>().HasMany(i => i.RestrictedAccounts).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.Contacts).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.Requests).WithOne(i => i.Client);
+            //modelBuilder.Entity<Client>().HasMany(i => i.BanksProductHistory).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.StopFactors).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.ClientToCriteria).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.ClientToCurrency).WithOne(i => i.Client);

@@ -12,6 +12,9 @@ namespace ContragentAnalyse.Model.Entities
         public int Criteria_Id { get; set; }
         public int Client_Id { get; set; }
         public bool ClosedClient { get; set; }
+        public string Comment { get; set; }
+        public float NOSTRO { get; set; }
+        public float LORO { get; set; }
 
         [ForeignKey(nameof(Client_Id))]
         public virtual Client Client { get; set; }
@@ -19,5 +22,6 @@ namespace ContragentAnalyse.Model.Entities
         public virtual Employees Employees { get; set; }
         [ForeignKey(nameof(Criteria_Id))]
         public virtual Criteria Criteria{ get; set; }
+        public string NostroLevel { get; set; }
     }
 }

@@ -362,10 +362,10 @@ namespace ContragentAnalyse.Migrations
                     b.Property<DateTime>("DatePresScor")
                         .HasColumnType("datetime2");
 
-                    b.Property<double?>("NO_Score")
+                    b.Property<float?>("NO_Score")
                         .HasColumnType("float");
 
-                    b.Property<double?>("Nostro_Score")
+                    b.Property<float?>("Nostro_Score")
                         .HasColumnType("float");
 
                     b.Property<int>("ScoringType_Id")
