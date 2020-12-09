@@ -99,9 +99,9 @@
                                         <GridViewColumn Header="Дата" DisplayMemberBinding="{Binding HistoryDate, StringFormat=dd.MM.yyyy}" Width="100"/>
                                         <GridViewColumn Header="Сотрудник" DisplayMemberBinding="{Binding EmployeeName}" Width="200"/>
                                         <GridViewColumn Header="Уровень риска" DisplayMemberBinding="{Binding Level, Mode=OneWay}" Width="100"/>
-                                        <GridViewColumn Header="Оценка завершена" DisplayMemberBinding="{Binding ClosedClient, Mode=OneWay}" Width="200"/>
+                                        <GridViewColumn Header="Оценка завершена" DisplayMemberBinding="{Binding ClosedClient}" Width="200"/>
                                         <GridViewColumn Header="Комментарий" DisplayMemberBinding="{Binding CurrentHistoryComment, Mode=OneWay}" Width="200"/>
-                                        <GridViewColumn Header="Уровень риска ЛОРО/НОСТРО" DisplayMemberBinding="{Binding NostroUnusualOperationsString, Mode=OneWay}" Width="200"/>
+                                        <GridViewColumn Header="Уровень риска ЛОРО/НОСТРО" DisplayMemberBinding="{Binding NostroLevel, Mode=OneWay}" Width="200"/>
                                     </GridView.Columns>
                                 </GridView>
                             </ListView.View>

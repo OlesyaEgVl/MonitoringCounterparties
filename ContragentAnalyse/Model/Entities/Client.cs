@@ -145,6 +145,7 @@ namespace ContragentAnalyse.Model.Entities
         public virtual Employees Employees { get; set; }
         [ForeignKey(nameof(Country_Id))]
         public virtual Country Country { get; set; }
+
         public List<ClientToCurrency> ClientToCurrency { get; set; }
 
         private ObservableCollection<Request> requests = new ObservableCollection<Request>();

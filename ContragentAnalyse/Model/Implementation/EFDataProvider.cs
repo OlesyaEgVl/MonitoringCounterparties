@@ -273,7 +273,7 @@ namespace ContragentAnalyse.Model.Implementation
                         HistoryRecords = new List<PrescoringScoringHistory>(),
                         EmployeeName = rec.Employees.Name,
                         ClosedClient = rec.ClosedClient,
-                        NostroLevel=rec.NostroLevel,
+                        //NostroLevel=rec.NostroLevel,
                        
                     };
                     newValue.HistoryRecords.Add(rec);

@@ -114,7 +114,7 @@ namespace ContragentAnalyse.ViewModel
             set
             {
                 _selectedHistoryRecord = value;
-                RaisePropertyChanged(nameof(IsCurrentHistoryRecordClosed));
+               // RaisePropertyChanged(nameof(IsCurrentHistoryRecordClosed));
             }
         }
         public bool IsCurrentHistoryRecordClosed
@@ -279,11 +279,15 @@ namespace ContragentAnalyse.ViewModel
                 BankProductHistory.Name = string.Empty;
                 BankProductHistory.Id = 0;
                 RaisePropertyChanged(nameof(NostroUnusualOperationsString));
+                RaisePropertyChanged(nameof(SelectedHistoryRecord));
                 RaisePropertyChanged(nameof(NostroUnusualOperationsNOSTRO));
                 RaisePropertyChanged(nameof(NostroUnusualOperationsLORO));
                 RaisePropertyChanged(nameof(BankProductHistory.Name));
                 RaisePropertyChanged(nameof(BankProductHistory.Id));
-                RaisePropertyChanged(nameof(SelectedCriterias));
+               // RaisePropertyChanged(nameof(SelectedCriterias));
+
+                //мб не тут
+                //RaisePropertyChanged(nameof(SelectedCriteriasLevel));
             };
             
         }
@@ -484,6 +488,8 @@ namespace ContragentAnalyse.ViewModel
             }
             CommitMethod();
             CurrentHistoryComment = string.Empty;
+            SelectedCriterias.Clear();
+            RaisePropertyChanged(nameof(SelectedCriterias));
         }
 
         public string notbankproduct = "";
@@ -557,7 +563,7 @@ namespace ContragentAnalyse.ViewModel
                 ExcelWorksheet sheet = excel.Workbook.Worksheets[numsheet - 1];
                 for (int i = 1; i < sheet.Dimension.Rows; i++)// поменять на 1
                 {
-                    if ((sheet.Cells[i,9].Text == SelectedClient.BIN) && (sheet.Cells[i, 25].Text != "" || sheet.Cells[i, 25].Text != ",") && (sheet.Cells[i, 26].Text == ""))// в некоторых ячейках есть запятая - это заполненным считается или нет?
+                    if ((sheet.Cells[i,9].Text == SelectedClient.BIN) && sheet.Cells[i, 25].Text != "" && (sheet.Cells[i, 26].Text == ""))// в некоторых ячейках есть запятая - это заполненным считается или нет?
                     {
                         NostroUnusualOperations += 0.5f;
                     }
@@ -593,13 +599,13 @@ namespace ContragentAnalyse.ViewModel
                 ExcelWorksheet sheet = excel.Workbook.Worksheets[numsheet];
                 for (int i = 1; i < sheet.Dimension.Rows; i++)
                 {
-                    if((sheet.Cells[i, 4].Text == SelectedClient.BIN) && (sheet.Cells[i, 16].Text == "Необычные") && (sheet.Cells[i, 12].Text == "") && (Convert.ToDateTime(sheet.Cells[i, 13].Text) >= Convert.ToDateTime(newdate.Date.ToString("d"))))
+                    if((sheet.Cells[i, 4].Text == SelectedClient.BIN) && (sheet.Cells[i, 16].Text == "Необычные") && (sheet.Cells[i, 13].Text == "") && (Convert.ToDateTime(sheet.Cells[i, 14].Text) >= Convert.ToDateTime(newdate.Date.ToString("d"))))
                     {
                         NostroUnusualOperations += 1.5f;
                         NostroUnusualOperationsLORO += 1.5f;
                     }
                     else
-                    if ((sheet.Cells[i, 4].Text == SelectedClient.BIN) && (sheet.Cells[i, 16].Text == "Необычные") && (sheet.Cells[i, 12].Text != "нет") && (Convert.ToDateTime(sheet.Cells[i, 12].Text) >= Convert.ToDateTime(newdate.Date.ToString("d"))))
+                    if ((sheet.Cells[i, 4].Text == SelectedClient.BIN) && (sheet.Cells[i, 16].Text == "Необычные") && (sheet.Cells[i, 13].Text != "нет") && (Convert.ToDateTime(sheet.Cells[i, 13].Text) >= Convert.ToDateTime(newdate.Date.ToString("d"))))
                     {
                         NostroUnusualOperations += 1.5f;
                         NostroUnusualOperationsLORO += 1.5f;
@@ -666,7 +672,10 @@ namespace ContragentAnalyse.ViewModel
                 BankProductHistory.Name = notbankproduct;
                 RaisePropertyChanged(nameof(BankProductHistory));
                 RaisePropertyChanged(nameof(NostroUnusualOperationsString));
-                RaisePropertyChanged(nameof(NostroUnusualOperationsNOSTRO));
+                SelectedHistoryRecord.NOSTRO = NostroUnusualOperationsNOSTRO;
+                RaisePropertyChanged(nameof(SelectedHistoryRecord.NOSTRO));
+                SelectedHistoryRecord.LORO = NostroUnusualOperationsLORO;
+                RaisePropertyChanged(nameof(SelectedHistoryRecord.LORO));
                 RaisePropertyChanged(nameof(NostroUnusualOperationsLORO));
                 MessageBox.Show("Посчитано!");
             }
@@ -698,22 +707,22 @@ namespace ContragentAnalyse.ViewModel
                 RaisePropertyChanged(nameof(NextScoringDate));
             }
             closedClients = true;
+            RaisePropertyChanged(nameof(closedClients));
             CommitMethod();
         }
 
         private void StoreSelectionMethod(object SelectedItems) //метод отвечающий за выбранные критерии добовляет их в SelectedCriterias
         {
+            SelectedCriterias.Clear();
             if (SelectedItems is IEnumerable collection && !IsSelectionLocked)
             {
-                SelectedCriterias.Clear();
                 foreach (object obj in collection)
                 {
                     SelectedCriterias.Add(obj as Criteria);
                 }
             }
-           
             RaisePropertyChanged(nameof(SelectedCriteriasLevel));
-           
+            
         }
 
         private void UpdateMethod(string BINStr) //кнопка обновленя клиента

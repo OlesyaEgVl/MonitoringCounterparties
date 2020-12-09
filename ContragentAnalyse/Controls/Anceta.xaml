@@ -90,11 +90,11 @@
                                             </ListView.View>
                                         </ListView>
                                         <TextBlock Text="НОСТРО:"  HorizontalAlignment="Left"/>
-                                        <TextBox Text="{Binding NostroUnusualOperationsNOSTRO, Mode=OneWay}" IsReadOnly="True"/>
+                                        <TextBox Text="{Binding SelectedHistoryRecord.NOSTRO , Mode=OneWay}"  IsReadOnly="True"/>
                                         <TextBlock Text="ЛОРО:"  HorizontalAlignment="Left"/>
-                                        <TextBox Text="{Binding NostroUnusualOperationsLORO, Mode=OneWay}" IsReadOnly="True"/>
+                                        <TextBox Text="{Binding SelectedHistoryRecord.LORO , Mode=OneWay}" IsReadOnly="True"/>
                                         <TextBlock Text="Уровень риска с учетом ЛОРО/НОСТРО:"  HorizontalAlignment="Left"/>
-                                        <TextBox Text="{Binding NostroUnusualOperationsString, Mode=OneWay}" IsReadOnly="True"/>
+                                        <TextBox Text="{Binding NostroUnusualOperationsString}"  IsReadOnly="True"/>
                                         <TextBlock Text="Запросы:"/>
                                         <DataGrid ItemsSource="{Binding SelectedClient.Requests}" AutoGenerateColumns="False"
                                                   IsReadOnly="False">
@@ -111,7 +111,7 @@
                                        
                                         <DataGrid ItemsSource="{Binding SelectedClient.Contacts}" AutoGenerateColumns="False">
                                             <DataGrid.Columns>
-                                                <DataGridComboBoxColumn x:Name="TypeContact" ItemsSource="{Binding Source={StaticResource Locator}, Path=Main.ContactTypes}" Header="ContactType" DisplayMemberPath="Name" SelectedItemBinding="{Binding ContactType}" IsReadOnly="True"/>
+                                                <DataGridComboBoxColumn x:Name="TypeContact"  ItemsSource="{Binding Source={StaticResource Locator}, Path=Main.ContactTypes}" Header="Тип Контакта" DisplayMemberPath="Name" SelectedItemBinding="{Binding ContactType}" IsReadOnly="True"/>
                                                 <DataGridTextColumn x:Name="FIOColumn" Header="ФИО"  MinWidth="150" Binding="{Binding ContactFIO}" IsReadOnly="True"/>
                                                 <DataGridTextColumn x:Name="ValueColumn" Header="Значение" MinWidth="110" Binding="{Binding Value}" IsReadOnly="True"/>
                                             </DataGrid.Columns>
