@@ -274,8 +274,8 @@ namespace ContragentAnalyse.ViewModel
                 RaisePropertyChanged(nameof(BankProductHistory));
                 SelectedCriterias.Clear();
                 NostroUnusualOperationsString = string.Empty;
-                NostroUnusualOperationsNOSTRO = 0;
-                NostroUnusualOperationsLORO = 0;
+                NostroUnusualOperationsNOSTRO = string.Empty;
+                //NostroUnusualOperationsLORO = string.Empty;
                 BankProductHistory.Name = string.Empty;
                 BankProductHistory.Id = 0;
                 RaisePropertyChanged(nameof(NostroUnusualOperationsString));
@@ -486,6 +486,7 @@ namespace ContragentAnalyse.ViewModel
                     LORO=NostroUnusualOperationsLORO
                 });
             }
+            RaisePropertyChanged(nameof(SelectedHistoryRecord));
             CommitMethod();
             CurrentHistoryComment = string.Empty;
             SelectedCriterias.Clear();
@@ -509,8 +510,9 @@ namespace ContragentAnalyse.ViewModel
         }
 
         public bool IsSelectionLocked { get; private set; }
-        public float NostroUnusualOperationsNOSTRO { get; set; }
-        public float NostroUnusualOperationsLORO { get; set; }
+        public string NostroUnusualOperationsNOSTRO  { get; set; }
+        public string NostroUnusualOperationsLORO { get; set; }
+        public float NostroUnusualOperationsLOROcount = 0;
         public void ContractBankProductsMethod() //несоответствие банковских продуктов
         {
             float NostroUnusualOperations = 0;//балл по необычным
@@ -569,11 +571,11 @@ namespace ContragentAnalyse.ViewModel
                     }
                 }
             }
-            NostroUnusualOperationsNOSTRO = NostroUnusualOperations;
+            NostroUnusualOperationsNOSTRO = NostroUnusualOperations +"";
            // RaisePropertyChanged(nameof(NostroUnusualOperationsNOSTRO));
             // fileInfo.Delete();
             kolsheets = 0;
-            NostroUnusualOperationsLORO = 0;
+            //NostroUnusualOperationsLORO = 0;
             //ЛОРО
             using (ExcelPackage excel = new ExcelPackage(new System.IO.FileInfo(excel_input3)))
             {
@@ -608,13 +610,14 @@ namespace ContragentAnalyse.ViewModel
                     if ((sheet.Cells[i, 4].Text == SelectedClient.BIN) && (sheet.Cells[i, 16].Text == "Необычные") && (sheet.Cells[i, 13].Text != "нет") && (Convert.ToDateTime(sheet.Cells[i, 13].Text) >= Convert.ToDateTime(newdate.Date.ToString("d"))))
                     {
                         NostroUnusualOperations += 1.5f;
-                        NostroUnusualOperationsLORO += 1.5f;
+                        NostroUnusualOperationsLOROcount += 1.5f;
                     }
                 }
             }
-          //  RaisePropertyChanged(nameof(NostroUnusualOperationsLORO));
-       
-            double itogNostro = 0;
+             NostroUnusualOperationsLORO = NostroUnusualOperationsLOROcount+"";
+        //  RaisePropertyChanged(nameof(NostroUnusualOperationsLORO));
+
+        double itogNostro = 0;
             itogNostro = SelectedCriterias.Select(i => i.Weight).Sum() + NostroUnusualOperations;
             string BankProductName = string.Empty;
             switch (itogNostro)
@@ -677,7 +680,9 @@ namespace ContragentAnalyse.ViewModel
                 SelectedHistoryRecord.LORO = NostroUnusualOperationsLORO;
                 RaisePropertyChanged(nameof(SelectedHistoryRecord.LORO));
                 RaisePropertyChanged(nameof(NostroUnusualOperationsLORO));
-                MessageBox.Show("Посчитано!");
+                RaisePropertyChanged(nameof(SelectedHistoryRecord));
+
+               MessageBox.Show("Посчитано!");
             }
         }
 

@@ -59,10 +59,24 @@ namespace ContragentAnalyse.Model.Entities
             }
             set
             {
-                HistoryRecords[0].NostroLevel = value;
+                if (HistoryRecords != null)
+                    HistoryRecords[0].NostroLevel = value;
             }
         }
-        public float NOSTRO { get; set; }
+        public string NOSTRO
+        {
+            get
+            {
+                if (HistoryRecords == null)
+                    return string.Empty;
+                return HistoryRecords[0].NOSTRO;
+            }
+            set
+            {
+                if (HistoryRecords != null)
+                    HistoryRecords[0].NOSTRO = value;
+            }
+        }
         /*{
             get
             {
@@ -72,7 +86,20 @@ namespace ContragentAnalyse.Model.Entities
             }
             set { HistoryRecords[0].NOSTRO = value; }
         }*/
-        public float LORO { get; set; }
+        public string LORO
+        {
+            get
+            {
+                if (HistoryRecords == null)
+                    return string.Empty;
+                return HistoryRecords[0].LORO;
+            }
+            set
+            {
+                if (HistoryRecords != null)
+                    HistoryRecords[0].LORO = value;
+            }
+        }
         /*{
             get
             {

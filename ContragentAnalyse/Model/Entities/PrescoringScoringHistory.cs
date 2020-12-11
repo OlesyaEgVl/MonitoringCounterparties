@@ -13,8 +13,8 @@ namespace ContragentAnalyse.Model.Entities
         public int Client_Id { get; set; }
         public bool ClosedClient { get; set; }
         public string Comment { get; set; }
-        public float NOSTRO { get; set; }
-        public float LORO { get; set; }
+        public string NOSTRO { get; set; }
+        public string LORO { get; set; }
 
         [ForeignKey(nameof(Client_Id))]
         public virtual Client Client { get; set; }

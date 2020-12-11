@@ -90,9 +90,9 @@
                                             </ListView.View>
                                         </ListView>
                                         <TextBlock Text="НОСТРО:"  HorizontalAlignment="Left"/>
-                                        <TextBox Text="{Binding SelectedHistoryRecord.NOSTRO , Mode=OneWay}"  IsReadOnly="True"/>
+                                        <TextBox Text="{Binding SelectedHistoryRecord.NOSTRO, Mode=OneWay }"  IsReadOnly="True"/>
                                         <TextBlock Text="ЛОРО:"  HorizontalAlignment="Left"/>
-                                        <TextBox Text="{Binding SelectedHistoryRecord.LORO , Mode=OneWay}" IsReadOnly="True"/>
+                                        <TextBox Text="{Binding SelectedHistoryRecord.LORO, Mode=OneWay }" IsReadOnly="True"/>
                                         <TextBlock Text="Уровень риска с учетом ЛОРО/НОСТРО:"  HorizontalAlignment="Left"/>
                                         <TextBox Text="{Binding NostroUnusualOperationsString}"  IsReadOnly="True"/>
                                         <TextBlock Text="Запросы:"/>
