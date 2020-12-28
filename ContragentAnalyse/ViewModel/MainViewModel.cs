@@ -342,7 +342,28 @@ namespace ContragentAnalyse.ViewModel
             SelectHistoryRecord = new MyCommand<ScoringHistoryGrouped>(SelectHistoryRecordMethod);
             AddScoringCommand = new MyCommand(AddScoringMethod);
         }
-
+        public string SelectedClientLatestNostro
+        {
+            get
+            {
+                if (SelectedClient == null)
+                {
+                    return string.Empty;
+                }
+                return SelectedClient.PrescoringScoringHistory.Last().NOSTRO;
+            }
+        }
+        public string SelectedClientLatestLORO
+        {
+            get
+            {
+                if (SelectedClient == null)
+                {
+                    return string.Empty;
+                }
+                return SelectedClient.PrescoringScoringHistory.Last().LORO;
+            }
+        }
         private void AddScoringMethod()
         {
             List<PrescoringScoringHistory> records = new List<PrescoringScoringHistory>();
