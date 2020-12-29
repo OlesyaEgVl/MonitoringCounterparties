@@ -59,55 +59,10 @@ namespace ContragentAnalyse.Model.Entities
             }
             set { }
         }
-        public string NOSTRO { get; set; }
-       /* {
-            get
-            {
-                if (HistoryRecords == null)
-                    return string.Empty;
-                return HistoryRecords[0].NOSTRO;
-            }
-            set
-            {
-                if (HistoryRecords != null)
-                    HistoryRecords[0].NOSTRO = value;
-            }
-        }*/
-        /*{
-            get
-            {
-               // if (HistoryRecords == null)
-                    //return HistoryRecords[0].NOSTRO=0;
-                return HistoryRecords[0].NOSTRO;
-            }
-            set { HistoryRecords[0].NOSTRO = value; }
-        }*/
-        public string LORO { get; set; }
-        /*{
-            get
-            {
-                if (HistoryRecords == null)
-                    return string.Empty;
-                return HistoryRecords[0].LORO;
-            }
-            set
-            {
-                if (HistoryRecords != null)
-                    HistoryRecords[0].LORO = value;
-            }
-        }*/
-        /*{
-            get
-            {
-                //if (HistoryRecords == null)
-                   // return HistoryRecords[0].LORO=0;
-                return HistoryRecords[0].LORO;
-            }
-            set
-            {
-                HistoryRecords[0].LORO = value;
-            }
-        }*/
+        /*public string NOSTRO { get; set; }
+       
+        public string LORO { get; set; }*/
+       
         public string InappropriateBankProducts
         {
             get
