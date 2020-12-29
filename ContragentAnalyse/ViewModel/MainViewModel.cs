@@ -62,8 +62,8 @@ namespace ContragentAnalyse.ViewModel
             get => _contactTypes;
             set => _contactTypes = value;
         }
-        private ObservableCollection<Criteria> selectedCriterias = new ObservableCollection<Criteria>();
-        public ObservableCollection<Criteria> SelectedCriterias => selectedCriterias;
+        private List<Criteria> selectedCriterias = new List<Criteria>();
+        public List<Criteria> SelectedCriterias => selectedCriterias;
         private ObservableCollection<Contracts> selectedContracts = new ObservableCollection<Contracts>();
         public string SelectedCriteriasLevel
         {
@@ -284,6 +284,10 @@ namespace ContragentAnalyse.ViewModel
                 RaisePropertyChanged(nameof(NostroUnusualOperationsLORO));
                 RaisePropertyChanged(nameof(BankProductHistory.Name));
                 RaisePropertyChanged(nameof(BankProductHistory.Id));
+                RaisePropertyChanged(nameof(SelectedClientLatestLORO));
+                RaisePropertyChanged(nameof(SelectedClientLatestNostro));
+                RaisePropertyChanged(nameof(SelectedCriterias));
+                
                // RaisePropertyChanged(nameof(SelectedCriterias));
 
                 //мб не тут
@@ -342,7 +346,28 @@ namespace ContragentAnalyse.ViewModel
             SelectHistoryRecord = new MyCommand<ScoringHistoryGrouped>(SelectHistoryRecordMethod);
             AddScoringCommand = new MyCommand(AddScoringMethod);
         }
-
+        public string SelectedClientLatestNostro
+        {
+            get
+            {
+                if (SelectedClient == null)
+                {
+                    return string.Empty;
+                }
+                return SelectedClient.PrescoringScoringHistory.Last().NOSTRO;
+            }
+        }
+        public string SelectedClientLatestLORO
+        {
+            get
+            {
+                if (SelectedClient == null)
+                {
+                    return string.Empty;
+                }
+                return SelectedClient.PrescoringScoringHistory.Last().LORO;
+            }
+        }
         private void AddScoringMethod()
         {
             List<PrescoringScoringHistory> records = new List<PrescoringScoringHistory>();
@@ -374,12 +399,16 @@ namespace ContragentAnalyse.ViewModel
             IsSelectionLocked = true;
             RaisePropertyChanged(nameof(IsCurrentHistoryRecordClosed));
             SelectedCriterias.Clear();
-            SelectedCriterias.AddRange(record.HistoryRecords.Select(i => i.Criteria));
+            foreach(Criteria criteria in record.HistoryRecords.Select(i => i.Criteria))
+            {
+                SelectedCriterias.Add(criteria);
+            }
             NostroUnusualOperationsString = record.NostroLevel;
             RaisePropertyChanged(nameof(NostroUnusualOperationsString));
             CurrentHistoryComment = record.CurrentHistoryComment;
             RaisePropertyChanged(nameof(CurrentHistoryComment));
             IsSelectionLocked = false;
+            RaisePropertyChanged(nameof(SelectedCriterias));
         }
         #endregion
 
@@ -675,10 +704,10 @@ namespace ContragentAnalyse.ViewModel
                 BankProductHistory.Name = notbankproduct;
                 RaisePropertyChanged(nameof(BankProductHistory));
                 RaisePropertyChanged(nameof(NostroUnusualOperationsString));
-                SelectedHistoryRecord.NOSTRO = NostroUnusualOperationsNOSTRO;
-                RaisePropertyChanged(nameof(SelectedHistoryRecord.NOSTRO));
-                SelectedHistoryRecord.LORO = NostroUnusualOperationsLORO;
-                RaisePropertyChanged(nameof(SelectedHistoryRecord.LORO));
+                //SelectedHistoryRecord.NOSTRO = NostroUnusualOperationsNOSTRO;
+               // RaisePropertyChanged(nameof(SelectedHistoryRecord.NOSTRO));
+                //SelectedHistoryRecord.LORO = NostroUnusualOperationsLORO;
+                //RaisePropertyChanged(nameof(SelectedHistoryRecord.LORO));
                 RaisePropertyChanged(nameof(NostroUnusualOperationsLORO));
                 RaisePropertyChanged(nameof(SelectedHistoryRecord));
 

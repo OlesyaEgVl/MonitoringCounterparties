@@ -26,6 +26,7 @@ namespace ContragentAnalyse.Model.Implementation
             Include(i => i.Actualization).
             Include(i => i.PrescoringScoring).
             Include(i => i.PrescoringScoringHistory).
+                ThenInclude(i => i.Employees).
             Include(i => i.RestrictedAccounts).
             Include(i => i.Contacts).
             Include(i => i.Country).
@@ -44,6 +45,7 @@ namespace ContragentAnalyse.Model.Implementation
             Include(i => i.Actualization).
             Include(i => i.PrescoringScoring).
             Include(i => i.PrescoringScoringHistory).
+                ThenInclude(i => i.Employees).
             Include(i => i.RestrictedAccounts).
             Include(i => i.Contacts).
             Include(i => i.Country).
@@ -272,9 +274,7 @@ namespace ContragentAnalyse.Model.Implementation
                         HistoryDate = rec.DatePresScor.Date,
                         HistoryRecords = new List<PrescoringScoringHistory>(),
                         EmployeeName = rec.Employees.Name,
-                        ClosedClient = rec.ClosedClient,
-                        //NostroLevel=rec.NostroLevel,
-                       
+                        ClosedClient = rec.ClosedClient,                
                     };
                     newValue.HistoryRecords.Add(rec);
                     output.Add(newValue);
