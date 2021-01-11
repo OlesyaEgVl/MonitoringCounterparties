@@ -62,8 +62,8 @@ namespace ContragentAnalyse.ViewModel
             get => _contactTypes;
             set => _contactTypes = value;
         }
-        private List<Criteria> selectedCriterias = new List<Criteria>();
-        public List<Criteria> SelectedCriterias => selectedCriterias;
+        private ObservableCollection<Criteria> selectedCriterias = new ObservableCollection<Criteria>();
+        public ObservableCollection<Criteria> SelectedCriterias => selectedCriterias;
         private ObservableCollection<Contracts> selectedContracts = new ObservableCollection<Contracts>();
         public string SelectedCriteriasLevel
         {
@@ -274,8 +274,7 @@ namespace ContragentAnalyse.ViewModel
                 RaisePropertyChanged(nameof(BankProductHistory));
                 SelectedCriterias.Clear();
                 NostroUnusualOperationsString = string.Empty;
-                NostroUnusualOperationsNOSTRO = string.Empty;
-                //NostroUnusualOperationsLORO = string.Empty;
+             //   NostroUnusualOperationsNOSTRO = string.Empty;
                 BankProductHistory.Name = string.Empty;
                 BankProductHistory.Id = 0;
                 RaisePropertyChanged(nameof(NostroUnusualOperationsString));
@@ -287,11 +286,8 @@ namespace ContragentAnalyse.ViewModel
                 RaisePropertyChanged(nameof(SelectedClientLatestLORO));
                 RaisePropertyChanged(nameof(SelectedClientLatestNostro));
                 RaisePropertyChanged(nameof(SelectedCriterias));
-                
-               // RaisePropertyChanged(nameof(SelectedCriterias));
+                RaisePropertyChanged(nameof(CurrentHistoryComment));
 
-                //мб не тут
-                //RaisePropertyChanged(nameof(SelectedCriteriasLevel));
             };
             
         }
@@ -368,6 +364,17 @@ namespace ContragentAnalyse.ViewModel
                 return SelectedClient.PrescoringScoringHistory.Last().LORO;
             }
         }
+        public string SelectedClientLatestITOG
+        {
+            get
+            {
+                if (SelectedClient == null)
+                {
+                    return string.Empty;
+                }
+                return SelectedClient.PrescoringScoringHistory.Last().NostroLevel;
+            }
+        }
         private void AddScoringMethod()
         {
             List<PrescoringScoringHistory> records = new List<PrescoringScoringHistory>();
@@ -399,13 +406,9 @@ namespace ContragentAnalyse.ViewModel
             IsSelectionLocked = true;
             RaisePropertyChanged(nameof(IsCurrentHistoryRecordClosed));
             SelectedCriterias.Clear();
-            foreach(Criteria criteria in record.HistoryRecords.Select(i => i.Criteria))
-            {
-                SelectedCriterias.Add(criteria);
-            }
+            SelectedCriterias.AddRange(record.HistoryRecords.Select(i => i.Criteria));
             NostroUnusualOperationsString = record.NostroLevel;
             RaisePropertyChanged(nameof(NostroUnusualOperationsString));
-            CurrentHistoryComment = record.CurrentHistoryComment;
             RaisePropertyChanged(nameof(CurrentHistoryComment));
             IsSelectionLocked = false;
             RaisePropertyChanged(nameof(SelectedCriterias));
@@ -517,24 +520,21 @@ namespace ContragentAnalyse.ViewModel
             }
             RaisePropertyChanged(nameof(SelectedHistoryRecord));
             CommitMethod();
-            CurrentHistoryComment = string.Empty;
             SelectedCriterias.Clear();
             RaisePropertyChanged(nameof(SelectedCriterias));
         }
 
         public string notbankproduct = "";
         public string NostroUnusualOperationsString { get; set; }
-        private string _currentHistoryComment = string.Empty;
         public string CurrentHistoryComment
         {
             get
             {
-                return _currentHistoryComment;
-            }
-            set
-            {
-                _currentHistoryComment = value;
-                RaisePropertyChanged(nameof(CurrentHistoryComment));
+                if (SelectedHistoryRecord == null)
+                {
+                    return string.Empty;
+                }
+                return SelectedHistoryRecord.CurrentHistoryComment;             
             }
         }
 
@@ -704,10 +704,6 @@ namespace ContragentAnalyse.ViewModel
                 BankProductHistory.Name = notbankproduct;
                 RaisePropertyChanged(nameof(BankProductHistory));
                 RaisePropertyChanged(nameof(NostroUnusualOperationsString));
-                //SelectedHistoryRecord.NOSTRO = NostroUnusualOperationsNOSTRO;
-               // RaisePropertyChanged(nameof(SelectedHistoryRecord.NOSTRO));
-                //SelectedHistoryRecord.LORO = NostroUnusualOperationsLORO;
-                //RaisePropertyChanged(nameof(SelectedHistoryRecord.LORO));
                 RaisePropertyChanged(nameof(NostroUnusualOperationsLORO));
                 RaisePropertyChanged(nameof(SelectedHistoryRecord));
 
@@ -747,18 +743,16 @@ namespace ContragentAnalyse.ViewModel
 
         private void StoreSelectionMethod(object SelectedItems) //метод отвечающий за выбранные критерии добовляет их в SelectedCriterias
         {
-            SelectedCriterias.Clear();
             if (SelectedItems is IEnumerable collection && !IsSelectionLocked)
             {
+                SelectedCriterias.Clear();
                 foreach (object obj in collection)
                 {
                     SelectedCriterias.Add(obj as Criteria);
                 }
             }
             RaisePropertyChanged(nameof(SelectedCriteriasLevel));
-            
         }
-
         private void UpdateMethod(string BINStr) //кнопка обновленя клиента
         {
                 if (_dbProvider.IsAnyClientExist(BINStr))
@@ -839,8 +833,7 @@ namespace ContragentAnalyse.ViewModel
         {
             if (!string.IsNullOrWhiteSpace(searchStr))
             {
-                List<Client> clients = _dbProvider.GetClients(searchStr).ToList();
-
+                
                 //TODO продумать предупреждение о большом количестве результатов поиска при поиске строки '"' или 'А'
                 Func<IEnumerable<Client>> GetClientsFunc = GetSearchFunction(searchStr); //Func - какой то метод, который обязуется вернуть IEnumerable<Client>
                 FoundClients.Clear();

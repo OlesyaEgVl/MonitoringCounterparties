@@ -14,8 +14,13 @@ namespace ContragentAnalyse.Model.Entities
         {
             get
             {
+                if (HistoryRecords==null)
+                {
+                    return string.Empty;
+                }
                 return HistoryRecords.Select(i => i.Comment).First();
             }
+          
         }
         public bool ClosedClient { get; set; }
         public string Level

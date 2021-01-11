@@ -74,7 +74,7 @@
                         <TextBlock Text="Несоответствие банковских продуктов:" MinWidth="220" Margin="5"/>
                         <TextBox Text="{Binding BankProductHistory.Name, Mode=OneWay}" x:Name="BankProduct" Margin="5" MinWidth="300" Height="100"/>
                         <TextBlock Text="Комментарий к скорингу:" MinWidth="220" Margin="5"/>
-                        <TextBox Text="{Binding CurrentHistoryComment}" x:Name="Comments" Margin="5" MinWidth="300" Height="100"/>
+                        <TextBox Text="{Binding CurrentHistoryComment, Mode=OneWay}" x:Name="Comments" Margin="5" MinWidth="300" Height="100"/>
                         <StackPanel Orientation="Horizontal" Margin="5">
                             <TextBlock Text="Оценка комплаенс риска завершена" MinWidth="225"/>
                             <Button x:Name="Check"   Width="110" Height="25" Content="Завершить!"  Command="{Binding EstimationRiskCommand}"/>
@@ -100,7 +100,7 @@
                                         <GridViewColumn Header="Сотрудник" DisplayMemberBinding="{Binding EmployeeName}" Width="200"/>
                                         <GridViewColumn Header="Уровень риска" DisplayMemberBinding="{Binding Level, Mode=OneWay}" Width="100"/>
                                         <GridViewColumn Header="Оценка завершена" DisplayMemberBinding="{Binding ClosedClient}" Width="200"/>
-                                        <GridViewColumn Header="Комментарий" DisplayMemberBinding="{Binding CurrentHistoryComment, Mode=OneWay}" Width="200"/>
+                                        <GridViewColumn Header="Комментарий" DisplayMemberBinding="{Binding CurrentHistoryComment, Mode=OneTime}" Width="200"/>
                                         <GridViewColumn Header="Уровень риска ЛОРО/НОСТРО" DisplayMemberBinding="{Binding NostroLevel, Mode=OneWay}" Width="200"/>
                                     </GridView.Columns>
                                 </GridView>

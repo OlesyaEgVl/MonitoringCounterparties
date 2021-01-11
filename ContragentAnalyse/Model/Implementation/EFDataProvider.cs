@@ -24,7 +24,7 @@ namespace ContragentAnalyse.Model.Implementation
             _dbContext.Client.
             Include(i => i.TypeClient).
             Include(i => i.Actualization).
-            Include(i => i.PrescoringScoring).
+           // Include(i => i.PrescoringScoring).
             Include(i => i.PrescoringScoringHistory).
                 ThenInclude(i => i.Employees).
             Include(i => i.RestrictedAccounts).
@@ -43,7 +43,7 @@ namespace ContragentAnalyse.Model.Implementation
             _dbContext.Client.
             Include(i => i.TypeClient).
             Include(i => i.Actualization).
-            Include(i => i.PrescoringScoring).
+            //Include(i => i.PrescoringScoring).
             Include(i => i.PrescoringScoringHistory).
                 ThenInclude(i => i.Employees).
             Include(i => i.RestrictedAccounts).
@@ -60,7 +60,7 @@ namespace ContragentAnalyse.Model.Implementation
         public IEnumerable<Client> GetClientsByName(string Name) => _dbContext.Client.
             Include(i => i.TypeClient).
             Include(i => i.Actualization).
-            Include(i => i.PrescoringScoring).
+           // Include(i => i.PrescoringScoring).
             Include(i => i.PrescoringScoringHistory).
             Include(i => i.RestrictedAccounts).
             Include(i => i.Contacts).
@@ -274,7 +274,8 @@ namespace ContragentAnalyse.Model.Implementation
                         HistoryDate = rec.DatePresScor.Date,
                         HistoryRecords = new List<PrescoringScoringHistory>(),
                         EmployeeName = rec.Employees.Name,
-                        ClosedClient = rec.ClosedClient,                
+                        ClosedClient = rec.ClosedClient,
+                        
                     };
                     newValue.HistoryRecords.Add(rec);
                     output.Add(newValue);
