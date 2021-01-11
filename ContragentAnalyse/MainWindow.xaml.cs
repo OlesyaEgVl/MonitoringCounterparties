@@ -21,6 +21,39 @@ namespace ContragentAnalyse
     /// </summary>
     public partial class MainWindow : Window
     {
+        Anceta AncetaPage { get; set; }
+        Risk RiskPage { get; set; }
+        Unloading UnloadingPage { get; set; }
+
+        public MainWindow()
+        {
+            InitializeComponent();
+            AncetaPage = new Anceta();
+            RiskPage = new Risk();
+            UnloadingPage = new Unloading();
+        }
+
+        private void MenuClick(object sender, RoutedEventArgs e)
+        {
+            string currentTag = (sender as Button).Tag.ToString();
+            switch (currentTag)
+            {
+                case ("Page1"):
+                    MainContentController.Content = AncetaPage;
+                    break;
+                case ("Page3"):
+                    MainContentController.Content = RiskPage;
+                    break;
+                case ("Page4"):
+                    MainContentController.Content = UnloadingPage;
+                    break;
+            }
+
+        }
+    }
+}
+    /*    public partial class MainWindow : Window
+    {
         public MainWindow()
         {
             InitializeComponent();
@@ -34,9 +67,7 @@ namespace ContragentAnalyse
                 case ("Page1"):
                     MainContentController.Content = new Anceta();
                     break;
-                /*case ("Page2"):
-                    MainContentController.Content = new Page2();
-                    break;*/
+               
                 case ("Page3"):
                     MainContentController.Content = new Risk();
                     break;
@@ -47,4 +78,4 @@ namespace ContragentAnalyse
             
         }
     }
-}
+}*/

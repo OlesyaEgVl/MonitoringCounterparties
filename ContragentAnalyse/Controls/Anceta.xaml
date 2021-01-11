@@ -94,7 +94,7 @@
                                         <TextBlock Text="ЛОРО:"  HorizontalAlignment="Left"/>
                                         <TextBox Text="{Binding SelectedClientLatestLORO, Mode=OneWay }" IsReadOnly="True"/>
                                         <TextBlock Text="Уровень риска с учетом ЛОРО/НОСТРО:"  HorizontalAlignment="Left"/>
-                                        <TextBox Text="{Binding NostroUnusualOperationsString}"  IsReadOnly="True"/>
+                                        <TextBox Text="{Binding SelectedClientLatestITOG, Mode=OneWay}"  IsReadOnly="True"/>
                                         <TextBlock Text="Запросы:"/>
                                         <DataGrid ItemsSource="{Binding SelectedClient.Requests}" AutoGenerateColumns="False"
                                                   IsReadOnly="False">
