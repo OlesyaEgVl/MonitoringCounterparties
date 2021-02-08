@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ContragentAnalyse.Model.Entities.Base;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ContragentAnalyse.Model.Entities
 {
     public class ScoringHistoryGrouped
     {
+        
         public List<PrescoringScoringHistory> HistoryRecords { get; set; }
         public DateTime HistoryDate { get; set; }
         public string EmployeeName { get; set; }
@@ -14,15 +18,33 @@ namespace ContragentAnalyse.Model.Entities
         {
             get
             {
-                if (HistoryRecords==null)
+                if (HistoryRecords== null || HistoryRecords.Count == 0)
                 {
                     return string.Empty;
                 }
                 return HistoryRecords.Select(i => i.Comment).First();
             }
+            set
+            {
+                if (HistoryRecords == null || HistoryRecords.Count == 0)
+                {
+                   List<PrescoringScoringHistory> HistoryRecords = new List<PrescoringScoringHistory>();
+                }
+                HistoryRecords.First().Comment = value;
+            }
           
         }
-        public bool ClosedClient { get; set; }
+        public bool ClosedClient
+        {
+            get
+            {
+                if(HistoryRecords == null || HistoryRecords.Count() == 0)
+                {
+                    return false;
+                }
+                return HistoryRecords.First().ClosedClient;
+            }
+        }
         public string Level
         {
             get
@@ -60,7 +82,7 @@ namespace ContragentAnalyse.Model.Entities
             {
                 if (HistoryRecords == null)
                     return string.Empty;
-                return HistoryRecords[0].NostroLevel;
+                return HistoryRecords[0].NostroLOROLevel;
             }
             set { }
         }
@@ -75,5 +97,7 @@ namespace ContragentAnalyse.Model.Entities
                 return string.Empty; //TODO
             }
         }
+
+       
     }
 }

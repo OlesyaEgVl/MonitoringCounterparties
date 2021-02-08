@@ -36,6 +36,6 @@ namespace ContragentAnalyse.Model.Interfaces
         IEnumerable<ContactType> GetContactTypes();
         Contracts GetContractByCode(string v);
         Employees GetCurrentEmployee();
-       
+        void UpdateRiskLevel(int OldScoringId, ScoringHistoryGrouped criteriashistorygroup, DateTime datepresscor);
     }
 }
