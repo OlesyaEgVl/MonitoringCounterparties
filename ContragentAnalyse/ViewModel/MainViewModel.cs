@@ -117,6 +117,17 @@ namespace ContragentAnalyse.ViewModel
                // RaisePropertyChanged(nameof(IsCurrentHistoryRecordClosed));
             }
         }
+
+        private PrescoringScoringHistory _selectedHistoryRecordonly = new PrescoringScoringHistory();
+        public PrescoringScoringHistory SelectedHistoryRecordOnly
+        {
+            get
+            {
+                return _selectedHistoryRecordonly;
+            }
+            set => _selectedHistoryRecordonly = value;
+        }
+
         public bool IsCurrentHistoryRecordClosed
         {
             get
@@ -176,6 +187,10 @@ namespace ContragentAnalyse.ViewModel
                 if (SelectedClient == null)
                     return null;
                 return _dbProvider.GetClientHistory(SelectedClient).ToList();
+            }
+            set
+            {
+                CurrentClientHistory = value;
             }
         }
 
@@ -281,6 +296,7 @@ namespace ContragentAnalyse.ViewModel
                 RaisePropertyChanged(nameof(SelectedHistoryRecord));
                 RaisePropertyChanged(nameof(NostroUnusualOperationsNOSTRO));
                 RaisePropertyChanged(nameof(NostroUnusualOperationsLORO));
+                RaisePropertyChanged(nameof(SelectedClientLatestITOG));
                 RaisePropertyChanged(nameof(BankProductHistory.Name));
                 RaisePropertyChanged(nameof(BankProductHistory.Id));
                 RaisePropertyChanged(nameof(SelectedClientLatestLORO));
@@ -291,6 +307,39 @@ namespace ContragentAnalyse.ViewModel
             };
             
         }
+
+        //List<string> _employees = new List<string>();
+        //List<string> Employees
+        //{
+        //    get
+        //    {
+        //        return _employees;
+        //    }
+        //    set
+        //    {
+        //        _employees = value;
+        //        RaisePropertyChanged(nameof(Employees));
+        //    }
+        //}
+        //string testString = "test";
+        //string TestString
+        //{
+        //    get => testString;
+        //    set
+        //    {
+        //        testString = value;
+        //        RaisePropertyChanged(nameof(TestString));
+        //    }
+        //}
+        //private void testVoid()
+        //{
+        //    TestString = "test2";
+        //    TestString = TestString + "3"; //"test2" + "3" = "test23"
+        //    Employees.Add("test1"); //Не попадаем в set блок, переменная не изменяется
+
+        //    Employees = new List<string>(); //Попадаем в блок set, потому что происходит ПРИСВОЕНИЕ значения (знак '=')
+        //    Employees.Add("test1");//Не попадаем в set блок, переменная не изменяется
+        //}
 
         /// <summary>
         /// Инициализирует все поля при старте программы
@@ -346,7 +395,7 @@ namespace ContragentAnalyse.ViewModel
         {
             get
             {
-                if (SelectedClient == null)
+                if (SelectedClient == null || SelectedClient.PrescoringScoringHistory.Count == 0)
                 {
                     return string.Empty;
                 }
@@ -357,7 +406,7 @@ namespace ContragentAnalyse.ViewModel
         {
             get
             {
-                if (SelectedClient == null)
+                if (SelectedClient == null || SelectedClient.PrescoringScoringHistory.Count == 0)
                 {
                     return string.Empty;
                 }
@@ -368,17 +417,18 @@ namespace ContragentAnalyse.ViewModel
         {
             get
             {
-                if (SelectedClient == null)
+                if (SelectedClient == null || SelectedClient.PrescoringScoringHistory.Count == 0)
                 {
-                    return string.Empty;
+                    return string.Empty; 
                 }
-                return SelectedClient.PrescoringScoringHistory.Last().NostroLevel;
+                return SelectedClient.PrescoringScoringHistory.Last().NostroLOROLevel;
             }
         }
         private void AddScoringMethod()
         {
             List<PrescoringScoringHistory> records = new List<PrescoringScoringHistory>();
-
+            DateTime created_at = DateTime.Now;
+            
             foreach (Criteria criteria in SelectedCriterias)
             {
                 records.Add(new PrescoringScoringHistory
@@ -386,16 +436,20 @@ namespace ContragentAnalyse.ViewModel
                     // здесь нужно инициализировать переменные
                     Client = SelectedClient,
                     Employee_Id = CurrentEmployee.Id,
-                    DatePresScor = DateTime.Now,
+                    DatePresScor = created_at,
                     Criteria = criteria,
                     ClosedClient = closedClients,
                     Comment = CurrentHistoryComment,
-                    NostroLevel = NostroUnusualOperationsString,
+                    NostroLOROLevel = NostroUnusualOperationsString,
                     NOSTRO = NostroUnusualOperationsNOSTRO,
                     LORO = NostroUnusualOperationsLORO
                 });
             }
             _dbProvider.AddScoring(records);
+            RaisePropertyChanged(nameof(CurrentClientHistory));
+           
+            //SelectedClient.ClientToCriteria.Clear();
+
         }
 
         private void SelectHistoryRecordMethod(ScoringHistoryGrouped record)
@@ -405,7 +459,10 @@ namespace ContragentAnalyse.ViewModel
             // Выбранные критерии = record...
             IsSelectionLocked = true;
             RaisePropertyChanged(nameof(IsCurrentHistoryRecordClosed));
-            SelectedCriterias.Clear();
+            while (SelectedCriterias.Count > 0)
+            {
+                SelectedCriterias.RemoveAt(0);
+            }
             SelectedCriterias.AddRange(record.HistoryRecords.Select(i => i.Criteria));
             NostroUnusualOperationsString = record.NostroLevel;
             RaisePropertyChanged(nameof(NostroUnusualOperationsString));
@@ -489,6 +546,8 @@ namespace ContragentAnalyse.ViewModel
 
         private void SaveRiskRecordMethod() // сохранение истории
         {
+            DateTime created_at = DateTime.Now;
+            //DateTime now = DateTime.Now;
             if (SelectedClient.ClientToCriteria == null)
             {
                 SelectedClient.ClientToCriteria = new List<ClientToCriteria>();
@@ -500,28 +559,24 @@ namespace ContragentAnalyse.ViewModel
                 {
                     Client = SelectedClient,
                     Criteria = criteria,
-                    DateAdd = DateTime.Now
+                    DateAdd = created_at
                 });
             }
-            foreach (Criteria criteria1 in SelectedCriterias)
-            {
-                SelectedClient.PrescoringScoringHistory.Add(new PrescoringScoringHistory
-                {
-                    Client = SelectedClient,
-                    Employee_Id = CurrentEmployee.Id,
-                    DatePresScor = DateTime.Now,
-                    Criteria = criteria1,
-                    ClosedClient = closedClients,
-                    Comment = CurrentHistoryComment,
-                    NostroLevel = NostroUnusualOperationsString,
-                    NOSTRO=NostroUnusualOperationsNOSTRO,
-                    LORO=NostroUnusualOperationsLORO
-                });
-            }
+
+
+            UpdateRiskLevel(SelectedClient.Id, SelectedHistoryRecord, SelectedClient.PrescoringScoringHistory.Last().DatePresScor);
+            
             RaisePropertyChanged(nameof(SelectedHistoryRecord));
-            CommitMethod();
+            RaisePropertyChanged(nameof(CurrentClientHistory));
             SelectedCriterias.Clear();
             RaisePropertyChanged(nameof(SelectedCriterias));
+            SelectedClient.ClientToCriteria.Clear();
+
+        }
+
+        private void UpdateRiskLevel(int id, ScoringHistoryGrouped selectedHistoryGrouped, DateTime historyDate)
+        {
+            _dbProvider.UpdateRiskLevel(id,selectedHistoryGrouped,historyDate);
         }
 
         public string notbankproduct = "";
@@ -535,6 +590,10 @@ namespace ContragentAnalyse.ViewModel
                     return string.Empty;
                 }
                 return SelectedHistoryRecord.CurrentHistoryComment;             
+            }
+            set
+            {
+                SelectedHistoryRecord.CurrentHistoryComment = value;
             }
         }
 
@@ -736,7 +795,6 @@ namespace ContragentAnalyse.ViewModel
                 SelectedClient.NextScoringDate = DateTime.Now.AddYears(1);
                 RaisePropertyChanged(nameof(NextScoringDate));
             }
-            closedClients = true;
             RaisePropertyChanged(nameof(closedClients));
             CommitMethod();
         }
@@ -861,6 +919,8 @@ namespace ContragentAnalyse.ViewModel
             //TODO это работает не так
             _dbProvider.Commit();
         }
+
+      
         //Excel_Risk
         private void ExportExcelCommandMethod(string BINStr)
         {
@@ -964,7 +1024,7 @@ namespace ContragentAnalyse.ViewModel
                     sheet.Cells[row, col++].Value = client.ClientManagerNew;
                     sheet.Cells[row, col++].Value = client.ClientManager;
                     sheet.Cells[row, col++].Value = string.Join(',', client.ClientToCriteria.Select(i=>$"{i.Criteria.Name} {i.Criteria.Weight}"));
-                    sheet.Cells[row, col++].Value = client.PrescoringScoringHistory.LastOrDefault()?.NostroLevel;
+                    sheet.Cells[row, col++].Value = client.PrescoringScoringHistory.LastOrDefault()?.NostroLOROLevel;
                     sheet.Cells[row, col++].Value = client.Requests.Select(i=>i.SendDate);                   
                     sheet.Cells[row, col++].Value = client.Requests.Select(i=>i.RecieveDate);
                     sheet.Cells[row, col++].Value = client.Requests.Select(i=>i.Comment);

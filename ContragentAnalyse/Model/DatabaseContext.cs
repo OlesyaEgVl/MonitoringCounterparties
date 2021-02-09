@@ -34,7 +34,8 @@ namespace ContragentAnalyse.Model
             modelBuilder.Entity<Client>().HasMany(i => i.ClientToCurrency).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.ClientToContracts).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.PrescoringScoringHistory).WithOne(i => i.Client);
-
+            modelBuilder.Entity<PrescoringScoringHistory>().HasKey(i => i.Id);
+            modelBuilder.Entity<PrescoringScoringHistory>().Property(i => i.Id).UseIdentityColumn();
 
             /* modelBuilder.Entity<PrescoringScoring>().HasMany(i => i.CriteriaToScoring).WithOne(i => i.PrescoringScoring);
              modelBuilder.Entity<Criteria>().HasMany(i => i.CriteriaToScoring).WithOne(i => i.Criteria);*/

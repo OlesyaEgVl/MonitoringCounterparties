@@ -185,6 +185,21 @@ namespace ContragentAnalyse.Model.Implementation
             _dbContext.SaveChanges();
         }
 
+        //Удалить старые критерии и добавить новые
+        public void UpdateRiskLevel(int ClientId, ScoringHistoryGrouped selectedCriterias, DateTime preScoringDate)
+        {
+            _dbContext.PrescoringScoringHistory.RemoveRange(_dbContext.PrescoringScoringHistory.Where(i => i.Client_Id == ClientId && i.DatePresScor == preScoringDate));
+
+            foreach(PrescoringScoringHistory newScoring in selectedCriterias.HistoryRecords)
+            {
+                newScoring.Id = 0;
+                _dbContext.PrescoringScoringHistory.Add(newScoring);
+                _dbContext.Entry<PrescoringScoringHistory>(newScoring).State = EntityState.Added;
+            }
+            
+            _dbContext.SaveChanges();
+        }
+
         public IEnumerable<ContactType> GetContactTypes()
         {
             return _dbContext.ContactType;
@@ -261,20 +276,19 @@ namespace ContragentAnalyse.Model.Implementation
         {
             List<ScoringHistoryGrouped> output = new List<ScoringHistoryGrouped>();
             List<PrescoringScoringHistory> historyRecords = _dbContext.PrescoringScoringHistory.Where(i => i.Client_Id == client.Id).ToList();
-            foreach(PrescoringScoringHistory rec in historyRecords)
+            foreach (PrescoringScoringHistory rec in historyRecords)
             {
-                if(output.Any(i=>i.HistoryDate.Date == rec.DatePresScor.Date))
+                if (output.Any(i => DateTime.Equals(i.HistoryDate, rec.DatePresScor)))
                 {
-                    output.First(i => i.HistoryDate.Date == rec.DatePresScor.Date).HistoryRecords.Add(rec);
+                    output.First(i => DateTime.Equals(i.HistoryDate, rec.DatePresScor)).HistoryRecords.Add(rec);
                 }
                 else
-                {
+                { 
                     ScoringHistoryGrouped newValue = new ScoringHistoryGrouped
                     {
-                        HistoryDate = rec.DatePresScor.Date,
+                        HistoryDate = rec.DatePresScor,
                         HistoryRecords = new List<PrescoringScoringHistory>(),
-                        EmployeeName = rec.Employees.Name,
-                        ClosedClient = rec.ClosedClient,
+                        EmployeeName = rec.Employees.Name
                         
                     };
                     newValue.HistoryRecords.Add(rec);
@@ -290,6 +304,7 @@ namespace ContragentAnalyse.Model.Implementation
             {
                 _dbContext.PrescoringScoringHistory.Add(scoring);
             }
+            _dbContext.SaveChanges();
         }
     }
 }

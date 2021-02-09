@@ -1,12 +1,16 @@
 ﻿using ContragentAnalyse.Model.Entities.Base;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ContragentAnalyse.Model.Entities
 {
-    public class PrescoringScoringHistory : BaseEntity
+    public class PrescoringScoringHistory
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id {get;set;}
         public DateTime DatePresScor { get; set; }
         public int Employee_Id { get; set; }
         public int Criteria_Id { get; set; }
@@ -22,6 +26,6 @@ namespace ContragentAnalyse.Model.Entities
         public virtual Employees Employees { get; set; }
         [ForeignKey(nameof(Criteria_Id))]
         public virtual Criteria Criteria{ get; set; }
-        public string NostroLevel { get; set; }
+        public string NostroLOROLevel { get; set; }
     }
 }
