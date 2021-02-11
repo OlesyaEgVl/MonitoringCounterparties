@@ -1,16 +1,7 @@
 ﻿using ContragentAnalyse.Model.Entities.Base;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 namespace ContragentAnalyse.Model.Entities
 {
     public class Contracts : NamedEntity
     {
-        //public List<ClientToContracts> ClientToContracts { get; set; }
-        //public override string ToString()
-        //{
-        //    return Name;
-        //}
     }
 }

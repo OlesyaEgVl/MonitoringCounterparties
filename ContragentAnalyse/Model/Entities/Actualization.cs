@@ -13,8 +13,7 @@ namespace ContragentAnalyse.Model.Entities
         public int? Type_Agreement_Id { get; set; }
         [ForeignKey(nameof(Client_Id))]
         public virtual Client Client { get; set; }
-       
         [ForeignKey(nameof(Type_Agreement_Id))]
-        public virtual TypeAgreement TypeAgreement { get; set; }
+        public virtual AgreementType TypeAgreement { get; set; }
     }
 }

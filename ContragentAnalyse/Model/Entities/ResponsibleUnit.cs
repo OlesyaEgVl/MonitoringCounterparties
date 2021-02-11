@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ContragentAnalyse.Model.Entities.Base;
+﻿using ContragentAnalyse.Model.Entities.Base;
 
 namespace ContragentAnalyse.Model.Entities
 {

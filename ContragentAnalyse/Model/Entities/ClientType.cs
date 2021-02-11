@@ -2,8 +2,7 @@
 
 namespace ContragentAnalyse.Model.Entities
 {
-    public class Currency: NamedEntity
+    public class ClientType : NamedEntity
     {
-        public string CodeCurrency { get; set; }
     }
 }

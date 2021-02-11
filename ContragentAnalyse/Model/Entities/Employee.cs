@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ContragentAnalyse.Model.Entities.Base;
+﻿using ContragentAnalyse.Model.Entities.Base;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ContragentAnalyse.Model.Entities
 {
-    public class Employees : NamedEntity
+    public class Employee : NamedEntity
     {
         public int? Position_Id { get; set; }
         public string CodeName { get; set; }

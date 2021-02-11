@@ -1,14 +1,10 @@
 ﻿using ContragentAnalyse.Extension;
 using ContragentAnalyse.Model.Entities;
 using ContragentAnalyse.Model.Interfaces;
-using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using System.Linq;
+using System.Collections.ObjectModel;
 using System.Text;
-using System.Windows;
 
 namespace ContragentAnalyse.Model.Implementation
 {
@@ -34,24 +30,18 @@ namespace ContragentAnalyse.Model.Implementation
             connected = true;
             sessionName = 'A';
             int attempCount = 0;
-            Console.WriteLine("Connecting to Equation");
-            Console.WriteLine($"Trying connect to {sessionName}...");
             while (EUCL.Connect(sessionName.ToString()) != 0)
             {
                 if (attempCount++ > 5)
                 {
                     connected = false;
-                    Console.WriteLine("Connection failed");
                     break;
                 }
                 sessionName++;
-                Console.WriteLine($"Trying connect to {sessionName}...");
             }
-
             if (connected)
             {
                 EUCL.ClearScreen();
-                Console.WriteLine("Connected.");
             }
             #endregion
         }
@@ -73,15 +63,11 @@ namespace ContragentAnalyse.Model.Implementation
             Connect();
             if (!connected)
             {
-                throw new NotConnectedException("Отсутствует подключение к equation. Пожалуйста, убедитесь что включена активная сессия Equation");
-            } //вот и вся проверка
+                throw new NotConnectedException("");
+            }
             else
             {
                 Client clients = new Client();
-                //Бежишь по eq и ищешь инфу
-                //Возвращаешь заполненный инфой класс
-
-
                 EUCL.SetCursorPos(21, 17);
                 EUCL.SendStr("ПБА");
                 pEnter();
@@ -90,18 +76,18 @@ namespace ContragentAnalyse.Model.Implementation
                 pEnter();
                 clients.BIN = BINStr;
                 clients.TypeClient = dataProvider.GetClientType(EUCL.ReadScreen(4, 33, 2));
-                string RKCBIK = EUCL.ReadScreen(21, 33, 9);//
+                string RKCBIK = EUCL.ReadScreen(21, 33, 9);
                 clients.RKC_BIK = RKCBIK;
-                string fullname = EUCL.ReadScreen(6, 33, 35);// 
-                clients.FullName = fullname.TrimSpaces(); //Удалять пробелы!!! + указать корректную длинну
-                string shortname = EUCL.ReadScreen(11, 33, 35) + EUCL.ReadScreen(12, 33, 35) + EUCL.ReadScreen(13, 33, 35);// 
-                clients.ShortName = shortname.TrimSpaces(); //WTF
-                string Englname = EUCL.ReadScreen(14, 33, 35) + EUCL.ReadScreen(15, 33, 35);// 
+                string fullname = EUCL.ReadScreen(6, 33, 35);
+                clients.FullName = fullname.TrimSpaces();
+                string shortname = EUCL.ReadScreen(11, 33, 35) + EUCL.ReadScreen(12, 33, 35) + EUCL.ReadScreen(13, 33, 35);
+                clients.ShortName = shortname.TrimSpaces();
+                string Englname = EUCL.ReadScreen(14, 33, 35) + EUCL.ReadScreen(15, 33, 35);
                 clients.EnglName = Englname.TrimSpaces();
-                string LicenceNumber = EUCL.ReadScreen(18, 33, 20);// 
+                string LicenceNumber = EUCL.ReadScreen(18, 33, 20);
                 clients.LicenceNumber = LicenceNumber.TrimSpaces();
 
-                string licenceDate = EUCL.ReadScreen(20, 33, 11);// 
+                string licenceDate = EUCL.ReadScreen(20, 33, 11);
                 if (EUCL.ReadScreen(20, 33, 1) != " ")
                 {
                     clients.LicenceEstDate = Convert.ToDateTime(licenceDate);
@@ -165,7 +151,7 @@ namespace ContragentAnalyse.Model.Implementation
                     }
                     if (clients.Actualization == null) //Потом убрать (не нужна - Клиент всегда null)
                     {
-                        clients.Actualization = new List<Actualization>();
+                        clients.Actualization = new ObservableCollection<Actualization>();
                     }
                     clients.Actualization.Add(act);
                 }
@@ -299,7 +285,7 @@ namespace ContragentAnalyse.Model.Implementation
                                     contractclient.Client = clients;
                                     if (clients.ClientToContracts == null)
                                     {
-                                        clients.ClientToContracts = new List<ClientToContracts>();
+                                        clients.ClientToContracts = new ObservableCollection<ClientToContracts>();
                                     }
                                     string datestart = EUCL.ReadScreen(9, 30, 2) + "." + EUCL.ReadScreen(9, 32, 2) + "." + EUCL.ReadScreen(9, 34, 2);
                                     if (datestart != "  .  .  ")

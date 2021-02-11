@@ -1,13 +1,11 @@
 ﻿using ContragentAnalyse.Model.Entities.Base;
-using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 
 namespace ContragentAnalyse.Model.Entities
 {
     public class Criteria: NamedEntity
     {
         public double Weight { get; set; }
+        public List<ScoringToCriteria> Scorings { get; set; } = new List<ScoringToCriteria>();
     }
 }
