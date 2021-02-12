@@ -24,40 +24,26 @@ namespace ContragentAnalyse.Model
         protected override void OnModelCreating(ModelBuilder modelBuilder) 
         {
             modelBuilder.Entity<Client>().HasMany(i => i.Actualization).WithOne(i => i.Client);
-            modelBuilder.Entity<Client>().HasMany(i => i.PrescoringScoring).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.RestrictedAccounts).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.Contacts).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.Requests).WithOne(i => i.Client);
-            //modelBuilder.Entity<Client>().HasMany(i => i.BanksProductHistory).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.StopFactors).WithOne(i => i.Client);
-            modelBuilder.Entity<Client>().HasMany(i => i.ClientToCriteria).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.ClientToCurrency).WithOne(i => i.Client);
             modelBuilder.Entity<Client>().HasMany(i => i.ClientToContracts).WithOne(i => i.Client);
-            modelBuilder.Entity<Client>().HasMany(i => i.PrescoringScoringHistory).WithOne(i => i.Client);
-            modelBuilder.Entity<PrescoringScoringHistory>().HasKey(i => i.Id);
-            modelBuilder.Entity<PrescoringScoringHistory>().Property(i => i.Id).UseIdentityColumn();
-
-            /* modelBuilder.Entity<PrescoringScoring>().HasMany(i => i.CriteriaToScoring).WithOne(i => i.PrescoringScoring);
-             modelBuilder.Entity<Criteria>().HasMany(i => i.CriteriaToScoring).WithOne(i => i.Criteria);*/
+            modelBuilder.Entity<Client>().HasMany(i => i.Scorings).WithOne(i => i.Client);
+            modelBuilder.Entity<ScoringToCriteria>().HasKey(i => new { i.ScoringId, i.CriteriaId });
+            modelBuilder.Entity<ScoringToCriteria>().HasOne(i => i.Scoring).WithMany(i => i.Criterias).HasForeignKey(i => i.ScoringId);
+            modelBuilder.Entity<ScoringToCriteria>().HasOne(i => i.Criteria).WithMany(i => i.Scorings).HasForeignKey(i => i.CriteriaId);
         }
 
         public DatabaseContext() : base()
         {
-           
             Database.EnsureCreated();
-           /* if (Client.Count() == 0)
-            {
-                //Создать тестовые денные
-                Client.BIN.;
-            }*/
         }
 
         public DbSet<AccountStates> AccountStates { get; set; }
         public DbSet<Actualization> Actualization { get; set; }
-        public DbSet<BankProduct> BankProduct { get; set; }
-        public DbSet<BanksProductHistory> BanksProductHistory { get; set; }
         public DbSet<Client> Client { get; set; }
-        public DbSet<ClientToCriteria> ClientToCriteria { get; set; }
         public DbSet<ClientToCurrency> ClientToCurrency { get; set; }
         public DbSet<ClientToContracts> ClientToContracts { get; set; }
         public DbSet<Contacts> Contacts { get; set; }
@@ -66,20 +52,15 @@ namespace ContragentAnalyse.Model
         public DbSet<Country> Country { get; set; }
         public DbSet<Criteria> Criteria { get; set; }
         public DbSet<Currency> Currency { get; set; }
-        public DbSet<Employees> Employees { get; set; }
-        public DbSet<Level> Level { get; set; }    
+        public DbSet<Scoring> Scorings { get; set; }
+        public DbSet<Employee> Employees { get; set; }
         public DbSet<Positions> Positions { get; set; }
-        public DbSet<PrescoringScoring> PrescoringScoring { get; set; }
-        public DbSet<PrescoringScoringHistory> PrescoringScoringHistory { get; set; }
-        public DbSet<ProductToScoring> ProductToScoring { get; set; }
         public DbSet<ResponsibleUnit> ResponsibleUnit { get; set; }
         public DbSet<RestrictedAccounts> RestrictedAccounts { get; set; }
         public DbSet<RiskCodes> RiskCodes { get; set; }
-        public DbSet<ScoringType> ScoringType { get; set; }
-        public DbSet<StatusActualization> StatusActualization { get; set; }
         public DbSet<StopFactors> StopFactors { get; set; }
-        public DbSet<TypeAgreement> TypeAgreement { get; set; }
-        public DbSet<TypeClient> TypeClient { get; set; }
+        public DbSet<AgreementType> TypeAgreement { get; set; }
+        public DbSet<ClientType> TypeClient { get; set; }
 
       
     }

@@ -57,6 +57,10 @@ namespace ContragentAnalyse.Extension
             {
                 _listView.SelectedItems.Remove(item);
             }
+            if(e.Action == NotifyCollectionChangedAction.Reset)
+            {
+                _listView.SelectedItems.Clear();
+            }
         }
 
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)

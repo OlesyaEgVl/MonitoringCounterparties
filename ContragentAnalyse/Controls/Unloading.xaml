@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-            
              mc:Ignorable="d" DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
     <UserControl.Resources>
         <DataTemplate x:Key="CheckBoxCell">
@@ -16,33 +15,11 @@
     <Grid>
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Введите идентификатор клиента" Margin="5,0"/>
-                    <TextBox Name="SearchField3" MinWidth="300" Margin="5,0"/>
-                    <Button IsDefault="True" x:Name="buttonSearch3"  Content="Поиск" Width="100" Click="Search3"
-                                Command="{Binding SearchCommand}"
-                                CommandParameter="{Binding ElementName=SearchField3, Path=Text}"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
-                    <GroupBox Header="Выберете из предложенных Банков/Юр.лиц" Margin="10,20" >
-                        <ListView Name="FoundItemsList3" Margin="5" MinWidth="600" MinHeight="100" ItemsSource="{Binding FoundClients}" SelectedItem="{Binding SelectedClient}">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Header="БИН" DisplayMemberBinding="{Binding Path=BIN}"/>
-                                    <GridViewColumn Header="Название" DisplayMemberBinding="{Binding Path=ShortName}"/>
-                                    <GridViewColumn Header="Мнемоника" DisplayMemberBinding="{Binding Path=Mnemonic}"/>
-                                    <GridViewColumn Header="Тип клиента" DisplayMemberBinding="{Binding Path=TypeClient.Name}"/>
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                    </GroupBox>
-                </StackPanel>
-
                 <StackPanel >
                     <GroupBox Header="Выберете фильтры" Margin="10,0">
                         <StackPanel >
                                 <TextBlock Text="Страна регистрации:" />
-                            <ListView Margin="5"  Grid.Column="1" Grid.Row="1" Name="selectoritems1" ItemsSource="{Binding CountryList}">
+                            <ListView Margin="5" MaxHeight="500"  Grid.Column="1" Grid.Row="1" Name="selectoritems1" ItemsSource="{Binding AllCountries}">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="SelectionChanged1">
                                             <i:InvokeCommandAction Command="{Binding StoreSelection}" CommandParameter="{Binding ElementName=selectoritems1, Path=SelectedItems}"/>
@@ -61,9 +38,9 @@
                                 <TextBlock Text="Дата актуализации:" Width="200"/>
                                 <StackPanel Orientation="Horizontal">
                                     <Label Content="Начальная дата:"/>
-                                    <DatePicker Name="StartDatePicker" SelectedDate="{Binding StartReportDate}" />
+                                    <DatePicker Name="StartDatePicker"/>
                                     <Label Content="Конечная дата:"/>
-                                    <DatePicker Name="EndDatePicker" SelectedDate="{Binding EndReportDate}" />
+                                    <DatePicker Name="EndDatePicker" />
                                 </StackPanel>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="5">
@@ -82,14 +59,14 @@
                                 <TextBlock Text="Дата пересмотра:" Width="200"/>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                     <Label Content="Начальная дата:"/>
-                                    <DatePicker Name="StartDatePicker2" SelectedDate="{Binding StartReportDate}" />
+                                    <DatePicker Name="StartDatePicker2"  />
                                     <Label Content="Конечная дата:"/>
-                                    <DatePicker Name="EndDatePicker2" SelectedDate="{Binding EndReportDate}" />
+                                    <DatePicker Name="EndDatePicker2"  />
                                 </StackPanel>
                             </StackPanel>
 
                             <TextBlock Text="Итоговый балл (Уровень риска Клиента):" Margin="5"/>
-                            <ListView Margin="5" ItemsSource="{Binding RiskCriteriasList}" Grid.Column="1" Grid.Row="1" Name="selectoritems">
+                            <ListView Margin="5" ItemsSource="{Binding AllCriterias}" Grid.Column="1" Grid.Row="1" Name="selectoritems">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="SelectionChanged">
                                             <i:InvokeCommandAction Command="{Binding StoreSelection}" CommandParameter="{Binding ElementName=selectoritems, Path=SelectedItems}"/>
@@ -327,16 +304,16 @@
                             <StackPanel Orientation="Horizontal" Margin="5">
                                 <TextBlock Text="Запросы (дата направления):" Width="200"/>
                                     <Label Content="Начальная дата:"/>
-                                    <DatePicker Name="StartDate" SelectedDate="{Binding StartReportDate}" />
+                                    <DatePicker Name="StartDate" />
                                     <Label Content="Конечная дата:"/>
-                                    <DatePicker Name="EndDate" SelectedDate="{Binding EndReportDate}" />
+                                    <DatePicker Name="EndDate" />
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="5">
                                 <TextBlock Text="Запросы (дата получения):" Width="200"/>
                                 <Label Content="Начальная дата:"/>
-                                <DatePicker Name="StartDatefinish" SelectedDate="{Binding StartReportDate}" />
+                                <DatePicker Name="StartDatefinish" />
                                 <Label Content="Конечная дата:"/>
-                                <DatePicker Name="EndDatefinish" SelectedDate="{Binding EndReportDate}" />
+                                <DatePicker Name="EndDatefinish"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="5">
                                 <TextBlock Text="Счет с ограничениями:" Width="200"/>

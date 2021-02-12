@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"     
              xmlns:local="clr-namespace:ContragentAnalyse.Extension"
+             xmlns:converters="clr-namespace:ContragentAnalyse.Controls.Converters"
              mc:Ignorable="d" DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
     <UserControl.Resources>
         <DataTemplate x:Key="CheckBoxCell">
@@ -12,110 +13,128 @@
                 <CheckBox IsChecked="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}"/>
             </StackPanel>
         </DataTemplate>
-        
+        <converters:InverseBool x:Key="InverseBool"/>
+        <converters:IsClientNull x:Key="IsClientNull"/>
+        <converters:IsScoringNull x:Key="IsScoringNull"/>
+        <converters:IsScoringNotNullAndNotClosed x:Key="IsScoringNotNullAndNotClosed"/>
+        <converters:SelectedCriteriasIsCheckedConverter x:Key="SelectedCriteriasIsCheckedConverter"/>
     </UserControl.Resources>
    
     <ScrollViewer VerticalScrollBarVisibility="Auto" >
-
-        <Grid>
-           
+        <Grid Name="riskGrid">
             <StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Введите идентификатор клиента" Margin="5,0"/>
-                    <TextBox Name="SearchField2" MinWidth="300" Margin="5,0"/>
-                    <Button IsDefault="True" x:Name="buttonSearch2"  Content="Поиск" Width="100" Click="Search2"
-                                Command="{Binding SearchCommand}"
-                                CommandParameter="{Binding ElementName=SearchField2, Path=Text}"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <GroupBox Header="Выберете из предложенных Банков/Юр.лиц" Margin="10,20" >
-                        <ListView Name="FoundItemsList2" Margin="5" MinWidth="600" MinHeight="100" ItemsSource="{Binding FoundClients}" SelectedItem="{Binding SelectedClient}">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Header="БИН" DisplayMemberBinding="{Binding Path=BIN}" Width="50"/>
-                                    <GridViewColumn Header="Название" DisplayMemberBinding="{Binding Path=ShortName}" Width="450"/>
-                                    <GridViewColumn Header="Мнемоника" DisplayMemberBinding="{Binding Path=Mnemonic}"/>
-                                    <GridViewColumn Header="Тип клиента" DisplayMemberBinding="{Binding Path=TypeClient.Name}"/>
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                    </GroupBox>
-                </StackPanel>
-                <GroupBox Header="Критерии риска" Margin="10,0" IsEnabled="{Binding IsAnyClientSelected}">
-                   
-                    <StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="5">
-                            <ListView ItemsSource="{Binding RiskCriteriasList}"
-                                      local:ListViewExtensions.SelectedValues="{Binding SelectedCriterias}"
-                                      Grid.Column="1" Grid.Row="1" Name="selectoritems">
+                <GroupBox Header="Критерии риска" Margin="10,0" IsEnabled="{Binding SelectedClient, Mode=OneWay, Converter={StaticResource IsClientNull}}">
+                    <Grid HorizontalAlignment="Stretch">
+                        <StackPanel HorizontalAlignment="Stretch">
+                            <Grid>
+                                <TextBlock Text="История:" Margin="5" HorizontalAlignment="Left"/>
+                                <StackPanel Orientation="Horizontal" Margin="5" HorizontalAlignment="Right">
+                                    <Button x:Name="AddScoring" Width="150" Height="25" Content="Добавить скоринг" Command="{Binding AddScoringCommand}" HorizontalAlignment="Right"/>
+                                    <Button x:Name="SaveHistoryTime" Width="150" Height="25" Content="Сохранить историю"  Command="{Binding SaveRiskRecordCommand}" IsEnabled="{Binding SelectedScoring, Mode=OneWay, Converter={StaticResource IsScoringNotNullAndNotClosed}}"/>
+                                    <Button x:Name="Check" IsEnabled="{Binding SelectedScoring, Converter={StaticResource IsScoringNotNullAndNotClosed}}"  Width="110" Height="25" Content="Закрыть запись" Command="{Binding CloseScoringCommand}"/>
+                                    <Button Width="150" Height="25" Content="Выгрузить историю" Command="{Binding ExportExcelCommand}" CommandParameter="{Binding SelectedClient.BIN}"/>
+                                </StackPanel>
+                            </Grid>
+                            
+                            
+
+                            <ListView Name="HistoryList" ItemsSource="{Binding SelectedClient.Scorings}" SelectedItem="{Binding SelectedScoring}" MinWidth="300" MinHeight="50">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="SelectionChanged">
-                                        <i:InvokeCommandAction Command="{Binding StoreSelection}" CommandParameter="{Binding ElementName=selectoritems, Path=SelectedItems}"/>
+                                        <i:InvokeCommandAction Command="{Binding SelectHistoryRecord}" CommandParameter="{Binding ElementName = HistoryList, Path=SelectedItem}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                                 <ListView.View>
                                     <GridView>
-                                        <GridViewColumn CellTemplate="{StaticResource CheckBoxCell}" Width="30"/>
-                                        <GridViewColumn Header="Название критерия" DisplayMemberBinding="{Binding Path=Name}" Width="550"/>
-                                        <GridViewColumn Header="Балл" DisplayMemberBinding="{Binding Path=Weight}" Width="50"/>
+                                        <GridView.Columns>
+                                            <GridViewColumn Header="Дата" DisplayMemberBinding="{Binding CreatedAt, StringFormat=dd.MM.yyyy HH:mm}" Width="100"/>
+                                            <GridViewColumn Header="Сотрудник" DisplayMemberBinding="{Binding Employee.Name}" Width="200"/>
+                                            <GridViewColumn Header="Уровень риска" DisplayMemberBinding="{Binding TotalRiskLevel, Mode=OneWay}" Width="100"/>
+                                            <GridViewColumn Header="Оценка завершена" DisplayMemberBinding="{Binding IsClosed, Mode=OneWay}" Width="200"/>
+                                            <GridViewColumn Header="Комментарий" DisplayMemberBinding="{Binding Comment, Mode=OneWay}" Width="200"/>
+                                            <GridViewColumn Header="Уровень риска НОСТРО" DisplayMemberBinding="{Binding NostroRiskLevel, Mode=OneWay}" Width="200"/>
+                                            <GridViewColumn Header="Уровень риска ЛОРО" DisplayMemberBinding="{Binding LoroRiskLevel, Mode=OneWay}" Width="200"/>
+                                        </GridView.Columns>
                                     </GridView>
                                 </ListView.View>
                             </ListView>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="5">
-                            <TextBlock Text="Итоговый балл (Уровень риска Клиента):" MinWidth="250"/>
-                            <TextBox Text="{Binding SelectedCriteriasLevel , Mode=OneWay}" x:Name="ItogRisk" MinWidth="300" Height="25" IsReadOnly="True"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="5">
-                            <TextBlock Text="Итоговый балл с учётом НОСТРО и ЛОРО:" MinWidth="250"/>
-                            <TextBox Text="{Binding NostroUnusualOperationsString, Mode=TwoWay}" x:Name="ItogNOSTRO" MinWidth="300" IsReadOnly="True"/>
-                            <Button x:Name="ItogRiskButton" Width="110" Height="25" Content="Посчитать" Command="{Binding ContractBankProducts}"/>
-                        </StackPanel>
-                        <TextBlock Text="Несоответствие банковских продуктов:" MinWidth="220" Margin="5"/>
-                        <TextBox Text="{Binding BankProductHistory.Name, Mode=OneWay}" x:Name="BankProduct" Margin="5" MinWidth="300" Height="100"/>
-                        <TextBlock Text="Комментарий к скорингу:" MinWidth="220" Margin="5"/>
-                        <TextBox Text="{Binding CurrentHistoryComment, Mode=TwoWay}" x:Name="Comments" Margin="5" MinWidth="300" Height="100"/>
-                        <StackPanel Orientation="Horizontal" Margin="5">
-                            <TextBlock Text="Оценка комплаенс риска завершена" MinWidth="225"/>
-                            <Button x:Name="Check"   Width="110" Height="25" Content="Завершить!"  Command="{Binding EstimationRiskCommand}"/>
-                            
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="5">
-                            <TextBlock Text="Дата пересмотра:" Width="225"/>
-                            <DatePicker SelectedDate="{Binding NextScoringDate, Mode=OneWay}" x:Name="DateRevision" Width="150" IsEnabled="False"/>
-                        </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="5">
+                                <!--IsEnabled="{Binding SelectedScoring, Converter={StaticResource IsScoringNull}, Mode=OneWay}"-->
+                                <Grid >
+                                    <ScrollViewer VerticalScrollBarVisibility="Visible" CanContentScroll="True" MaxHeight="500">
+                                        <ListView ItemsSource="{Binding AllCriterias}"
+                                          MaxWidth="{Binding ElementName=riskGrid, Path=ActualWidth}"
+                                            ScrollViewer.CanContentScroll="False"
+                                            ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                          HorizontalAlignment="Center"
+                                          local:ListViewExtensions.SelectedValues="{Binding SelectedCriterias}"
+                                          Grid.Column="1" Grid.Row="1" Name="selectoritems"
+                                          IsEnabled="{Binding SelectedScoring, Converter={StaticResource IsScoringNotNullAndNotClosed}}"
+                                          >
+                                   
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="SelectionChanged">
+                                            <i:InvokeCommandAction Command="{Binding StoreSelection}" CommandParameter="{Binding ElementName=selectoritems, Path=SelectedItems}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <ListView.View>
+                                        <GridView>
+                                            <GridViewColumn CellTemplate="{StaticResource CheckBoxCell}" Width="30"/>
+                                            <GridViewColumn x:Name="criteriaNameCol" Width="{Binding ElementName=Col500, Path=ActualWidth, Mode=OneWay}" Header="Название критерия" >
+                                                <GridViewColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding Name}" TextWrapping="WrapWithOverflow"/>
+                                                    </DataTemplate>
+                                                </GridViewColumn.CellTemplate>
+                                            </GridViewColumn>
+                                            <GridViewColumn x:Name="riskLevelCol" Width="60" Header="Балл" DisplayMemberBinding="{Binding Path=Weight}"/>
+                                        </GridView>
+                                    </ListView.View>
+                                </ListView>
+                                    </ScrollViewer>
+                                </Grid>
+                            </StackPanel>
+                            <Grid Name="hiddenHelperGrid" Visibility="Hidden">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="30"/>
+                                    <ColumnDefinition Width="500*"/>
+                                    <ColumnDefinition Width="100"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid Grid.Column="1" HorizontalAlignment="Stretch" Name="Col500">
+                                    
+                                </Grid>
+                            </Grid>
 
-                        <TextBlock Text="История:" Margin="5"/>
-
-                        <ListView Name="HistoryList" ItemsSource="{Binding CurrentClientHistory}" SelectedItem="{Binding SelectedHistoryRecord}" MinHeight="300" MinWidth="300">
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="SelectionChanged">
-                                    <i:InvokeCommandAction Command="{Binding SelectHistoryRecord}" CommandParameter="{Binding ElementName = HistoryList, Path=SelectedItem}"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                            <ListView.View>
-                                <GridView>
-                                    <GridView.Columns>
-                                        <GridViewColumn Header="Дата" DisplayMemberBinding="{Binding HistoryDate, StringFormat=dd.MM.yyyy HH:mm}" Width="100"/>
-                                        <GridViewColumn Header="Сотрудник" DisplayMemberBinding="{Binding EmployeeName}" Width="200"/>
-                                        <GridViewColumn Header="Уровень риска" DisplayMemberBinding="{Binding Level, Mode=OneWay}" Width="100"/>
-                                        <GridViewColumn Header="Оценка завершена" DisplayMemberBinding="{Binding ClosedClient, Mode=OneWay}" Width="200"/>
-                                        <GridViewColumn Header="Комментарий" DisplayMemberBinding="{Binding CurrentHistoryComment, Mode=OneWay}" Width="200"/>
-                                        <GridViewColumn Header="Уровень риска ЛОРО/НОСТРО" DisplayMemberBinding="{Binding NostroLevel, Mode=OneWay}" Width="200"/>
-                                    </GridView.Columns>
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                       
-                        <StackPanel Orientation="Vertical" Margin="5" HorizontalAlignment="Right">
-                            <Button x:Name="AddScoring" Width="150" Height="25" Content="Добавить скоринг" Click="AddScoring_Click" Command="{Binding AddScoringCommand}"/>
-                            <Button x:Name="RedactHistory" Width="150" Height="25" Content="Редактировать" Click="Redact_Click"/>
-                            <Button x:Name="SaveHistoryTime" Width="150" Height="25" Content="Сохранить историю" Click="SaveHistoryTime_Click" Command="{Binding SaveRiskRecordCommand}" IsEnabled="{Binding IsCurrentHistoryRecordClosed}"/>
-                            <Button Width="150" Height="25" Content="Выгрузить историю" Click="Button_Click" Command="{Binding ExportExcelCommand}" CommandParameter="{Binding SelectedClient.BIN}"/>
+                            <StackPanel Orientation="Horizontal" Margin="5">
+                                <TextBlock Text="Итоговый балл (Уровень риска Клиента):" MinWidth="250"/>
+                                <TextBox Text="{Binding SelectedScoring.TotalRiskLevel , Mode=OneWay}" x:Name="ItogRisk" MinWidth="300" Height="25" IsReadOnly="True"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="5">
+                                <TextBlock Text="Итоговый балл с учётом НОСТРО и ЛОРО:" MinWidth="250"/>
+                                <TextBox Text="{Binding SelectedScoring.TotalNostroLoroRiskLevel, Mode=OneWay}" x:Name="ItogNOSTRO" MinWidth="300" IsReadOnly="True"/>
+                                <Button x:Name="ItogRiskButton" Width="110" Height="25" Content="Посчитать" IsEnabled="{Binding SelectedScoring, Converter={StaticResource IsScoringNotNullAndNotClosed}}" Command="{Binding CalculateRiskLevel}"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="5">
+                                <TextBlock Text="Дата пересмотра: "/>
+                                <DatePicker SelectedDate="{Binding SelectedClient.NextScoringDate, Mode=TwoWay}"/>
+                            </StackPanel>
+                            <TextBlock Text="Несоответствие банковских продуктов:" MinWidth="220" Margin="5"/>
+                            <TextBox Text="{Binding SelectedClient.BankProduct, Mode=OneWay}" IsReadOnly="True" x:Name="BankProduct" Margin="5" MinWidth="300" Height="100"/>
+                            <TextBlock Text="Комментарий к скорингу:" MinWidth="220" Margin="5"/>
+                            <TextBox Text="{Binding SelectedScoring.Comment, Mode=TwoWay}" IsReadOnly="{Binding SelectedScoring, Converter={StaticResource IsScoringNotNullAndNotClosed}}" x:Name="Comments" Margin="5" MinWidth="300" Height="100"/>
                         </StackPanel>
-                    </StackPanel>
+                    </Grid>
                 </GroupBox>
             </StackPanel>
+            <Grid Visibility="Hidden">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="60*" MaxWidth="500"/>
+                    <ColumnDefinition Width="*" MaxWidth="500"/>
+                </Grid.ColumnDefinitions>
+                <Grid x:Name="helperField1" Grid.Column="1"></Grid>
+                <Grid x:Name="helperField2" Grid.Column="2"></Grid>
+            </Grid>
         </Grid>
     </ScrollViewer>
 </UserControl>

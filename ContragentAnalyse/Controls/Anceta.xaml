@@ -3,33 +3,18 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              x:Class="ContragentAnalyse.Controls.Anceta"
+             xmlns:converter="clr-namespace:ContragentAnalyse.Controls.Converters"
     mc:Ignorable="d" DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
+    <UserControl.Resources>
+        <converter:CurrencyToStringConverter x:Key="CurrencyToString"/>
+        <converter:ClientLatestNostroRiskLevel x:Key="ClientLatestNostroRiskLevel"/>
+        <converter:ClientLatestLoroRiskLevel x:Key="ClientLatestLoroRiskLevel"/>
+        <converter:ClientTotalRiskLevel x:Key="ClientTotalRiskLevel"/>
+        <converter:ClientToContracts x:Key="ClientToContracts"/>
+        <converter:IsClientNull x:Key="IsClientNull"/>
+    </UserControl.Resources>
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <Grid >
-            <StackPanel Grid.ColumnSpan="2">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Введите идентификатор клиента" Margin="5,0"/>
-                    <TextBox Name="SearchField" MinWidth="300" Margin="5,0"/>
-                    <Button IsDefault="True" x:Name="buttonSearch"  Content="Поиск" Width="100" Click="Search"
-                                Command="{Binding SearchCommand}"
-                                CommandParameter="{Binding ElementName=SearchField, Path=Text}"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <GroupBox Header="Выберете из предложенных Банков/Юр.лиц" Margin="10,20" >
-                        <ListView Name="FoundItemsList" Margin="5" MinWidth="600" MinHeight="100" ItemsSource="{Binding FoundClients}" SelectedItem="{Binding SelectedClient}">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Header="БИН" DisplayMemberBinding="{Binding Path=BIN}" Width="50"/>
-                                    <GridViewColumn Header="Название" DisplayMemberBinding="{Binding Path=FullName}" Width="450"/>
-                                    <GridViewColumn Header="Мнемоника" DisplayMemberBinding="{Binding Path=Mnemonic}"/>
-                                    <GridViewColumn Header="Тип клиента" DisplayMemberBinding="{Binding Path=TypeClient.Name}"/>
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                    </GroupBox>
-                </StackPanel>
-            </StackPanel>
-            <ContentControl Name="Page1ContentController1" Margin="0,190,0,0"  >
                 <TabControl VerticalAlignment="Top" HorizontalAlignment="Stretch">
                     <TabItem Header="Информация о Клиенте"  >
                         <TabItem.Content>
@@ -40,7 +25,8 @@
                                 </Grid.ColumnDefinitions>
                                 <StackPanel>
                                     <GroupBox Header="Информация о Клиенте" Margin="10,0">
-                                        <StackPanel MinWidth="300">
+                                    <Grid>
+                                        <StackPanel HorizontalAlignment="Stretch">
                                             <TextBlock Text="Статус клиента:" />
                                             <TextBox x:Name="ActStatus" Text="{Binding SelectedClient.ActualizationStatus, Mode=OneWay}" IsReadOnly="True"/>
                                             <TextBlock Text="Полное наименование Клиента:" />
@@ -52,9 +38,9 @@
                                             <TextBlock Text="Другие БИНы Клиента:"/>
                                             <TextBox Text="{Binding SelectedClient.AdditionalBIN}" IsReadOnly="True"/>
                                             <TextBlock Text="Действующие договоры:"/>
-                                            <TextBox Text="{Binding CurrentClientContracts, Mode=OneWay}" IsReadOnly="True" MinHeight="50" TextWrapping="Wrap"/>
+                                            <TextBox Text="{Binding SelectedClient, Mode=OneWay, Converter={StaticResource ClientToContracts}}" IsReadOnly="True" MinHeight="50" TextWrapping="Wrap"/>
                                             <TextBlock Text="Счета в валюте:"/>
-                                            <TextBox Text="{Binding CurrentClientCurrency, Mode=OneWay}" IsReadOnly="True"/>
+                                            <TextBox Text="{Binding SelectedClient.ClientToCurrency, Mode=OneWay, Converter={StaticResource CurrencyToString}}" IsReadOnly="True"/>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="Наличие КОП:" Width="150"/>
                                                 <CheckBox x:Name="CheckBox" IsEnabled="False" IsChecked="{Binding SelectedClient.CardOP}"/>
@@ -68,10 +54,12 @@
                                                 <CheckBox x:Name="CheckBox2" IsEnabled="False" IsChecked="{Binding SelectedClient.SEB}"/>
                                             </StackPanel>
                                         </StackPanel>
-                                    </GroupBox>
+                                    </Grid>
+                                </GroupBox>
                                 </StackPanel>
-                                <GroupBox Header="Информация о Клиенте 2" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="1">
-                                    <StackPanel IsEnabled="{Binding IsAnyClientSelected}">
+                                <GroupBox Header="Информация о Клиенте 2" HorizontalAlignment="Stretch" VerticalAlignment="Top" Grid.Column="1">
+                                <Grid>
+                                    <StackPanel HorizontalAlignment="Stretch" IsEnabled="{Binding SelectedClient, Mode=OneWay, Converter={StaticResource IsClientNull}}">
                                         <TextBlock Text="Комплаенс-менеджер:"  HorizontalAlignment="Left"/>
                                         <TextBox x:Name="ClientManagerAnceta" Text="{Binding SelectedClient.ClientManagerNew}" IsReadOnly="True"/>
                                         <TextBlock Text="Клинет менеджер:" HorizontalAlignment="Left"/>
@@ -79,7 +67,7 @@
                                         <TextBlock Text="Уровень риска:"  HorizontalAlignment="Left"/>
                                         <TextBox Text="{Binding SelectedClient.Level, Mode=OneWay}" IsReadOnly="True"/>
                                         <TextBlock Text="Дата пересмотра риска:"  HorizontalAlignment="Left"/>
-                                        <DatePicker SelectedDate="{Binding NextScoringDate, Mode=OneWay, StringFormat=dd.MM.yyyy}" IsEnabled="False"/>
+                                        <DatePicker SelectedDate="{Binding SelectedClient.NextScoringDate, Mode=OneWay, StringFormat=dd.MM.yyyy}" IsEnabled="False"/>
                                         <TextBlock Text="Выявленные критерии риска:"/>
                                         <ListView ItemsSource="{Binding SelectedClient.ClientToCriteria, Mode=OneWay}">
                                             <ListView.View>
@@ -90,17 +78,14 @@
                                             </ListView.View>
                                         </ListView>
                                         <TextBlock Text="НОСТРО:"  HorizontalAlignment="Left"/>
-                                        <TextBox Text="{Binding SelectedClientLatestNostro, Mode=OneWay }"  IsReadOnly="True"/>
+                                        <TextBox Text="{Binding SelectedClient, Mode=OneWay, Converter={StaticResource ClientLatestNostroRiskLevel}}"  IsReadOnly="True"/>
                                         <TextBlock Text="ЛОРО:"  HorizontalAlignment="Left"/>
-                                        <TextBox Text="{Binding SelectedClientLatestLORO, Mode=OneWay }" IsReadOnly="True"/>
+                                        <TextBox Text="{Binding SelectedClient, Mode=OneWay, Converter={StaticResource ClientLatestLoroRiskLevel}}" IsReadOnly="True"/>
                                         <TextBlock Text="Уровень риска с учетом ЛОРО/НОСТРО:"  HorizontalAlignment="Left"/>
-                                        <TextBox Text="{Binding SelectedClientLatestITOG, Mode=OneWay}"  IsReadOnly="True"/>
+                                        <TextBox Text="{Binding SelectedClient, Mode=OneWay, Converter={StaticResource ClientTotalRiskLevel}}"  IsReadOnly="True"/>
                                         <TextBlock Text="Запросы:"/>
                                         <DataGrid ItemsSource="{Binding SelectedClient.Requests}" AutoGenerateColumns="False"
                                                   IsReadOnly="False">
-                                            <!--<i:EventTrigger EventName="LostFocus">
-                                                        <i:InvokeCommandAction Command="{Binding CommitChanges}"/>
-                                                    </i:EventTrigger>-->
                                             <DataGrid.Columns>
                                                 <DataGridTextColumn x:Name="SendDateColumn" Header="Дата направления" MinWidth="90" Binding="{Binding SendDate, StringFormat=dd.MM.yyyy}" IsReadOnly="True"/>
                                                 <DataGridTextColumn x:Name="RecieveDateColumn" Header="Дата получения"  MinWidth="90" Binding="{Binding RecieveDate, StringFormat=dd.MM.yyyy}" IsReadOnly="True"/>
@@ -123,13 +108,14 @@
                                                     Command="{Binding SaveCommand}"
                                                     />
                                             <Button x:Name="buttonNew" Width="150" Height="25" Content="Обновить клиента" Click="Word"
-                                                    Command="{Binding UpdateCommand}"
+                                                    Command="{Binding RefreshClientInfoFromEq}"
                                                     CommandParameter="{Binding SelectedClient.BIN}"/>
                                             <Button x:Name="buttonWord" Width="150" Height="25" Content="Выгрузить в Word" Click="Word"
                                                     Command="{Binding ExportWordCommand}"/>
                                         </StackPanel>
                                     </StackPanel>
-                                </GroupBox>
+                                </Grid>
+                            </GroupBox>
                             </Grid>
                         </TabItem.Content>
                     </TabItem>
@@ -150,7 +136,6 @@
                         </TabItem.Content>
                     </TabItem>
                 </TabControl>
-            </ContentControl>
         </Grid>
     </ScrollViewer>
 </UserControl>

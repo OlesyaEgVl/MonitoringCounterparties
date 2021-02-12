@@ -23,10 +23,7 @@ namespace ContragentAnalyse.Controls
             InitializeComponent();
         }
 
-        private void Search(object sender, RoutedEventArgs e)
-        {
-            buttonSearch.Background = Brushes.DarkGray;
-        }
+
         private void Corr(object sender, RoutedEventArgs e)
         {
             buttonCorr.Background = Brushes.DarkGray;

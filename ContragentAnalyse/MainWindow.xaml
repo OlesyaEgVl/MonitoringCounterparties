@@ -4,8 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ContragentAnalyse"
+        xmlns:converters ="clr-namespace:ContragentAnalyse.Controls.Converters"
         mc:Ignorable="d"
-        Title="Анализ контрагентов" MinHeight="600" MinWidth="700" Height="920" Width="1245">
+        Name="currentWindow"
+        Title="Анализ контрагентов" MinHeight="600" MinWidth="700" Height="920" Width="1245"
+        DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
     <Window.Resources >
         <Style TargetType="Button" x:Key="MenuButton">
             <Setter Property="Background" Value="#FF1A1A1D"/>
@@ -39,6 +42,7 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        <converters:ContentControllerHeight x:Key="ContentControllerHeight"/>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -51,8 +55,29 @@
             <Button Content="Оценка Риска" Style="{StaticResource MenuButton}" Click="MenuClick" Tag="Page3"/>
             <Button Content="Выгрузка в Excel" Style="{StaticResource MenuButton}" Click="MenuClick" Tag="Page4"/>
         </StackPanel>
-        <ContentControl Grid.Column="1" Name="MainContentController" Margin="10" > 
-
-        </ContentControl>
+        <StackPanel Grid.Column="1" HorizontalAlignment="Stretch" Margin="10">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock Text="Введите идентификатор клиента"/>
+                    <TextBox Name="SearchField" MinWidth="300" Margin="5 0"/>
+                    <Button IsDefault="True" x:Name="buttonSearch" Content="Поиск" Width="100"
+                                Command="{Binding SearchCommand}"
+                                CommandParameter="{Binding ElementName=SearchField, Path=Text}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Name="foundedClientsArea">
+                <GroupBox Header="Выберете из предложенных Банков/Юр.лиц" Margin="0 10" Width="{Binding ElementName=foundedClientsArea, Path=ActualWidth}" HorizontalAlignment="Stretch" >
+                    <ListView Name="FoundItemsList" Margin="5" MinWidth="600" HorizontalAlignment="Stretch" MinHeight="100" ItemsSource="{Binding ClientsFound, Mode=OneWay}" SelectedItem="{Binding SelectedClient}">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="БИН" DisplayMemberBinding="{Binding Path=BIN}" Width="50"/>
+                                    <GridViewColumn Header="Название" DisplayMemberBinding="{Binding Path=FullName}" Width="450"/>
+                                    <GridViewColumn Header="Мнемоника" DisplayMemberBinding="{Binding Path=Mnemonic}"/>
+                                    <GridViewColumn Header="Тип клиента" DisplayMemberBinding="{Binding Path=TypeClient.Name}"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </GroupBox>
+            </StackPanel>
+            <ContentControl Name="MainContentController" Margin="0" MaxHeight="{Binding ElementName=currentWindow, Path=ActualHeight, Converter={StaticResource ContentControllerHeight}}"/>
+        </StackPanel>
     </Grid>
 </Window>

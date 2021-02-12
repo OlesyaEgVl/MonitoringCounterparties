@@ -22,55 +22,16 @@ namespace ContragentAnalyse.Controls
         {
             InitializeComponent();
         }
-        private void Search2(object sender, RoutedEventArgs e)
-        {
-            buttonSearch2.Background = Brushes.DarkGray;
-            
-            //SaveHistoryTime.IsEnabled = true;
-        }
+
         private void SaveHistoryTime_Click(object sender, RoutedEventArgs e)
         {
-            RedactHistory.Background = Brushes.LightGray;
-            SaveHistoryTime.Background = Brushes.DarkGray;
             BankProduct.IsEnabled = false;
             ItogRiskButton.IsEnabled = false;
-            ItogRisk.IsEnabled = false;
-           // selectoritems.SelectedItem = null;
-
-
         }
 
         private void Redact_Click(object sender, RoutedEventArgs e)
         {
-            RedactHistory.Background = Brushes.DarkGray;
-            SaveHistoryTime.Background = Brushes.LightGray;
             BankProduct.IsEnabled = true;
-           // ItogRiskButton.IsEnabled = true;
-            ItogRisk.IsEnabled = true;
-
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            RedactHistory.Background = Brushes.LightGray;
-            SaveHistoryTime.Background = Brushes.LightGray;
-        }
-
-        private void AddScoring_Click(object sender, RoutedEventArgs e)
-        {
-            RedactHistory.Background = Brushes.LightGray;
-            SaveHistoryTime.Background = Brushes.LightGray;
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            RedactHistory.Background = Brushes.LightGray;
-            SaveHistoryTime.Background = Brushes.LightGray;
-        }
-
-        private void CheckBox_Click(object sender, RoutedEventArgs e)
-        {
-            DateRevision.IsEnabled = true;
         }
     }
 }
